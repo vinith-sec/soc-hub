@@ -135,6 +135,8 @@ textarea:focus,input[type=text]:focus,select:focus{border-color:var(--text2);}
     <div class="hdr-sub">Unified search &middot; All sources &middot; Live monitoring</div>
   </div>
   <div class="hdr-clock" id="clock"></div>
+  <div id="key-status-dot" onclick="showSettings()" title="API key status" style="width:10px;height:10px;border-radius:50%;background:#E24B4A;cursor:pointer;flex-shrink:0;margin-left:8px;"></div>
+  <button onclick="showSettings()" style="font-size:12px;padding:5px 12px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;">&#9881; API Key</button>
 </div>
 
 <div class="layout">
@@ -165,6 +167,21 @@ textarea:focus,input[type=text]:focus,select:focus{border-color:var(--text2);}
   <button class="sb-btn" onclick="window.open('https://www.fire.ca.gov/','_blank')">          <span class="sb-ic">&#127795;</span>CAL FIRE</button>
   <div class="sb-div"></div>
   <button class="sb-btn" id="sb-about" onclick="showPage('about')"><span class="sb-ic">&#8505;</span>About / Setup</button>
+  <button class="sb-btn" id="sb-settings" onclick="showSettings()"><span class="sb-ic">&#9881;</span>API Key Settings</button>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--bg);border-radius:var(--rl);padding:28px 32px;width:480px;max-width:90vw;border:0.5px solid var(--border2);">
+    <div style="font-size:16px;font-weight:600;margin-bottom:6px;">&#9881; Groq API Key</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6;">Get your free key at <a href="https://console.groq.com" target="_blank" style="color:var(--blue-text);">console.groq.com</a> — no credit card needed. Paste it below. It saves in your browser automatically.</p>
+    <input type="password" id="settings-key-input" placeholder="gsk_..." style="margin-bottom:12px;font-family:var(--font-mono,monospace);font-size:13px;"/>
+    <div id="settings-status" style="font-size:12px;margin-bottom:14px;min-height:18px;"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn" onclick="closeSettings()">Cancel</button>
+      <button class="btn primary" onclick="saveKey()">Save key</button>
+    </div>
+  </div>
 </div>
 
 <div class="main" id="main-content"></div>
@@ -174,7 +191,50 @@ textarea:focus,input[type=text]:focus,select:focus{border-color:var(--text2);}
 const API_URL='https://api.groq.com/openai/v1/chat/completions';
 const MODEL='llama-3.3-70b-versatile';
 
-function getKey(){return window.SOC_CONFIG&&window.SOC_CONFIG.GROQ_API_KEY&&window.SOC_CONFIG.GROQ_API_KEY!=='YOUR_GROQ_API_KEY_HERE'?window.SOC_CONFIG.GROQ_API_KEY:null;}
+function getKey(){
+  const stored=localStorage.getItem('soc_groq_key');
+  if(stored&&stored.trim())return stored.trim();
+  if(window.SOC_CONFIG&&window.SOC_CONFIG.GROQ_API_KEY&&window.SOC_CONFIG.GROQ_API_KEY!=='YOUR_GROQ_API_KEY_HERE')return window.SOC_CONFIG.GROQ_API_KEY;
+  return null;
+}
+
+function showSettings(){
+  const modal=document.getElementById('settings-modal');
+  modal.style.display='flex';
+  const inp=document.getElementById('settings-key-input');
+  const existing=localStorage.getItem('soc_groq_key')||'';
+  inp.value=existing;
+  const status=document.getElementById('settings-status');
+  status.textContent=existing?'Key saved in your browser':'No key saved yet — paste your Groq key above';
+  status.style.color=existing?'var(--green-text)':'var(--amber-text)';
+  setTimeout(()=>inp.focus(),50);
+}
+
+function closeSettings(){
+  document.getElementById('settings-modal').style.display='none';
+}
+
+function saveKey(){
+  const val=(document.getElementById('settings-key-input').value||'').trim();
+  if(!val){
+    const s=document.getElementById('settings-status');
+    s.textContent='Please paste your Groq API key first.';s.style.color='var(--red-text)';return;
+  }
+  localStorage.setItem('soc_groq_key',val);
+  const s=document.getElementById('settings-status');
+  s.textContent='Key saved! AI analysis is now active.';s.style.color='var(--green-text)';
+  updateHeaderKeyStatus();
+  setTimeout(()=>closeSettings(),1200);
+}
+
+function updateHeaderKeyStatus(){
+  const el=document.getElementById('key-status-dot');
+  if(!el)return;
+  el.style.background=getKey()?'#639922':'#E24B4A';
+  el.title=getKey()?'API key active — click to change':'No API key — click to add';
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSettings();});
 
 setInterval(()=>{const el=document.getElementById('clock');if(el)el.textContent=new Date().toLocaleString();},1000);
 
@@ -223,8 +283,8 @@ async function aiCall(system,prompt,tokens){
 
 function noKeyBanner(){
   return`<div class="no-api">
-    <div style="font-size:14px;font-weight:500;color:var(--amber-text);margin-bottom:6px;">&#9888; API key not configured</div>
-    <div style="font-size:13px;color:var(--amber-text);line-height:1.7;">Open <code>config.js</code> and paste your free Groq API key. Get one free at <strong>console.groq.com</strong> — no credit card needed. OSINT links and physical feeds below still work without it.</div>
+    <div style="font-size:14px;font-weight:500;color:var(--amber-text);margin-bottom:6px;">&#9888; No API key configured</div>
+    <div style="font-size:13px;color:var(--amber-text);line-height:1.7;">Click the <strong>&#9881; API Key</strong> button at the top right to add your free Groq key. Get one free in 2 minutes at <a href="https://console.groq.com" target="_blank" style="color:var(--amber-text);font-weight:600;">console.groq.com</a> — no credit card needed. OSINT links and physical feeds below still work without it.</div>
   </div>`;}
 
 function buildStreamShell(){
@@ -268,18 +328,163 @@ function parseTriage(text){
 
 async function runSearch(q){
   const type=dType(q),key=dKey(q,type);
-  const [t,th,n,p,s]=await Promise.all([
-    aiCall(`SOC analyst. Respond ONLY:\nALERT TYPE: [type]\nSEVERITY: [Critical/High/Medium/Low]\nCONFIDENCE: [High/Medium/Low]\nWATCH POSTURE: [Elevated/Standard/Informational]\nSUMMARY: [2-3 sentences]\nAFFECTED SYSTEMS: [concise or Unknown]\nKNOWN THREAT ACTORS: [or N/A]\nRECOMMENDED ACTION: [1-2 sentences]\nMITRE TTPS: [top 2-3 IDs and names]`,`Triage:\n${q}`,500),
-    aiCall(`Threat intel analyst. What would VirusTotal, Shodan, AlienVault OTX, Pulsedive, Recorded Future, and PANW Threat Vault show for this indicator? Include reputation, known campaigns, related IOCs, CVSSv3 if CVE. 5-6 sentences.`,`Indicator: ${key}\nAlert: ${q.substring(0,300)}`,400),
-    aiCall(`SOC news analyst. What is Bleeping Computer, SANS ISC, Reddit r/netsec, Google News, GitHub advisories reporting about this? Include exploit availability, patch status, active campaigns. 5-6 sentences.`,`Topic: ${key}\nContext: ${q.substring(0,300)}`,400),
-    aiCall(`Physical security analyst. What would NWS, FEMA, NHC National Hurricane Center, SPC Storm Prediction Center, Watch Duty wildfire, CAL FIRE, USGS, Citizen App show? If cyber-only: "Cyber-only alert — no physical threat indicators." Otherwise give severity, regions, watch posture. 4-5 sentences.`,`Event: ${key}\nContext: ${q.substring(0,300)}`,350),
-    aiCall(`Social media threat analyst. For this alert: (1) Top X/Twitter keywords and hashtags to monitor right now, (2) Which verified accounts (CISA, security researchers, news orgs) and unverified community members are discussing this, (3) Current social media narrative, (4) Notable handles covering this topic. 6-7 sentences.`,`Indicator: ${key}\nContext: ${q.substring(0,300)}`,400)
+
+  // Step 1: Extract smart keywords first (fast, ~1 sec)
+  // Run keyword extraction AND all 5 AI sections in parallel
+  const kwPromise=aiCall(
+    `You are a keyword extractor for a SOC tool. Given an alert or event, extract ONLY the most important 3-5 search keywords that an analyst would search on Twitter/X to find relevant posts. For physical events (floods, fires, protests) extract location + event type. For cyber alerts extract threat name, CVE, or malware name. Return ONLY a comma-separated list of keywords, nothing else. Example: "Houston flood, Texas flooding, Buffalo Bayou" or "CVE-2024-3400, PAN-OS exploit, Palo Alto vulnerability"`,
+    `Extract search keywords from this alert:\n${q}`, 80
+  );
+
+  // Step 2: Fetch real live data from public APIs in parallel with AI
+  const physDataPromise = fetchLivePhysData(q);
+
+  const [t,th,n,p,s,kwRaw,physData] = await Promise.all([
+    aiCall(`You are a SOC analyst. Respond ONLY in this exact format:
+ALERT TYPE: [CVE/Malware/IOC/Physical Event/TTP/Unknown]
+SEVERITY: [Critical/High/Medium/Low]
+CONFIDENCE: [High/Medium/Low]
+WATCH POSTURE: [Elevated/Standard/Informational]
+SUMMARY: [2-3 sentences explaining what this is and why it matters]
+AFFECTED SYSTEMS: [specific systems, versions, or regions affected]
+KNOWN THREAT ACTORS: [named groups if applicable, else N/A]
+RECOMMENDED ACTION: [2 specific analyst actions to take right now]
+MITRE TTPS: [top 2-3 ATT&CK technique IDs and names]`,
+      `Triage this alert:\n${q}`, 500),
+
+    aiCall(`You are a threat intelligence analyst. Based on this indicator, describe in detail what each of these sources would currently show:
+- VirusTotal: detection ratio, file type, first seen, sandbox behavior
+- Shodan: open ports, services, geolocation, organization
+- AlienVault OTX: pulse count, related indicators, threat category
+- Pulsedive: risk score, feeds, linked threats
+- Recorded Future: risk score, threat actor associations, recent sightings
+- PANW Threat Vault: threat category, severity, affected products
+Be specific with realistic findings. 6-8 sentences.`,
+      `Indicator: ${key}\nFull alert context: ${q.substring(0,400)}`, 500),
+
+    aiCall(`You are a SOC news analyst with access to all security news sources. Report what these sources are currently publishing about this threat:
+- Bleeping Computer: recent articles, headlines
+- SANS Internet Storm Center: diary entries, severity
+- Reddit r/netsec and r/cybersecurity: community discussion, PoC availability  
+- Google News: mainstream coverage
+- GitHub: public PoC repos, security tools, advisories
+- Exploit-DB: exploit availability and maturity
+Include: whether a patch exists, active exploitation in the wild, CVSSv3 score if CVE. 6-8 sentences.`,
+      `Topic: ${key}\nContext: ${q.substring(0,400)}`, 500),
+
+    aiCall(`You are a physical security and situational awareness analyst. Analyze this event and report what these live monitoring sources would show:
+- NOAA NWS: active alerts, severity, affected counties
+- FEMA: disaster declarations, response status
+- NHC National Hurricane Center: storm tracking if applicable
+- SPC Storm Prediction Center: severe weather outlook
+- Watch Duty: wildfire perimeter, containment percentage
+- CAL FIRE: incident report if California wildfire
+- USGS: earthquake magnitude, depth, ShakeMap
+- Citizen App: local incident reports, police activity, crowd sourced updates
+- GDELT: news event intensity, protest activity
+If this is a cyber-only alert with zero physical component, say exactly: "Cyber-only alert — no physical threat indicators from NWS, FEMA, Watch Duty or other physical monitoring sources."
+Otherwise be specific about severity, affected regions, and recommended watch posture. 5-7 sentences.`,
+      `Event: ${key}\nFull context: ${q.substring(0,400)}`, 500),
+
+    aiCall(`You are a social media threat intelligence analyst. For this alert or event provide:
+1. KEYWORDS TO SEARCH: The exact 4-6 keywords/hashtags an analyst should search on X/Twitter right now (be specific, not generic)
+2. VERIFIED ACCOUNTS LIKELY POSTING: Name specific verified accounts — government agencies like @CISAgov @FEMA, researchers like @troyhunt @briankrebs, news orgs like @CNN @Reuters, local officials if physical event
+3. UNVERIFIED COMMUNITY: What the broader security or local community is likely discussing, what narrative is forming
+4. TRENDING ANGLE: The specific angle or story that is getting the most traction right now
+5. MISINFORMATION RISK: Any false narratives or misinformation likely circulating
+Be specific and actionable. 7-9 sentences total.`,
+      `Indicator: ${key}\nContext: ${q.substring(0,400)}`, 500),
+
+    kwPromise,
+    physDataPromise
   ]);
+
+  // Parse smart keywords for X searches
+  const keywords=(kwRaw&&kwRaw!=='__nokey__'?kwRaw:'').split(',').map(k=>k.trim()).filter(k=>k.length>1).slice(0,5);
+  if(!keywords.length)keywords.push(key.substring(0,40));
+
+  // Update all 5 AI sections
   updateSection('triage',t==='__nokey__'?'__nokey__':parseTriage(t),t!=='__nokey__');
   updateSection('threat',th,false);
   updateSection('news',n,false);
-  updateSection('phys',p,false);
-  updateSection('social',s,false);
+
+  // Physical section: combine AI analysis with real live API data
+  let physHTML=p&&p!=='__nokey__'?p.replace(/\n/g,'<br>'):'';
+  if(physData&&physData.length){
+    physHTML+=`<div style="margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border);"><div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Live feed data pulled right now</div>`+
+    physData.map(a=>`<div style="background:var(--bg2);border-radius:var(--r);padding:8px 10px;margin-bottom:6px;font-size:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+      <div><div style="font-weight:500;">${a.title}</div><div style="color:var(--text2);margin-top:2px;">${a.area||a.source}</div></div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+        <span style="font-size:10px;background:var(--${a.sev==='Extreme'||a.sev==='Severe'?'red':'amber'}-bg);color:var(--${a.sev==='Extreme'||a.sev==='Severe'?'red':'amber'}-text);padding:2px 7px;border-radius:999px;">${a.sev}</span>
+        <a href="${a.url}" target="_blank" style="font-size:10px;color:var(--blue-text);text-decoration:none;">View ↗</a>
+      </div>
+    </div>`).join('')+`</div>`;
+  }
+  if(p==='__nokey__')updateSection('phys','__nokey__',false);
+  else updateSection('phys',physHTML,false);
+
+  // Social section: include smart X search links with extracted keywords
+  let socialHTML=s&&s!=='__nokey__'?s.replace(/\n/g,'<br>'):'';
+  socialHTML+=buildSmartXLinks(keywords,key,q);
+  if(s==='__nokey__')updateSection('social','__nokey__',false);
+  else updateSection('social',socialHTML,false);
+}
+
+async function fetchLivePhysData(q){
+  // Only fetch physical data if the alert looks physical
+  const isPhys=/flood|fire|wildfire|earthquake|storm|hurricane|tornado|protest|riot|civil|unrest|hazmat|chemical|spill|evacuation|shooting|explosion/i.test(q);
+  if(!isPhys)return[];
+  try{
+    const[nws,usgs]=await Promise.all([
+      fetch('https://api.weather.gov/alerts/active?status=actual&limit=20',{headers:{Accept:'application/geo+json','User-Agent':'SOCHub/7.0'}}).then(r=>r.ok?r.json():{features:[]}).catch(()=>({features:[]})),
+      fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson').then(r=>r.ok?r.json():{features:[]}).catch(()=>({features:[]}))
+    ]);
+    const results=[];
+    (nws.features||[]).slice(0,4).forEach(f=>{
+      const p=f.properties||{};
+      results.push({title:p.event||'NWS Alert',area:(p.areaDesc||'').substring(0,50),sev:p.severity||'Unknown',source:'NWS',url:'https://www.weather.gov/alerts'});
+    });
+    (usgs.features||[]).slice(0,2).forEach(f=>{
+      const p=f.properties||{};
+      results.push({title:`Earthquake M${p.mag||'?'} — ${p.place||''}`,area:'USGS',sev:p.mag>=6?'Severe':'Moderate',source:'USGS',url:p.url||'https://earthquake.usgs.gov'});
+    });
+    return results.slice(0,5);
+  }catch(e){return[];}
+}
+
+function buildSmartXLinks(keywords,key,q){
+  const isPhys=/flood|fire|wildfire|earthquake|storm|hurricane|tornado|protest|riot|civil|unrest|hazmat|evacuation/i.test(q);
+  const searches=[];
+
+  // Build targeted searches from extracted keywords
+  keywords.forEach((kw,i)=>{
+    const enc=encodeURIComponent(kw);
+    if(i===0)searches.push({l:`Latest: "${kw}"`,u:`https://x.com/search?q=${enc}&f=live`,t:'Live'});
+    else searches.push({l:`"${kw}"`,u:`https://x.com/search?q=${enc}&f=live`,t:'Live'});
+  });
+
+  // Add targeted searches based on alert type
+  const enc=encodeURIComponent(key.substring(0,60));
+  if(isPhys){
+    searches.push({l:'Emergency services & local officials',u:`https://x.com/search?q=${encodeURIComponent(keywords[0]||key.substring(0,30))}+%28from%3AFEMA+OR+%23breaking+OR+%23emergency+OR+%23alert%29&f=live`,t:'Official'});
+    searches.push({l:'News coverage',u:`https://x.com/search?q=${encodeURIComponent(keywords[0]||key.substring(0,30))}+%28from%3ACNN+OR+from%3Areuters+OR+from%3ANPR+OR+from%3ABBCWorld%29&f=live`,t:'News'});
+    searches.push({l:'Eyewitness reports',u:`https://x.com/search?q=${encodeURIComponent(keywords[0]||key.substring(0,30))}+%28%23breaking+OR+%23alert+OR+video%29&f=live`,t:'Eyewitness'});
+  } else {
+    searches.push({l:'Infosec community',u:`https://x.com/search?q=${enc}+%28%23infosec+OR+%23cybersecurity+OR+%23threatintel%29&f=live`,t:'Infosec'});
+    searches.push({l:'Verified security researchers',u:`https://x.com/search?q=${enc}+filter%3Averified&f=live`,t:'Verified'});
+    searches.push({l:'News & media',u:`https://x.com/search?q=${enc}+%28from%3ACNN+OR+from%3Areuters+OR+from%3Ableepcomp%29&f=live`,t:'News'});
+  }
+
+  return`<div style="margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border);">
+    <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Auto-extracted X / Twitter searches — click to open</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Keywords extracted from your alert: <strong style="color:var(--text2);">${keywords.join(', ')}</strong></div>`+
+  searches.map(s=>`<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--bg2);border-radius:var(--r);padding:8px 10px;margin-bottom:5px;">
+    <div style="font-size:12px;color:var(--text);flex:1;">${s.l}</div>
+    <div style="display:flex;gap:5px;flex-shrink:0;">
+      <span style="font-size:10px;background:var(--amber-bg);color:var(--amber-text);padding:2px 6px;border-radius:999px;">${s.t}</span>
+      <a href="${s.u}" target="_blank" style="font-size:11px;padding:3px 9px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text);text-decoration:none;">Open ↗</a>
+    </div>
+  </div>`).join('')+`</div>`;
 }
 
 function buildLinks(q,type,key){
@@ -679,6 +884,8 @@ function renderAbout(mc){
 // ---- INIT ----
 invNew('Alert 1');
 showPage('inv');
+updateHeaderKeyStatus();
+if(!getKey()){setTimeout(()=>showSettings(),800);}
 </script>
 </body>
 </html>
