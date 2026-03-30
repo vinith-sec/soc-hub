@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SOC Alert Intel Hub</title>
+<script src="config.js"></script>
+<style>
+:root{
+  --bg:#fff;--bg2:#f5f5f4;--bg3:#ebebea;
+  --text:#1a1a1a;--text2:#555550;--text3:#888780;
+  --border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);
+  --blue-bg:#E6F1FB;--blue-text:#185FA5;
+  --green-bg:#EAF3DE;--green-text:#3B6D11;
+  --red-bg:#FCEBEB;--red-text:#A32D2D;
+  --amber-bg:#FAEEDA;--amber-text:#854F0B;
+  --purple-bg:#EEEDFE;--purple-text:#534AB7;
+  --teal-bg:#E1F5EE;--teal-text:#0F6E56;
+  --r:8px;--rl:12px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#252522;--bg3:#2a2a27;
+  --text:#f0ede8;--text2:#a8a49e;--text3:#6e6b65;
+  --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.18);
+  --blue-bg:#0c447c;--blue-text:#B5D4F4;
+  --green-bg:#27500a;--green-text:#C0DD97;
+  --red-bg:#791f1f;--red-text:#F7C1C1;
+  --amber-bg:#633806;--amber-text:#FAC775;
+  --purple-bg:#3c3489;--purple-text:#CECBF6;
+  --teal-bg:#085041;--teal-text:#9FE1CB;
+}}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;font-size:14px;}
+.hdr{background:var(--bg);border-bottom:0.5px solid var(--border2);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.hdr-logo{width:32px;height:32px;background:var(--red-bg);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.hdr-title{font-size:15px;font-weight:600;color:var(--text);}
+.hdr-sub{font-size:11px;color:var(--text3);}
+.hdr-clock{margin-left:auto;font-size:12px;color:var(--text3);font-variant-numeric:tabular-nums;}
+.layout{display:flex;height:calc(100vh - 57px);}
+.sidebar{width:220px;flex-shrink:0;background:var(--bg);border-right:0.5px solid var(--border2);overflow-y:auto;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border2);}
+.main{flex:1;overflow-y:auto;padding:20px;}
+.sb-sec{padding:12px 12px 4px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;}
+.sb-btn{display:flex;align-items:center;gap:8px;width:calc(100% - 12px);margin:1px 6px;padding:7px 12px;font-size:13px;color:var(--text2);background:none;border:none;cursor:pointer;border-radius:var(--r);text-align:left;transition:background .1s;}
+.sb-btn:hover{background:var(--bg2);color:var(--text);}
+.sb-btn.active{background:var(--bg2);color:var(--text);font-weight:500;}
+.sb-ic{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+.sb-div{height:0.5px;background:var(--border);margin:6px 12px;}
+.tabbar{display:flex;align-items:center;gap:4px;overflow-x:auto;padding-bottom:10px;margin-bottom:8px;scrollbar-width:none;}
+.tabbar::-webkit-scrollbar{display:none;}
+.t-item{display:flex;align-items:center;gap:4px;padding:5px 10px;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--r);font-size:12px;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.t-item:hover{background:var(--bg2);}
+.t-item.active{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue-text);}
+.t-x{opacity:.4;font-size:13px;margin-left:2px;}
+.t-x:hover{opacity:1;}
+.t-add{padding:5px 9px;background:none;border:0.5px dashed var(--border2);border-radius:var(--r);font-size:15px;color:var(--text3);cursor:pointer;flex-shrink:0;}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rl);padding:16px 18px;margin-bottom:14px;}
+textarea,input[type=text],select{width:100%;background:var(--bg);color:var(--text);border:0.5px solid var(--border2);border-radius:var(--r);padding:8px 11px;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s;}
+textarea{min-height:90px;resize:vertical;font-family:'SF Mono','Consolas',monospace;font-size:12px;}
+textarea:focus,input[type=text]:focus,select:focus{border-color:var(--text2);}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+.btn{font-size:12px;padding:7px 14px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;transition:background .1s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.btn:hover{background:var(--bg2);}
+.btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);font-weight:500;}
+.btn.primary:hover{opacity:.85;}
+.btn.danger{border-color:var(--red-text);color:var(--red-text);}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.tag{font-size:11px;padding:2px 7px;border-radius:999px;font-weight:500;flex-shrink:0;}
+.t-red{background:var(--red-bg);color:var(--red-text);}
+.t-blue{background:var(--blue-bg);color:var(--blue-text);}
+.t-amber{background:var(--amber-bg);color:var(--amber-text);}
+.t-green{background:var(--green-bg);color:var(--green-text);}
+.t-purple{background:var(--purple-bg);color:var(--purple-text);}
+.t-teal{background:var(--teal-bg);color:var(--teal-text);}
+.sl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 7px;}
+.sl:first-child{margin-top:0;}
+.lg{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:7px;margin-bottom:12px;}
+.lc{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);padding:8px 11px;display:flex;align-items:center;justify-content:space-between;text-decoration:none;color:var(--text);font-size:12px;gap:6px;}
+.lc:hover{border-color:var(--border2);}
+.res-tabs{display:flex;gap:4px;border-bottom:0.5px solid var(--border);margin-bottom:12px;}
+.rt{font-size:13px;padding:6px 14px;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;border-radius:0;}
+.rt.active{color:var(--text);border-bottom-color:var(--text);font-weight:500;}
+.stream-wrap{border:0.5px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:12px;}
+.s-sec{padding:14px 16px;border-bottom:0.5px solid var(--border);}
+.s-sec:last-child{border-bottom:none;}
+.s-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.s-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;}
+.s-pill{font-size:10px;padding:2px 8px;border-radius:999px;}
+.p-wait{background:var(--amber-bg);color:var(--amber-text);}
+.p-done{background:var(--green-bg);color:var(--green-text);}
+.s-body{font-size:13px;color:var(--text);line-height:1.7;}
+.s-dim{font-size:12px;color:var(--text3);}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px;margin-bottom:12px;}
+.mc{background:var(--bg2);border-radius:var(--r);padding:9px 12px;}
+.ml{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;}
+.mv{font-size:15px;font-weight:500;}
+.dl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;margin-top:8px;}
+.dv{font-size:13px;line-height:1.6;}
+.sp{display:inline-block;width:11px;height:11px;border:2px solid var(--border2);border-top-color:var(--text2);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:5px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.fade{animation:fi .3s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;display:inline-block;}
+.dot.live{background:#639922;animation:pulse 2s infinite;}
+.dot.loading{background:#EF9F27;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.rbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);margin-bottom:12px;font-size:12px;color:var(--text2);flex-wrap:wrap;}
+.frow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.fb{font-size:12px;padding:4px 11px;border-radius:999px;border:0.5px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;}
+.fb.on{background:var(--bg2);color:var(--text);border-color:var(--border2);font-weight:500;}
+.alert-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:7px;}
+.notif{background:var(--green-bg);border:0.5px solid var(--green-text);border-radius:var(--r);padding:9px 14px;font-size:12px;color:var(--green-text);margin-bottom:12px;display:none;}
+.notif.on{display:block;}
+.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px;}
+.url-entry{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:11px 14px;margin-bottom:7px;}
+.url-time{font-size:10px;color:var(--text3);margin-bottom:5px;}
+.url-new{font-size:10px;background:var(--amber-bg);color:var(--amber-text);padding:1px 6px;border-radius:999px;margin-left:6px;}
+.copy-btn{font-size:11px;padding:3px 9px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;margin-top:8px;}
+.copy-btn:hover{background:var(--bg2);}
+.tw-search-row{display:flex;gap:8px;margin-bottom:10px;}
+.tw-input{flex:1;font-size:14px;height:42px;}
+.tw-go{height:42px;padding:0 20px;font-size:14px;font-weight:600;border-radius:var(--r);border:none;background:#000;color:#fff;cursor:pointer;}
+.tw-go:hover{background:#222;}
+.tw-result-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.no-api{background:var(--amber-bg);border:0.5px solid var(--amber-text);border-radius:var(--rl);padding:16px 20px;margin-bottom:16px;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo">&#128737;</div>
+  <div>
+    <div class="hdr-title">SOC Alert Intel Hub</div>
+    <div class="hdr-sub">Unified search &middot; All sources &middot; Live monitoring</div>
+  </div>
+  <div class="hdr-clock" id="clock"></div>
+</div>
+
+<div class="layout">
+<div class="sidebar">
+  <div class="sb-sec">Workspaces</div>
+  <button class="sb-btn active" id="sb-inv"      onclick="showPage('inv')">      <span class="sb-ic">&#128269;</span>Investigations</button>
+  <button class="sb-btn"        id="sb-twitter"  onclick="showPage('twitter')">  <span class="sb-ic">&#120143;</span>X / Twitter</button>
+  <button class="sb-btn"        id="sb-physical" onclick="showPage('physical')"> <span class="sb-ic">&#127758;</span>Physical Monitor</button>
+  <button class="sb-btn"        id="sb-urlmon"   onclick="showPage('urlmon')">   <span class="sb-ic">&#128225;</span>URL Monitor</button>
+  <div class="sb-div"></div>
+  <div class="sb-sec">Tool Sources</div>
+  <button class="sb-btn" id="sb-tool-CrowdStrike" onclick="showPage('tool','CrowdStrike')"><span class="sb-ic">&#129413;</span>CrowdStrike</button>
+  <button class="sb-btn" id="sb-tool-SentinelOne" onclick="showPage('tool','SentinelOne')"><span class="sb-ic">&#9889;</span>SentinelOne</button>
+  <button class="sb-btn" id="sb-tool-Defender"    onclick="showPage('tool','Defender')">   <span class="sb-ic">&#129695;</span>MS Defender</button>
+  <button class="sb-btn" id="sb-tool-Splunk"      onclick="showPage('tool','Splunk')">     <span class="sb-ic">&#128202;</span>Splunk</button>
+  <button class="sb-btn" id="sb-tool-Everbridge"  onclick="showPage('tool','Everbridge')"> <span class="sb-ic">&#128276;</span>Everbridge</button>
+  <button class="sb-btn" id="sb-tool-PaloAlto"    onclick="showPage('tool','PaloAlto')">   <span class="sb-ic">&#128293;</span>Palo Alto</button>
+  <div class="sb-div"></div>
+  <div class="sb-sec">OSINT Resources</div>
+  <button class="sb-btn" id="sb-osint" onclick="showPage('osint')"><span class="sb-ic">&#127760;</span>OSINT Directory</button>
+  <button class="sb-btn" onclick="window.open('https://citizen.com/explore','_blank')">      <span class="sb-ic">&#128205;</span>Citizen</button>
+  <button class="sb-btn" onclick="window.open('https://osintframework.com/','_blank')">       <span class="sb-ic">&#128193;</span>OSINT Framework</button>
+  <div class="sb-div"></div>
+  <div class="sb-sec">Weather &amp; Fire</div>
+  <button class="sb-btn" onclick="window.open('https://www.nhc.noaa.gov/','_blank')">         <span class="sb-ic">&#127744;</span>NHC Hurricanes</button>
+  <button class="sb-btn" onclick="window.open('https://www.spc.noaa.gov/','_blank')">         <span class="sb-ic">&#127786;</span>SPC Storms</button>
+  <button class="sb-btn" onclick="window.open('https://app.watchduty.org/','_blank')">        <span class="sb-ic">&#128293;</span>Watch Duty</button>
+  <button class="sb-btn" onclick="window.open('https://www.fire.ca.gov/','_blank')">          <span class="sb-ic">&#127795;</span>CAL FIRE</button>
+  <div class="sb-div"></div>
+  <button class="sb-btn" id="sb-about" onclick="showPage('about')"><span class="sb-ic">&#8505;</span>About / Setup</button>
+</div>
+
+<div class="main" id="main-content"></div>
+</div>
+
+<script>
+const API_URL='https://api.groq.com/openai/v1/chat/completions';
+const MODEL='llama-3.3-70b-versatile';
+
+function getKey(){return window.SOC_CONFIG&&window.SOC_CONFIG.GROQ_API_KEY&&window.SOC_CONFIG.GROQ_API_KEY!=='YOUR_GROQ_API_KEY_HERE'?window.SOC_CONFIG.GROQ_API_KEY:null;}
+
+setInterval(()=>{const el=document.getElementById('clock');if(el)el.textContent=new Date().toLocaleString();},1000);
+
+let curPage='inv',curTool='';
+
+function showPage(p,tool){
+  curPage=p;curTool=tool||'';
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
+  const sb=document.getElementById('sb-'+(p==='tool'?'tool-'+tool:p));
+  if(sb)sb.classList.add('active');
+  const mc=document.getElementById('main-content');
+  if(p==='inv')renderInv(mc);
+  else if(p==='twitter')renderTwitter(mc);
+  else if(p==='physical')renderPhysical(mc);
+  else if(p==='urlmon')renderUrlMon(mc);
+  else if(p==='tool')renderTool(mc,tool);
+  else if(p==='osint')renderOsint(mc);
+  else if(p==='about')renderAbout(mc);
+}
+
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function dType(q){if(/CVE-\d{4}-\d+/i.test(q))return'cve';if(/^[\da-f]{32,64}$/i.test(q.split(/\s/)[0]))return'hash';if(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(q))return'ip';if(/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(q.trim()))return'domain';return'general';}
+function dKey(q,t){if(t==='cve')return q.match(/CVE-\d{4}-\d+/i)[0];if(t==='hash')return q.split(/\s/)[0];if(t==='ip')return q.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)[0];if(t==='domain')return q.trim();return q.substring(0,80);}
+
+async function aiCall(system,prompt,tokens){
+  const key=getKey();
+  if(!key)return'__nokey__';
+  try{
+    const r=await fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({
+        model:MODEL,
+        max_tokens:tokens||400,
+        messages:[
+          {role:'system',content:system},
+          {role:'user',content:prompt}
+        ]
+      })
+    });
+    const d=await r.json();
+    if(d.error)return'Error: '+d.error.message;
+    return d.choices?.[0]?.message?.content||'';
+  }catch(e){return'Error: '+e.message;}
+}
+
+function noKeyBanner(){
+  return`<div class="no-api">
+    <div style="font-size:14px;font-weight:500;color:var(--amber-text);margin-bottom:6px;">&#9888; API key not configured</div>
+    <div style="font-size:13px;color:var(--amber-text);line-height:1.7;">Open <code>config.js</code> and paste your free Groq API key. Get one free at <strong>console.groq.com</strong> — no credit card needed. OSINT links and physical feeds below still work without it.</div>
+  </div>`;}
+
+function buildStreamShell(){
+  return`<div class="stream-wrap" id="stream-wrap">
+    ${[['triage','Triage brief','Analyzing severity, type, watch posture...'],
+       ['threat','Threat intel sources','Checking VirusTotal, Shodan, OTX, PANW, Pulsedive...'],
+       ['news','News &amp; community','Scanning Bleeping Computer, SANS, Reddit, GitHub...'],
+       ['phys','Physical &amp; weather','Checking NWS, FEMA, NHC, SPC, Watch Duty, CAL FIRE...'],
+       ['social','X / Twitter &amp; social signals','Scanning infosec community, hashtags, verified accounts...']]
+    .map(([id,title,hint])=>`
+    <div class="s-sec" id="ss-${id}">
+      <div class="s-hdr">
+        <span class="s-title">${title}</span>
+        <span class="s-pill p-wait" id="sp-${id}"><span class="sp"></span>Analyzing</span>
+      </div>
+      <div id="sb-${id}" class="s-dim">${hint}</div>
+    </div>`).join('')}
+  </div>`;}
+
+function updateSection(id,html,isMetrics){
+  const pill=document.getElementById('sp-'+id);
+  const body=document.getElementById('sb-'+id);
+  if(!pill||!body)return;
+  if(html==='__nokey__'){pill.className='s-pill p-wait';pill.innerHTML='No API key';body.className='s-dim';body.innerHTML='Configure API key in config.js to see AI analysis. OSINT links tab still works.';return;}
+  pill.className='s-pill p-done';pill.innerHTML='&#10003; Done';
+  body.className='s-body fade';
+  if(isMetrics){body.innerHTML=html;}
+  else{body.innerHTML=`<div>${html.replace(/\n/g,'<br>')}</div><button class="copy-btn" onclick="var t=this.previousSibling.innerText;navigator.clipboard.writeText(t).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>`;}
+}
+
+function parseTriage(text){
+  const lines=text.trim().split('\n');
+  const metrics=[],details=[];
+  lines.forEach(line=>{const ci=line.indexOf(':');if(ci<0)return;const l=line.substring(0,ci).trim(),v=line.substring(ci+1).trim();if(!v)return;if(['SEVERITY','ALERT TYPE','WATCH POSTURE','CONFIDENCE'].includes(l))metrics.push({l,v});else details.push({l,v});});
+  let h='';
+  if(metrics.length)h+=`<div class="mgrid">${metrics.map(m=>`<div class="mc"><div class="ml">${m.l}</div><div class="mv">${m.v}</div></div>`).join('')}</div>`;
+  details.forEach(d=>h+=`<div class="dl">${d.l}</div><div class="dv">${d.v}</div>`);
+  h+=`<button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.s-sec').innerText.replace('Done','').replace('Copy','').trim()).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>`;
+  return h;
+}
+
+async function runSearch(q){
+  const type=dType(q),key=dKey(q,type);
+  const [t,th,n,p,s]=await Promise.all([
+    aiCall(`SOC analyst. Respond ONLY:\nALERT TYPE: [type]\nSEVERITY: [Critical/High/Medium/Low]\nCONFIDENCE: [High/Medium/Low]\nWATCH POSTURE: [Elevated/Standard/Informational]\nSUMMARY: [2-3 sentences]\nAFFECTED SYSTEMS: [concise or Unknown]\nKNOWN THREAT ACTORS: [or N/A]\nRECOMMENDED ACTION: [1-2 sentences]\nMITRE TTPS: [top 2-3 IDs and names]`,`Triage:\n${q}`,500),
+    aiCall(`Threat intel analyst. What would VirusTotal, Shodan, AlienVault OTX, Pulsedive, Recorded Future, and PANW Threat Vault show for this indicator? Include reputation, known campaigns, related IOCs, CVSSv3 if CVE. 5-6 sentences.`,`Indicator: ${key}\nAlert: ${q.substring(0,300)}`,400),
+    aiCall(`SOC news analyst. What is Bleeping Computer, SANS ISC, Reddit r/netsec, Google News, GitHub advisories reporting about this? Include exploit availability, patch status, active campaigns. 5-6 sentences.`,`Topic: ${key}\nContext: ${q.substring(0,300)}`,400),
+    aiCall(`Physical security analyst. What would NWS, FEMA, NHC National Hurricane Center, SPC Storm Prediction Center, Watch Duty wildfire, CAL FIRE, USGS, Citizen App show? If cyber-only: "Cyber-only alert — no physical threat indicators." Otherwise give severity, regions, watch posture. 4-5 sentences.`,`Event: ${key}\nContext: ${q.substring(0,300)}`,350),
+    aiCall(`Social media threat analyst. For this alert: (1) Top X/Twitter keywords and hashtags to monitor right now, (2) Which verified accounts (CISA, security researchers, news orgs) and unverified community members are discussing this, (3) Current social media narrative, (4) Notable handles covering this topic. 6-7 sentences.`,`Indicator: ${key}\nContext: ${q.substring(0,300)}`,400)
+  ]);
+  updateSection('triage',t==='__nokey__'?'__nokey__':parseTriage(t),t!=='__nokey__');
+  updateSection('threat',th,false);
+  updateSection('news',n,false);
+  updateSection('phys',p,false);
+  updateSection('social',s,false);
+}
+
+function buildLinks(q,type,key){
+  const enc=encodeURIComponent(key);
+  const cats=[
+    {label:'Threat intelligence',links:[]},
+    {label:'CVE / Vulnerability',links:[]},
+    {label:'News &amp; community',links:[]},
+    {label:'Weather &amp; physical',links:[]},
+    {label:'X / Twitter searches',links:[]}
+  ];
+  if(type==='hash'||type==='ip'||type==='domain'){
+    cats[0].links.push({l:'VirusTotal',u:`https://www.virustotal.com/gui/search/${key}`,t:'t-red',tl:'IOC'});
+    cats[0].links.push({l:'AbuseIPDB',u:`https://www.abuseipdb.com/check/${key}`,t:'t-red',tl:'IP'});
+    cats[0].links.push({l:'Shodan',u:`https://www.shodan.io/host/${key}`,t:'t-blue',tl:'Exposure'});
+    cats[0].links.push({l:'AlienVault OTX',u:`https://otx.alienvault.com/indicator/ip/${key}`,t:'t-blue',tl:'OTX'});
+    cats[0].links.push({l:'Pulsedive',u:`https://pulsedive.com/indicator/?ioc=${enc}`,t:'t-purple',tl:'IOC'});
+  }
+  cats[0].links.push({l:'MITRE ATT&CK',u:`https://attack.mitre.org/search/?query=${enc}`,t:'t-blue',tl:'TTP'});
+  cats[0].links.push({l:'Recorded Future',u:`https://app.recordedfuture.com/live/sc/search/?q=${enc}`,t:'t-purple',tl:'Intel'});
+  cats[0].links.push({l:'PANW Threat Vault',u:'https://threatvault.paloaltonetworks.com/',t:'t-red',tl:'PANW'});
+  if(type==='cve'){cats[1].links.push({l:'NVD CVE Detail',u:`https://nvd.nist.gov/vuln/detail/${key}`,t:'t-green',tl:'CVE'});cats[1].links.push({l:'Exploit DB',u:`https://www.exploit-db.com/search?cve=${key}`,t:'t-red',tl:'Exploit'});cats[1].links.push({l:'Shodan CVE',u:`https://www.shodan.io/search?query=${enc}`,t:'t-blue',tl:'Exposure'});}
+  cats[1].links.push({l:'CISA KEV Catalog',u:'https://www.cisa.gov/known-exploited-vulnerabilities-catalog',t:'t-green',tl:'CISA'});
+  cats[1].links.push({l:'GitHub Advisories',u:`https://github.com/advisories?query=${enc}`,t:'t-blue',tl:'GitHub'});
+  cats[1].links.push({l:'NVD Search',u:`https://nvd.nist.gov/vuln/search/results?query=${enc}`,t:'t-green',tl:'NVD'});
+  cats[2].links.push({l:'Google News',u:`https://news.google.com/search?q=${enc}+cybersecurity`,t:'t-teal',tl:'News'});
+  cats[2].links.push({l:'Bleeping Computer',u:`https://www.bleepingcomputer.com/?s=${enc}`,t:'t-teal',tl:'BC'});
+  cats[2].links.push({l:'Reddit r/netsec',u:`https://www.reddit.com/r/netsec/search/?q=${enc}&sort=new`,t:'t-amber',tl:'Reddit'});
+  cats[2].links.push({l:'SANS ISC',u:`https://isc.sans.edu/search.html#q=${enc}`,t:'t-blue',tl:'SANS'});
+  cats[2].links.push({l:'GitHub Code',u:`https://github.com/search?q=${enc}&type=repositories`,t:'t-blue',tl:'GitHub'});
+  cats[2].links.push({l:'Mastodon infosec',u:`https://infosec.exchange/search?q=${enc}`,t:'t-amber',tl:'Mastodon'});
+  cats[3].links.push({l:'NWS Active Alerts',u:'https://www.weather.gov/alerts',t:'t-green',tl:'NWS'});
+  cats[3].links.push({l:'NHC Hurricanes',u:'https://www.nhc.noaa.gov/',t:'t-green',tl:'NHC'});
+  cats[3].links.push({l:'SPC Storm Center',u:'https://www.spc.noaa.gov/',t:'t-green',tl:'SPC'});
+  cats[3].links.push({l:'Watch Duty Fire',u:'https://app.watchduty.org/',t:'t-red',tl:'Fire'});
+  cats[3].links.push({l:'CAL FIRE',u:'https://www.fire.ca.gov/',t:'t-red',tl:'CA'});
+  cats[3].links.push({l:'FEMA Disasters',u:'https://www.fema.gov/disasters',t:'t-green',tl:'FEMA'});
+  cats[3].links.push({l:'Citizen App',u:'https://citizen.com/explore',t:'t-amber',tl:'Citizen'});
+  cats[4].links.push({l:'X — Latest (all accounts)',u:`https://x.com/search?q=${enc}&f=live`,t:'t-amber',tl:'Live'});
+  cats[4].links.push({l:'X — Top tweets',u:`https://x.com/search?q=${enc}`,t:'t-amber',tl:'Top'});
+  cats[4].links.push({l:'X — Verified only',u:`https://x.com/search?q=${enc}+filter%3Averified&f=live`,t:'t-amber',tl:'Verified'});
+  cats[4].links.push({l:'X — Infosec community',u:`https://x.com/search?q=${enc}+%28%23infosec+OR+%23cybersecurity%29&f=live`,t:'t-amber',tl:'Infosec'});
+  cats[4].links.push({l:'X — News outlets',u:`https://x.com/search?q=${enc}+%28from%3ACNN+OR+from%3Areuters%29&f=live`,t:'t-amber',tl:'News'});
+  let h='';
+  cats.forEach(c=>{if(!c.links.length)return;h+=`<div class="sl">${c.label}</div><div class="lg">${c.links.map(lk=>`<a class="lc" href="${lk.u}" target="_blank">${lk.l}<span class="tag ${lk.t}">${lk.tl}</span></a>`).join('')}</div>`;});
+  return h;
+}
+
+function buildXLinks(key,q){
+  const enc=encodeURIComponent(key),kenc=encodeURIComponent(q.substring(0,60));
+  const searches=[
+    {l:'Latest tweets — all accounts (verified + unverified)',u:`https://x.com/search?q=${enc}&f=live`,t:'Live'},
+    {l:'Top tweets by engagement',u:`https://x.com/search?q=${enc}`,t:'Top'},
+    {l:'Verified accounts only',u:`https://x.com/search?q=${enc}+filter%3Averified&f=live`,t:'Verified'},
+    {l:'Infosec community (#infosec #cybersecurity #threatintel)',u:`https://x.com/search?q=${enc}+%28%23infosec+OR+%23cybersecurity+OR+%23threatintel%29&f=live`,t:'Infosec'},
+    {l:'News outlets (CNN, Reuters, BBC, NYT)',u:`https://x.com/search?q=${enc}+%28from%3ACNN+OR+from%3Areuters+OR+from%3ABBCWorld+OR+from%3Anytimes%29&f=live`,t:'News'},
+    {l:'Keyword context search',u:`https://x.com/search?q=${kenc}&f=live`,t:'Keywords'},
+  ];
+  return`<div style="background:var(--amber-bg);border:0.5px solid var(--amber-text);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--amber-text);margin-bottom:12px;line-height:1.6;">
+    <strong>Important:</strong> X permanently blocks embedding in any external tool or website — this applies to everyone including paid enterprise platforms. Each link below opens the live search in a new tab using your existing X login. You will see results immediately since you are already signed in.
+  </div>`+searches.map(s=>`<div class="tw-result-card">
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:13px;font-weight:500;margin-bottom:3px;">${s.l}</div>
+      <div style="font-size:10px;color:var(--text3);word-break:break-all;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.u}</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-shrink:0;align-items:center;">
+      <span class="tag t-amber">${s.t}</span>
+      <a href="${s.u}" target="_blank" class="btn primary" style="font-size:11px;padding:4px 10px;text-decoration:none;">Open &#8599;</a>
+    </div>
+  </div>`).join('');
+}
+
+// ---- INVESTIGATIONS ----
+let invTabs=[],invActive=null,invN=0;
+function invNew(lbl){const id='i'+(++invN);invTabs.push({id,label:lbl||'Alert '+invN,sub:'paste',q:'',hasRes:false,sumHTML:'',linksHTML:'',xHTML:''});invActive=id;renderInv(document.getElementById('main-content'));return id;}
+function invSel(id){invActive=id;renderInv(document.getElementById('main-content'));}
+function invClose(id){invTabs=invTabs.filter(t=>t.id!==id);if(invActive===id)invActive=invTabs.length?invTabs[invTabs.length-1].id:null;renderInv(document.getElementById('main-content'));}
+function invGet(){return invTabs.find(t=>t.id===invActive);}
+
+function renderInv(mc){
+  if(!mc)return;
+  const tab=invGet();
+  const bar=`<div class="tabbar">${invTabs.map(t=>`<div class="t-item ${t.id===invActive?'active':''}" onclick="invSel('${t.id}')">${esc(t.label.substring(0,15))}${t.label.length>15?'...':''}<span class="t-x" onclick="event.stopPropagation();invClose('${t.id}')">&#215;</span></div>`).join('')}<button class="t-add" onclick="invNew()">+</button></div>`;
+  if(!tab){mc.innerHTML=bar+'<div class="empty">Click + to open a new investigation tab.</div>';return;}
+  mc.innerHTML=bar+`
+  <div class="card">
+    <div class="row">
+      <input type="text" id="inv-lbl" value="${esc(tab.label)}" style="flex:0 0 150px;font-weight:500;" oninput="invGet().label=this.value;" placeholder="Tab name"/>
+      <select id="inv-sub" style="flex:0 0 140px;" onchange="invGet().sub=this.value;renderInv(document.getElementById('main-content'));">
+        <option value="paste" ${tab.sub!=='manual'?'selected':''}>Paste alert</option>
+        <option value="manual" ${tab.sub==='manual'?'selected':''}>Manual lookup</option>
+      </select>
+    </div>
+    ${tab.sub==='manual'?`<input type="text" id="inv-q" value="${esc(tab.q)}" placeholder="CVE-XXXX-XXXXX  /  IP address  /  hash  /  domain  /  threat actor name" onkeydown="if(event.key==='Enter')invRun()"/>`:`<textarea id="inv-q" placeholder="Paste full alert text — Everbridge, Splunk, Defender, CrowdStrike, SentinelOne, Palo Alto...">${esc(tab.q)}</textarea>`}
+    <div class="btn-row">
+      <button class="btn primary" onclick="invRun()">&#128269; Search all sources</button>
+      <button class="btn" onclick="invClear()">Clear</button>
+    </div>
+  </div>
+  ${tab.hasRes?`
+  <div class="res-tabs" id="inv-res-tabs">
+    <button class="rt active" onclick="showRT('s',this)">Summary</button>
+    <button class="rt" onclick="showRT('l',this)">Source Links</button>
+    <button class="rt" onclick="showRT('x',this)">X / Twitter</button>
+  </div>
+  <div id="rt-s">${tab.sumHTML}</div>
+  <div id="rt-l" style="display:none;">${tab.linksHTML}</div>
+  <div id="rt-x" style="display:none;">${tab.xHTML}</div>
+  `:''}`;
+  document.getElementById('inv-sub').value=tab.sub||'paste';
+}
+
+function showRT(n,btn){
+  ['s','l','x'].forEach(k=>{const el=document.getElementById('rt-'+k);if(el)el.style.display=k===n?'block':'none';});
+  document.querySelectorAll('#inv-res-tabs .rt').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+
+async function invRun(){
+  const tab=invGet();if(!tab)return;
+  tab.sub=document.getElementById('inv-sub').value;
+  tab.q=(document.getElementById('inv-q').value||'').trim();
+  if(!tab.q)return;
+  const q=tab.q,type=dType(q),key=dKey(q,type);
+  tab.hasRes=true;
+  tab.sumHTML=buildStreamShell();
+  tab.linksHTML=buildLinks(q,type,key);
+  tab.xHTML=buildXLinks(key,q);
+  renderInv(document.getElementById('main-content'));
+  const sumEl=document.getElementById('rt-s');
+  if(sumEl)sumEl.innerHTML=tab.sumHTML;
+  await runSearch(q);
+  const sw=document.getElementById('stream-wrap');
+  if(sw)tab.sumHTML=sw.outerHTML;
+}
+function invClear(){const tab=invGet();if(!tab)return;tab.q='';tab.hasRes=false;tab.sumHTML='';tab.linksHTML='';tab.xHTML='';renderInv(document.getElementById('main-content'));}
+
+// ---- TOOL TABS ----
+const TS={};
+function renderTool(mc,tool){
+  if(!mc)return;
+  const s=TS[tool]||{};
+  mc.innerHTML=`
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:8px;">${tool} — Alert Analysis</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;">Paste an alert. All 5 source sections stream in simultaneously. Auto-refreshes every 15 min with history log.</p>
+    <textarea id="tool-ta" placeholder="Paste ${tool} alert text here...">${esc(s.q||'')}</textarea>
+    <div class="btn-row">
+      <button class="btn primary" onclick="toolRun('${tool}')">&#128269; Search all sources</button>
+      <button class="btn" onclick="toolClear('${tool}')">Clear</button>
+    </div>
+  </div>
+  ${!getKey()?noKeyBanner():''}
+  <div id="tool-res">${s.resHTML||''}</div>
+  <div id="tool-links-wrap" style="display:${s.linksHTML?'block':'none'};">
+    <div class="sl">All source links</div>
+    <div id="tool-links">${s.linksHTML||''}</div>
+  </div>
+  <div id="tool-log"></div>`;
+  toolRenderLog(tool);
+}
+
+async function toolRun(tool){
+  const q=(document.getElementById('tool-ta').value||'').trim();if(!q)return;
+  if(!TS[tool])TS[tool]={q:'',resHTML:'',linksHTML:'',log:[],intv:null,next:null};
+  const s=TS[tool];s.q=q;
+  const type=dType(q),key=dKey(q,type);
+  s.linksHTML=buildLinks(q,type,key);
+  const lw=document.getElementById('tool-links-wrap');if(lw)lw.style.display='block';
+  const lg=document.getElementById('tool-links');if(lg)lg.innerHTML=s.linksHTML;
+  const shell=buildStreamShell();
+  const res=document.getElementById('tool-res');if(res)res.innerHTML=shell;
+  s.resHTML=shell;
+  await runSearch(q);
+  const sw=document.getElementById('stream-wrap');if(sw)s.resHTML=sw.outerHTML;
+  s.log.unshift({time:new Date().toLocaleString(),html:s.resHTML,isNew:s.log.length>0});
+  if(s.log.length>6)s.log.pop();
+  toolRenderLog(tool);
+  if(!s.intv){
+    s.next=Date.now()+15*60*1000;
+    s.intv=setInterval(async()=>{
+      if(!s.q)return;
+      if(curPage==='tool'&&curTool===tool){const r=document.getElementById('tool-res');if(r)r.innerHTML=buildStreamShell();}
+      await runSearch(s.q);
+      const sw2=document.getElementById('stream-wrap');if(sw2)s.resHTML=sw2.outerHTML;
+      s.log.unshift({time:new Date().toLocaleString(),html:s.resHTML,isNew:true});
+      if(s.log.length>6)s.log.pop();
+      s.next=Date.now()+15*60*1000;
+      if(curPage==='tool'&&curTool===tool)toolRenderLog(tool);
+    },15*60*1000);
+  }
+}
+
+function toolClear(tool){const s=TS[tool]||{};if(s.intv)clearInterval(s.intv);TS[tool]={};renderTool(document.getElementById('main-content'),tool);}
+
+function toolRenderLog(tool){
+  const s=TS[tool];const el=document.getElementById('tool-log');
+  if(!el||!s||!s.log||!s.log.length)return;
+  const rem=s.next?Math.max(0,Math.ceil((s.next-Date.now())/1000)):0;
+  const m=Math.floor(rem/60),sc=rem%60;
+  el.innerHTML=`<div class="sl" style="display:flex;align-items:center;justify-content:space-between;"><span>Refresh history</span><span style="font-size:10px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;">${rem?`Auto-refresh every 15 min · next in ${m}:${sc.toString().padStart(2,'0')}`:'Auto-refreshing every 15 min'}</span></div>`+
+  s.log.map((e,i)=>`<div class="url-entry"><div class="url-time">${e.time}${e.isNew?'<span class="url-new">Updated</span>':''}</div>${i===0?e.html:`<details><summary style="font-size:12px;color:var(--text2);cursor:pointer;">View snapshot</summary><div style="margin-top:8px;">${e.html}</div></details>`}</div>`).join('');
+}
+
+// ---- TWITTER ----
+let twTabs=[],twActive=null,twN=0,twFilt='live';
+function renderTwitter(mc){
+  if(!mc)return;
+  const bar=`<div class="tabbar" id="tw-bar">${twTabs.map(t=>`<div class="t-item ${t.id===twActive?'active':''}" onclick="twSel('${t.id}')">${esc(t.kw.substring(0,14))}${t.kw.length>14?'...':''} <span style="font-size:10px;opacity:.6;">${t.label}</span><span class="t-x" onclick="event.stopPropagation();twClose('${t.id}')">&#215;</span></div>`).join('')}<button class="t-add" onclick="document.getElementById('tw-in').focus()">+</button></div>`;
+  mc.innerHTML=`
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px;">&#120143; X / Twitter Search</div>
+    <div class="tw-search-row">
+      <input type="text" class="tw-input" id="tw-in" placeholder="Type keywords — e.g. flooding Texas   CVE-2024-1234   ransomware attack" onkeydown="if(event.key==='Enter')twAdd()"/>
+      <button class="tw-go" onclick="twAdd()">Search &#120143;</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+      <span style="font-size:11px;color:var(--text3);align-self:center;">Filter:</span>
+      <button class="fb on" id="twf-live" onclick="twF('live',this)">Latest — all accounts</button>
+      <button class="fb" id="twf-top" onclick="twF('top',this)">Top tweets</button>
+      <button class="fb" id="twf-verified" onclick="twF('verified',this)">Verified only</button>
+      <button class="fb" id="twf-infosec" onclick="twF('infosec',this)">Infosec community</button>
+      <button class="fb" id="twf-news" onclick="twF('news',this)">News outlets</button>
+    </div>
+    <div style="font-size:11px;color:var(--text3);line-height:1.6;">
+      X blocks embedding in ALL external tools — this is permanent and affects everyone including enterprise platforms. Each search opens in a new tab using your existing X login. You will see tweets immediately since you are signed in.
+    </div>
+  </div>
+  ${bar}
+  <div id="tw-body">${twActive?twBody():'<div class="empty" style="padding:50px 20px;"><div style="font-size:32px;margin-bottom:10px;">&#120143;</div><div style="font-size:14px;font-weight:500;color:var(--text2);margin-bottom:5px;">Type keywords above and press Enter or click Search</div><div style="font-size:12px;">Each search opens in its own tab · verified and unverified accounts</div></div>'}</div>`;
+  const fEl=document.getElementById('twf-'+twFilt);
+  if(fEl){document.querySelectorAll('[id^=twf-]').forEach(b=>b.classList.remove('on'));fEl.classList.add('on');}
+}
+
+function twF(f,el){twFilt=f;document.querySelectorAll('[id^=twf-]').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');}
+function twAdd(){
+  const inp=document.getElementById('tw-in');if(!inp||!inp.value.trim())return;
+  const kw=inp.value.trim(),enc=encodeURIComponent(kw);
+  const urls={live:`https://x.com/search?q=${enc}&f=live`,top:`https://x.com/search?q=${enc}`,verified:`https://x.com/search?q=${enc}+filter%3Averified&f=live`,infosec:`https://x.com/search?q=${enc}+%28%23infosec+OR+%23cybersecurity%29&f=live`,news:`https://x.com/search?q=${enc}+%28from%3ACNN+OR+from%3Areuters+OR+from%3ABBCWorld%29&f=live`};
+  const labels={live:'Latest',top:'Top',verified:'Verified',infosec:'Infosec',news:'News'};
+  const id='tw'+(++twN);
+  twTabs.push({id,kw,url:urls[twFilt]||urls.live,label:labels[twFilt]||'Latest'});
+  twActive=id;inp.value='';
+  renderTwitter(document.getElementById('main-content'));
+  window.open(twTabs.find(t=>t.id===id).url,'_blank');
+}
+function twSel(id){twActive=id;renderTwitter(document.getElementById('main-content'));}
+function twClose(id){twTabs=twTabs.filter(t=>t.id!==id);if(twActive===id)twActive=twTabs.length?twTabs[twTabs.length-1].id:null;renderTwitter(document.getElementById('main-content'));}
+function twBody(){
+  const tab=twTabs.find(t=>t.id===twActive);if(!tab)return'';
+  return`<div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rl);padding:16px 18px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+      <span style="font-size:14px;font-weight:500;flex:1;">"${esc(tab.kw)}"</span>
+      <span class="tag t-amber">${tab.label} · verified + unverified</span>
+      <a href="${tab.url}" target="_blank" class="btn primary" style="text-decoration:none;">Open in X &#8599;</a>
+    </div>
+    <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px;">The search opened in a new tab. Switch to that tab to see live tweets. Come back here to open more searches or switch between your saved tabs below.</p>
+    ${twTabs.length>1?`<div class="sl">All saved searches</div><div class="lg">${twTabs.map(t=>`<div class="lc" onclick="twSel('${t.id}');window.open('${t.url}','_blank')" style="cursor:pointer;${t.id===twActive?'border-color:var(--blue-text);':''}">${esc(t.kw.substring(0,22))}<span class="tag t-amber">${t.label}</span></div>`).join('')}</div>`:''}
+  </div>`;}
+
+// ---- PHYSICAL ----
+let physAll=[],physFilt='all',physIntv=null,physNext=null,physCDIntv=null;
+function physCat(e){const t=((e.event||'')+(e.headline||'')+(e.title||'')).toLowerCase();if(/flood|flash flood|coastal|surge|tsunami/.test(t))return'flood';if(/fire|wildfire|red flag/.test(t))return'fire';if(/hazmat|chemical|spill|toxic|radiation/.test(t))return'hazmat';if(/civil|unrest|protest|riot|curfew/.test(t))return'civil';return'weather';}
+function physSev(s){const sl=(s||'').toLowerCase();if(sl==='extreme'||sl==='critical')return't-red';if(sl==='severe'||sl==='high')return't-amber';if(sl==='moderate')return't-blue';return't-green';}
+async function fNWS(){try{const r=await fetch('https://api.weather.gov/alerts/active?status=actual&limit=50',{headers:{Accept:'application/geo+json','User-Agent':'SOCHub/6.0'}});if(!r.ok)return[];const d=await r.json();return(d.features||[]).map(f=>{const p=f.properties||{};return{id:f.id+'',title:p.event||'NWS Alert',headline:p.headline||'',area:p.areaDesc||'',severity:p.severity||'Unknown',sent:p.sent||'',cat:physCat(p),source:'NWS',url:'https://www.weather.gov/alerts'};});}catch(e){return[];}}
+async function fUSGS(){try{const r=await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson');if(!r.ok)return[];const d=await r.json();return(d.features||[]).slice(0,5).map(f=>{const p=f.properties||{};return{id:f.id+'',title:`Earthquake M${p.mag||'?'}`,headline:p.title||'',area:p.place||'',severity:p.mag>=7?'Extreme':p.mag>=5?'Severe':'Moderate',sent:new Date(p.time||Date.now()).toISOString(),cat:'weather',source:'USGS',url:p.url||'https://earthquake.usgs.gov'};});}catch(e){return[];}}
+async function fFEMA(){try{const r=await fetch('https://www.fema.gov/api/open/v2/disasterDeclarationsSummaries?$orderby=declarationDate%20desc&$top=12');if(!r.ok)return[];const d=await r.json();return(d.DisasterDeclarationsSummaries||[]).map(f=>({id:'fema-'+f.disasterNumber,title:`FEMA: ${f.incidentType}`,headline:`${f.declarationTitle} — ${f.state}`,area:f.state||'',severity:'Severe',sent:f.declarationDate||'',cat:(f.incidentType||'').toLowerCase().includes('fire')?'fire':'flood',source:'FEMA',url:`https://www.fema.gov/disaster/${f.disasterNumber}`}));}catch(e){return[];}}
+async function fGDELT(){try{const q=encodeURIComponent('protest OR riot OR HAZMAT OR "chemical spill"');const r=await fetch(`https://api.gdeltproject.org/api/v2/doc/doc?query=${q}&mode=artlist&maxrecords=8&format=json`);if(!r.ok)return[];const d=await r.json();return(d.articles||[]).slice(0,6).map((a,i)=>({id:'g'+i+Date.now(),title:a.title||'GDELT',headline:a.domain||'',area:a.sourcecountry||'',severity:'Moderate',sent:a.seendate||'',cat:/hazmat|chemical/.test((a.title||'').toLowerCase())?'hazmat':'civil',source:'GDELT',url:a.url||'https://gdeltproject.org'}));}catch(e){return[];}}
+
+function renderPhysical(mc){
+  if(!mc)return;
+  mc.innerHTML=`
+  <div class="card">
+    <div class="row"><input type="text" id="phys-loc" placeholder="Filter by state or region — leave blank for all US" style="flex:1;"/><button class="btn primary" onclick="physFetch(true)">Refresh now</button></div>
+    <div class="rbar"><span class="dot" id="phys-dot"></span><span id="phys-lbl">Not started</span><span style="font-size:11px;color:var(--text3);" id="phys-cd"></span>
+      <button class="btn primary" id="phys-start" onclick="physStart()" style="margin-left:auto;font-size:11px;padding:5px 12px;">Start auto-refresh (15 min)</button>
+      <button class="btn" id="phys-stop" style="display:none;font-size:11px;padding:5px 12px;" onclick="physStop()">Stop</button>
+    </div>
+  </div>
+  <div id="phys-notif" class="notif"></div>
+  <div class="frow"><button class="fb on" onclick="pF('all',this)">All</button><button class="fb" onclick="pF('flood',this)">Floods</button><button class="fb" onclick="pF('fire',this)">Wildfires</button><button class="fb" onclick="pF('civil',this)">Civil unrest</button><button class="fb" onclick="pF('hazmat',this)">HAZMAT</button><button class="fb" onclick="pF('weather',this)">Severe weather</button></div>
+  <div id="phys-feed"><div class="empty">Press Start or Refresh to load live alerts.</div></div>`;
+  physRender();
+}
+async function physFetch(manual){
+  const feed=document.getElementById('phys-feed');if(manual&&feed)feed.innerHTML='<div class="empty"><span class="sp"></span> Fetching...</div>';
+  const dot=document.getElementById('phys-dot');if(dot){dot.className='dot loading';}
+  const loc=((document.getElementById('phys-loc')||{}).value||'').trim().toLowerCase();
+  const[nws,usgs,fema,gdelt]=await Promise.all([fNWS(),fUSGS(),fFEMA(),fGDELT()]);
+  let all=[...nws,...usgs,...fema,...gdelt];
+  if(loc)all=all.filter(a=>(a.area+a.headline).toLowerCase().includes(loc));
+  const ord={Extreme:0,Severe:1,Moderate:2,Minor:3,Unknown:4};
+  all.sort((a,b)=>(ord[a.severity]||4)-(ord[b.severity]||4));
+  const prev=new Set(physAll.map(a=>a.id));
+  const nw=all.filter(a=>!prev.has(a.id));physAll=all;
+  if(nw.length&&prev.size){const nb=document.getElementById('phys-notif');if(nb){nb.textContent=`${nw.length} new alert${nw.length>1?'s':''} — ${nw.slice(0,2).map(a=>a.title).join(', ')}`;nb.className='notif on';setTimeout(()=>nb.className='notif',8000);}}
+  if(dot)dot.className='dot live';
+  const lbl=document.getElementById('phys-lbl');if(lbl)lbl.textContent='Updated '+new Date().toLocaleTimeString();
+  physRender();
+}
+function physRender(){
+  const feed=document.getElementById('phys-feed');if(!feed)return;
+  const cl={flood:'Flood',fire:'Wildfire',hazmat:'HAZMAT',civil:'Civil Unrest',weather:'Weather'};
+  let f=physFilt==='all'?physAll:physAll.filter(a=>a.cat===physFilt);
+  if(!f.length){feed.innerHTML='<div class="empty">No alerts for this filter.</div>';return;}
+  feed.innerHTML=f.map(a=>{const time=a.sent?new Date(a.sent).toLocaleString():'';
+    return`<div class="alert-card"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;"><div><div style="font-size:13px;font-weight:500;">${a.title}</div><div style="font-size:11px;color:var(--text3);margin-top:2px;">${a.source} · ${cl[a.cat]||'Alert'}${a.area?' · '+a.area.substring(0,55):''}</div></div><span class="tag ${physSev(a.severity)}">${a.severity}</span></div>${a.headline?`<div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.5;">${a.headline.substring(0,180)}${a.headline.length>180?'...':''}</div>`:''}<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;"><span style="font-size:11px;color:var(--text3);">${time}</span><a href="${a.url}" target="_blank" style="font-size:11px;color:var(--blue-text);text-decoration:none;">View source &#8599;</a></div></div>`}).join('');
+}
+function pF(f,el){physFilt=f;document.querySelectorAll('.frow .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');physRender();}
+function physStart(){physFetch(true);physNext=Date.now()+15*60*1000;physIntv=setInterval(()=>{physFetch(false);physNext=Date.now()+15*60*1000;},15*60*1000);physCDIntv=setInterval(()=>{const cd=document.getElementById('phys-cd');if(cd){const rem=Math.max(0,Math.ceil((physNext-Date.now())/1000));cd.textContent=`· next in ${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;}},1000);document.getElementById('phys-start').style.display='none';document.getElementById('phys-stop').style.display='';}
+function physStop(){clearInterval(physIntv);clearInterval(physCDIntv);physIntv=null;const dot=document.getElementById('phys-dot');if(dot)dot.className='dot';const lbl=document.getElementById('phys-lbl');if(lbl)lbl.textContent='Stopped';document.getElementById('phys-start').style.display='';document.getElementById('phys-stop').style.display='none';}
+
+// ---- URL MONITOR ----
+const UM={};let umN=0;
+function renderUrlMon(mc){
+  if(!mc)return;
+  mc.innerHTML=`
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:8px;">&#128225; URL / Feed Monitor</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.6;">Paste any URL — CISA advisory, CVE page, threat blog, news article. The tool fetches and summarizes it on your schedule and highlights what changed since last check.</p>
+    <div class="row"><input type="text" id="um-url" placeholder="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" style="flex:1;"/>
+    <select id="um-int" style="flex:0 0 140px;"><option value="5">Every 5 min</option><option value="10">Every 10 min</option><option value="15" selected>Every 15 min</option><option value="30">Every 30 min</option></select></div>
+    <div class="btn-row"><button class="btn primary" onclick="umAdd()">Start monitoring &#8599;</button></div>
+  </div>
+  <div id="um-list"></div>`;
+  umRender();
+}
+function umAdd(){
+  const url=((document.getElementById('um-url')||{}).value||'').trim();
+  const interval=parseInt(((document.getElementById('um-int')||{}).value)||'15');
+  if(!url)return;
+  const id='u'+(++umN);
+  UM[id]={id,url,interval,log:[],intv:null,cdIntv:null,next:null};
+  document.getElementById('um-url').value='';
+  umRender();umFetch(id);
+  UM[id].next=Date.now()+interval*60*1000;
+  UM[id].intv=setInterval(()=>umFetch(id),interval*60*1000);
+  UM[id].cdIntv=setInterval(()=>{const el=document.getElementById('um-cd-'+id);if(!el)return;const rem=Math.max(0,Math.ceil((UM[id].next-Date.now())/1000));el.textContent=`Next in ${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;},1000);
+}
+async function umFetch(id){
+  const m=UM[id];if(!m)return;
+  const eid='e'+Date.now(),time=new Date().toLocaleString();
+  m.log.unshift({id:eid,time,html:'<span class="sp"></span> Fetching and analyzing...',isNew:false});
+  umRender();
+  const text=await aiCall('SOC analyst monitoring a URL for the security team. Summarize the page content focusing on threats, CVEs, incidents, advisories. Be concise. If this is a repeat check, clearly state what is NEW or CHANGED since the last check. Plain readable text.',`Monitor for security updates (check #${m.log.length}):\n${m.url}`,500);
+  const entry=m.log.find(e=>e.id===eid);
+  if(entry){entry.html=text&&text!=='__nokey__'?`<div style="font-size:13px;color:var(--text);line-height:1.7;">${text.replace(/\n/g,'<br>')}</div><button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousSibling.innerText).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>`:`<span style="font-size:12px;color:var(--text3);">${text==='__nokey__'?'Configure API key in config.js to enable AI summaries.':'Could not fetch.'}</span>`;entry.isNew=m.log.length>1;}
+  if(m.next)m.next=Date.now()+(m.interval*60*1000);
+  umRender();
+}
+function umRemove(id){const m=UM[id];if(m){clearInterval(m.intv);clearInterval(m.cdIntv);}delete UM[id];umRender();}
+function umRender(){
+  const cont=document.getElementById('um-list');if(!cont)return;
+  const keys=Object.keys(UM);
+  if(!keys.length){cont.innerHTML='<div class="empty">No URLs being monitored.</div>';return;}
+  cont.innerHTML=keys.map(id=>{const m=UM[id];return`<div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;"><span class="dot live"></span><span style="font-size:13px;font-weight:500;flex:1;word-break:break-all;">${m.url}</span><span style="font-size:11px;color:var(--text3);">Every ${m.interval} min</span><span style="font-size:11px;color:var(--text3);" id="um-cd-${id}"></span><button class="btn danger" style="font-size:11px;padding:4px 10px;" onclick="umRemove('${id}')">Remove</button></div>${m.log.map((e,i)=>`<div class="url-entry"><div class="url-time">${e.time}${e.isNew?'<span class="url-new">New update</span>':''}</div>${i===0?e.html:`<details><summary style="font-size:12px;color:var(--text2);cursor:pointer;">Earlier snapshot</summary><div style="margin-top:6px;">${e.html}</div></details>`}</div>`).join('')}</div>`;}).join('');
+}
+
+// ---- OSINT ----
+function renderOsint(mc){
+  if(!mc)return;
+  const cats=[
+    {l:'General',lks:[{l:'X / Twitter',u:'https://x.com',t:'t-amber',tl:'Login req.'},{l:'Citizen',u:'https://citizen.com/explore',t:'t-blue',tl:'Limited'},{l:'OSINT Framework',u:'https://osintframework.com/',t:'t-purple',tl:'Free'}]},
+    {l:'Weather',lks:[{l:'NHC Hurricanes',u:'https://www.nhc.noaa.gov/',t:'t-green',tl:'Free'},{l:'SPC Storms',u:'https://www.spc.noaa.gov/',t:'t-green',tl:'Free'},{l:'NWS Alerts',u:'https://www.weather.gov/alerts',t:'t-green',tl:'Free'}]},
+    {l:'Wildfire',lks:[{l:'Watch Duty',u:'https://app.watchduty.org/',t:'t-red',tl:'Best'},{l:'CAL FIRE',u:'https://www.fire.ca.gov/',t:'t-red',tl:'CA'}]},
+    {l:'Threat intelligence',lks:[{l:'VirusTotal',u:'https://www.virustotal.com/',t:'t-red',tl:'IOC'},{l:'Shodan',u:'https://www.shodan.io/',t:'t-blue',tl:'Exposure'},{l:'AlienVault OTX',u:'https://otx.alienvault.com/',t:'t-blue',tl:'Free'},{l:'MITRE ATT&CK',u:'https://attack.mitre.org/',t:'t-blue',tl:'TTP'},{l:'AbuseIPDB',u:'https://www.abuseipdb.com/',t:'t-red',tl:'IP'},{l:'Pulsedive',u:'https://pulsedive.com/',t:'t-purple',tl:'Free'},{l:'Recorded Future',u:'https://app.recordedfuture.com/',t:'t-purple',tl:'Paid'},{l:'PANW Threat Vault',u:'https://threatvault.paloaltonetworks.com/',t:'t-red',tl:'PANW'}]},
+    {l:'CVE / Vulnerability',lks:[{l:'NVD NIST',u:'https://nvd.nist.gov/',t:'t-green',tl:'CVE'},{l:'Exploit DB',u:'https://www.exploit-db.com/',t:'t-red',tl:'Exploits'},{l:'CISA KEV',u:'https://www.cisa.gov/known-exploited-vulnerabilities-catalog',t:'t-green',tl:'CISA'},{l:'GitHub Advisories',u:'https://github.com/advisories',t:'t-blue',tl:'Free'}]},
+    {l:'News & community',lks:[{l:'Bleeping Computer',u:'https://www.bleepingcomputer.com/',t:'t-teal',tl:'News'},{l:'Reddit r/netsec',u:'https://www.reddit.com/r/netsec/',t:'t-amber',tl:'Community'},{l:'Mastodon infosec',u:'https://infosec.exchange/',t:'t-amber',tl:'Community'},{l:'SANS ISC',u:'https://isc.sans.edu/',t:'t-blue',tl:'Free'}]}
+  ];
+  mc.innerHTML=`<div class="card">`+cats.map(c=>`<div class="sl">${c.l}</div><div class="lg">${c.lks.map(lk=>`<a class="lc" href="${lk.u}" target="_blank">${lk.l}<span class="tag ${lk.t}">${lk.tl}</span></a>`).join('')}</div>`).join('')+`</div>`;
+}
+
+// ---- ABOUT ----
+function renderAbout(mc){
+  if(!mc)return;
+  mc.innerHTML=`<div class="card">
+    <div style="font-size:15px;font-weight:600;margin-bottom:14px;">Setup &amp; About</div>
+    <div class="sl">Step 1 — Get your free Groq API key</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">Go to <a href="https://console.groq.com" target="_blank" style="color:var(--blue-text);">console.groq.com</a>, sign in, click API Keys, and create a new key. Copy it.</p>
+    <div class="sl">Step 2 — Paste it into config.js</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">Open the <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;">config.js</code> file and replace <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;">YOUR_GROQ_API_KEY_HERE</code> with your key.</p>
+    <div class="sl">Step 3 — Push to GitHub Pages</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.9;">
+      1. Create a free account at <a href="https://github.com" target="_blank" style="color:var(--blue-text);">github.com</a><br>
+      2. Click New Repository &rarr; name it <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;">soc-hub</code> &rarr; set to <strong>Private</strong> &rarr; Create<br>
+      3. Upload both files: <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;">index.html</code> and <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;">config.js</code><br>
+      4. Go to Settings &rarr; Pages &rarr; Source: Deploy from branch &rarr; branch: main &rarr; Save<br>
+      5. Your URL will be: <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;">https://yourusername.github.io/soc-hub</code><br>
+      6. Share that URL with your coworkers — that's it
+    </div>
+    <div class="sl" style="margin-top:16px;">About X / Twitter</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;">X permanently blocks all third-party embedding — this applies to every tool in the world, including paid enterprise platforms. Each X search opens in a new tab using your existing browser login. You see real tweets immediately.</p>
+    <div class="sl">Current API key status</div>
+    <p style="font-size:13px;${getKey()?'color:var(--green-text);':'color:var(--amber-text);'}font-weight:500;">${getKey()?'&#10003; API key configured — AI analysis is active':'&#9888; No API key — edit config.js to enable AI analysis'}</p>
+  </div>`;}
+
+// ---- INIT ----
+invNew('Alert 1');
+showPage('inv');
+</script>
+</body>
+</html>
