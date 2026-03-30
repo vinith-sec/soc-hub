@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Complete OSINT Framework Directory — SOC Hub</title>
+<style>
+:root{--bg:#fff;--bg2:#f5f5f4;--bg3:#ebebea;--text:#1a1a1a;--text2:#555550;--text3:#888780;--border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);--blue-bg:#E6F1FB;--blue-text:#185FA5;--green-bg:#EAF3DE;--green-text:#3B6D11;--red-bg:#FCEBEB;--red-text:#A32D2D;--amber-bg:#FAEEDA;--amber-text:#854F0B;--purple-bg:#EEEDFE;--purple-text:#534AB7;--teal-bg:#E1F5EE;--teal-text:#0F6E56;--r:8px;--rl:12px;}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#252522;--bg3:#2a2a27;--text:#f0ede8;--text2:#a8a49e;--text3:#6e6b65;--border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.18);--blue-bg:#0c447c;--blue-text:#B5D4F4;--green-bg:#27500a;--green-text:#C0DD97;--red-bg:#791f1f;--red-text:#F7C1C1;--amber-bg:#633806;--amber-text:#FAC775;--purple-bg:#3c3489;--purple-text:#CECBF6;--teal-bg:#085041;--teal-text:#9FE1CB;}}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:13px;}
+.hdr{background:var(--bg);border-bottom:0.5px solid var(--border2);padding:12px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;}
+.hdr-title{font-size:15px;font-weight:600;}.hdr-sub{font-size:11px;color:var(--text3);}
+.search-bar{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.search-bar input{padding:6px 12px;border-radius:var(--r);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:12px;width:220px;outline:none;}
+.back-btn{font-size:12px;padding:5px 12px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;text-decoration:none;}
+.main{max-width:1100px;margin:0 auto;padding:20px;}
+.cat-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;padding:14px 16px;background:var(--bg);border-radius:var(--rl);border:0.5px solid var(--border);}
+.cat-nav a{font-size:11px;padding:3px 9px;border-radius:999px;border:0.5px solid var(--border);background:transparent;color:var(--text2);text-decoration:none;cursor:pointer;}
+.cat-nav a:hover{background:var(--bg2);color:var(--text);}
+.category{margin-bottom:28px;}
+.cat-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;padding-bottom:8px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px;}
+.cat-desc{font-size:11px;color:var(--text3);margin-bottom:10px;}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;}
+.tool-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:9px 11px;display:flex;flex-direction:column;gap:3px;text-decoration:none;color:var(--text);transition:border-color .1s;}
+.tool-card:hover{border-color:var(--border2);background:var(--bg2);}
+.tool-name{font-size:12px;font-weight:500;color:var(--text);}
+.tool-desc{font-size:10px;color:var(--text3);line-height:1.4;}
+.tool-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;}
+.tag{font-size:9px;padding:1px 5px;border-radius:999px;font-weight:500;}
+.t-free{background:var(--green-bg);color:var(--green-text);}
+.t-login{background:var(--amber-bg);color:var(--amber-text);}
+.t-paid{background:var(--bg2);color:var(--text3);}
+.t-cli{background:var(--purple-bg);color:var(--purple-text);}
+.t-live{background:var(--blue-bg);color:var(--blue-text);}
+.t-dark{background:var(--red-bg);color:var(--red-text);}
+.stats{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+.stat{background:var(--bg);border-radius:var(--r);padding:10px 16px;border:0.5px solid var(--border);}
+.stat-n{font-size:22px;font-weight:600;color:var(--text);}
+.stat-l{font-size:10px;color:var(--text3);}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div>
+    <div class="hdr-title">&#127760; Complete OSINT Framework Directory</div>
+    <div class="hdr-sub">All tools from osintframework.com + additional SOC-relevant sources &mdash; 300+ tools across 25 categories</div>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search tools..." oninput="filterTools(this.value)"/>
+    <a href="index.html" class="back-btn">&#8592; Back to SOC Hub</a>
+  </div>
+</div>
+<div class="main">
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="total-count">0</div><div class="stat-l">Total tools</div></div>
+    <div class="stat"><div class="stat-n" id="free-count">0</div><div class="stat-l">Free / no login</div></div>
+    <div class="stat"><div class="stat-n" id="login-count">0</div><div class="stat-l">Free with login</div></div>
+    <div class="stat"><div class="stat-n" id="paid-count">0</div><div class="stat-l">Paid / enterprise</div></div>
+  </div>
+  <div class="cat-nav" id="cat-nav"></div>
+  <div id="categories"></div>
+</div>
+<script>
+const CATS=[
+{id:'threat-intel',icon:'&#128737;',name:'Threat Intelligence',desc:'IOC lookup, malware analysis, threat actor tracking, reputation scoring',tools:[
+  {n:'VirusTotal',u:'https://www.virustotal.com',d:'File, URL, hash, IP, domain analysis. 90+ AV engines. Community scores.',tags:['free','login']},
+  {n:'Shodan',u:'https://www.shodan.io',d:'Internet-wide port/service scanner. Banner data, CVEs, geolocation.',tags:['free','login']},
+  {n:'Shodan Monitor',u:'https://monitor.shodan.io',d:'Monitor your attack surface on Shodan for new exposures.',tags:['login']},
+  {n:'Censys',u:'https://search.censys.io',d:'Internet scan data, certificates, services, historical records.',tags:['free','login']},
+  {n:'Greynoise',u:'https://viz.greynoise.io',d:'Classify IPs as malicious/benign/unknown. Intent tags, scanning behavior.',tags:['free','login']},
+  {n:'AlienVault OTX',u:'https://otx.alienvault.com',d:'Threat pulses, IOC sharing, malware families, threat actors.',tags:['free']},
+  {n:'Pulsedive',u:'https://pulsedive.com',d:'Risk scoring, threat feeds, linked indicators, threat types.',tags:['free','login']},
+  {n:'ThreatFox',u:'https://threatfox.abuse.ch',d:'IOC sharing platform. Malware families, confidence levels, first seen.',tags:['free']},
+  {n:'MalwareBazaar',u:'https://bazaar.abuse.ch',d:'Malware sample sharing. File type, tags, yara rules, first seen.',tags:['free']},
+  {n:'URLhaus',u:'https://urlhaus.abuse.ch',d:'Malicious URL sharing. Status, threat category, payload, reporter.',tags:['free']},
+  {n:'AbuseIPDB',u:'https://www.abuseipdb.com',d:'IP abuse reports, reputation, ISP, country, usage type.',tags:['free','login']},
+  {n:'Recorded Future',u:'https://app.recordedfuture.com',d:'Risk scores, threat actor intel, recent sightings, dark web.',tags:['paid']},
+  {n:'PANW Threat Vault',u:'https://threatvault.paloaltonetworks.com',d:'Palo Alto threat signatures, CVE details, severity, affected products.',tags:['login']},
+  {n:'Hybrid Analysis',u:'https://www.hybrid-analysis.com',d:'Automated sandbox. MITRE mapping, file/URL analysis, network traffic.',tags:['free','login']},
+  {n:'ANY.RUN',u:'https://app.any.run',d:'Interactive malware sandbox. Live task analysis, C2 connections.',tags:['free','login']},
+  {n:'Joe Sandbox',u:'https://www.joesandbox.com',d:'Deep malware analysis. Behavior analysis, YARA, network indicators.',tags:['free','login']},
+  {n:'Triage (Hatching)',u:'https://tria.ge',d:'Fast malware triage sandbox. Family detection, config extraction.',tags:['free','login']},
+  {n:'Intezer Analyze',u:'https://analyze.intezer.com',d:'Code-based malware classification. Gene analysis, family detection.',tags:['free','login']},
+  {n:'Cuckoo Sandbox',u:'https://cuckoosandbox.org',d:'Open source automated malware analysis system.',tags:['free','cli']},
+  {n:'Maltiverse',u:'https://maltiverse.com',d:'IoC threat intelligence aggregator. Scoring, feeds, blacklists.',tags:['free','login']},
+  {n:'MISP',u:'https://www.misp-project.org',d:'Open source threat intelligence platform. IOC sharing and correlation.',tags:['free','cli']},
+  {n:'OpenCTI',u:'https://opencti.io',d:'Cyber threat intelligence platform. Knowledge graph, STIX2, ATT&CK.',tags:['free','cli']},
+  {n:'Spiderfoot',u:'https://www.spiderfoot.net',d:'Automated OSINT framework. 200+ modules for recon and threat intel.',tags:['free','cli']},
+  {n:'theHarvester',u:'https://github.com/laramies/theHarvester',d:'Email, hostname, subdomain, IP, URL gathering from public sources.',tags:['free','cli']},
+  {n:'Maltego',u:'https://www.maltego.com',d:'Visual link analysis and intelligence gathering. 50+ data sources.',tags:['paid']},
+  {n:'YETI',u:'https://yeti-platform.io',d:'Threat intelligence management. IOCs, TTPs, campaigns tracking.',tags:['free','cli']},
+  {n:'Anomali ThreatStream',u:'https://www.anomali.com',d:'Enterprise threat intelligence management and enrichment platform.',tags:['paid']},
+  {n:'IBM X-Force Exchange',u:'https://exchange.xforce.ibmcloud.com',d:'Threat intelligence sharing. IPs, URLs, malware, vulnerabilities.',tags:['free','login']},
+  {n:'Cisco Talos',u:'https://talosintelligence.com',d:'IP/domain reputation, email reputation, file reputation, threat intel.',tags:['free']},
+  {n:'Lumu',u:'https://lumu.io',d:'Compromise indicators, threat illumination, network telemetry.',tags:['paid']},
+]},
+
+{id:'ip-domain',icon:'&#127760;',name:'IP Address & Domain',desc:'IP reputation, WHOIS, DNS, subdomain enumeration, BGP, ASN lookup',tools:[
+  {n:'ViewDNS',u:'https://viewdns.info',d:'Reverse IP, DNS lookup, WHOIS, port scan, IP history, traceroute.',tags:['free']},
+  {n:'DNSDumpster',u:'https://dnsdumpster.com',d:'Domain recon. DNS records, MX, TXT, subdomains, host map.',tags:['free']},
+  {n:'SecurityTrails',u:'https://securitytrails.com',d:'DNS history, WHOIS, subdomains, IP history, associated domains.',tags:['free','login']},
+  {n:'crt.sh',u:'https://crt.sh',d:'Certificate transparency logs. Find subdomains via SSL certificates.',tags:['free']},
+  {n:'Robtex',u:'https://www.robtex.com',d:'IP/domain analysis. Routes, AS, DNS, shared hosting, blacklists.',tags:['free']},
+  {n:'BGP.he.net',u:'https://bgp.he.net',d:'BGP routing, ASN lookup, IP prefix, network info, DNS records.',tags:['free']},
+  {n:'ARIN WHOIS',u:'https://search.arin.net',d:'American Registry for Internet Numbers. IP block ownership.',tags:['free']},
+  {n:'RIPE NCC',u:'https://www.ripe.net',d:'European IP registry. WHOIS, routing, abuse contacts.',tags:['free']},
+  {n:'IPinfo',u:'https://ipinfo.io',d:'IP geolocation, ISP, hostname, ASN, privacy detection.',tags:['free','login']},
+  {n:'IP-API',u:'https://ip-api.com',d:'Free IP geolocation JSON API. Country, region, city, ISP, lat/long.',tags:['free']},
+  {n:'Spamhaus',u:'https://www.spamhaus.org/lookup',d:'Spam and malware IP/domain blacklist checks. ZEN, DBL lookups.',tags:['free']},
+  {n:'MXToolbox',u:'https://mxtoolbox.com',d:'DNS, MX, blacklist, SMTP diagnostics, email header analysis.',tags:['free']},
+  {n:'Sublist3r',u:'https://github.com/aboul3la/Sublist3r',d:'Fast subdomain enumeration using search engines.',tags:['free','cli']},
+  {n:'Amass (OWASP)',u:'https://github.com/owasp-amass/amass',d:'Attack surface mapping and asset discovery tool.',tags:['free','cli']},
+  {n:'DNSlytics',u:'https://dnslytics.com',d:'Reverse DNS, IP analysis, shared hosting, analytics detection.',tags:['free']},
+  {n:'Hurricane Electric',u:'https://bgp.he.net',d:'BGP toolkit. AS info, prefixes, peers, network map.',tags:['free']},
+  {n:'FullHunt',u:'https://fullhunt.io',d:'Attack surface management. Identify and monitor internet-exposed assets.',tags:['free','login']},
+  {n:'Netlas',u:'https://netlas.io',d:'Internet scanner. Certificates, DNS, HTTP responses, host discovery.',tags:['free','login']},
+  {n:'ZoomEye',u:'https://www.zoomeye.org',d:'Chinese internet search engine for exposed devices and services.',tags:['free','login']},
+  {n:'Fofa',u:'https://fofa.info',d:'Chinese network space mapping search engine. Similar to Shodan.',tags:['free','login']},
+  {n:'BinaryEdge',u:'https://www.binaryedge.io',d:'Internet-wide scanning. Exposed services, vulnerabilities, events.',tags:['paid']},
+  {n:'Urlscan.io',u:'https://urlscan.io',d:'URL/website scanner. Screenshots, DOM, network requests, indicators.',tags:['free']},
+  {n:'URLVoid',u:'https://www.urlvoid.com',d:'URL reputation check. Multiple blacklists, website safety score.',tags:['free']},
+  {n:'WhoisXML API',u:'https://whois.whoisxmlapi.com',d:'WHOIS lookup, DNS, IP geolocation, domain availability.',tags:['free','login']},
+  {n:'DomainTools',u:'https://www.domaintools.com',d:'WHOIS history, hosting history, domain risk scoring, reverse WHOIS.',tags:['paid']},
+  {n:'PassiveDNS (DNSDB)',u:'https://www.farsightsecurity.com/tools/dnsdb',d:'Passive DNS database. Historical DNS resolutions.',tags:['paid']},
+  {n:'RiskIQ (now Microsoft)',u:'https://community.riskiq.com',d:'Digital threat management, passive DNS, WHOIS intelligence.',tags:['login']},
+]},
+
+{id:'email',icon:'&#128140;',name:'Email Investigation',desc:'Email reputation, breach checks, header analysis, email OSINT',tools:[
+  {n:'Have I Been Pwned',u:'https://haveibeenpwned.com',d:'Check if email/password was in a data breach. Free public lookup.',tags:['free']},
+  {n:'Hunter.io',u:'https://hunter.io',d:'Find email addresses for any domain. Email verification and format.',tags:['free','login']},
+  {n:'EmailRep',u:'https://emailrep.io',d:'Email reputation scoring. Risk level, recent breach, sender reputation.',tags:['free']},
+  {n:'Phonebook.cz',u:'https://phonebook.cz',d:'Email, domain, URL intelligence. Search leaked databases.',tags:['free','login']},
+  {n:'Epieos',u:'https://epieos.com',d:'Email OSINT. Find associated Google, Skype accounts, public info.',tags:['free']},
+  {n:'GHunt',u:'https://github.com/mxrch/GHunt',d:'Google account OSINT from email address. Maps, photos, YouTube.',tags:['free','cli']},
+  {n:'holehe',u:'https://github.com/megadose/holehe',d:'Check if email is registered on 120+ websites.',tags:['free','cli']},
+  {n:'IntelX',u:'https://intelx.io',d:'Search engine for leaked databases, pastes, WHOIS, documents.',tags:['free','login']},
+  {n:'Dehashed',u:'https://dehashed.com',d:'Breached database search. Emails, usernames, passwords, IPs.',tags:['paid']},
+  {n:'LeakCheck',u:'https://leakcheck.io',d:'Data breach lookup. Emails, usernames, domains in breached data.',tags:['free','login']},
+  {n:'Snusbase',u:'https://snusbase.com',d:'Database breach search. Email, username, hash, IP lookup.',tags:['paid']},
+  {n:'Email Header Analyzer',u:'https://mxtoolbox.com/EmailHeaders.aspx',d:'Parse and analyze email headers. Trace routing path, SPF, DKIM.',tags:['free']},
+  {n:'Google Admin Toolbox',u:'https://toolbox.googleapps.com/apps/messageheader/',d:'Email header analyzer from Google. Trace delivery path and delays.',tags:['free']},
+  {n:'Verify Email',u:'https://verify-email.org',d:'Check if email address exists without sending an email.',tags:['free']},
+  {n:'SMTP2Go Lookup',u:'https://www.smtp2go.com/utils/spf/',d:'SPF, DKIM, DMARC record checker and email authentication tester.',tags:['free']},
+]},
+
+{id:'username',icon:'&#128100;',name:'Username & Person Search',desc:'Find accounts, social profiles, and people across platforms',tools:[
+  {n:'Sherlock',u:'https://github.com/sherlock-project/sherlock',d:'Hunt down social media accounts by username across 300+ sites.',tags:['free','cli']},
+  {n:'WhatsMyName',u:'https://whatsmyname.app',d:'Check username across 600+ websites. Web UI version of Sherlock.',tags:['free']},
+  {n:'Namecheckr',u:'https://www.namecheckr.com',d:'Check username availability across social networks simultaneously.',tags:['free']},
+  {n:'Namechk',u:'https://namechk.com',d:'Username and domain availability checker across 100+ platforms.',tags:['free']},
+  {n:'Instant Username Search',u:'https://instantusername.com',d:'Real-time username search across social networks.',tags:['free']},
+  {n:'KnowEm',u:'https://knowem.com',d:'Username search across 500+ social networks and websites.',tags:['free','login']},
+  {n:'Pipl',u:'https://pipl.com',d:'People search engine. Emails, phones, addresses, social profiles.',tags:['paid']},
+  {n:'Spokeo',u:'https://www.spokeo.com',d:'People search. Phone, email, address, social media profiles.',tags:['paid']},
+  {n:'Intelius',u:'https://www.intelius.com',d:'Background check, people search, contact info, public records.',tags:['paid']},
+  {n:'Webmii',u:'https://webmii.com',d:'People search across the web. Social profiles, news, images.',tags:['free']},
+  {n:'PeekYou',u:'https://www.peekyou.com',d:'People finder. Links social profiles, usernames, public records.',tags:['free']},
+  {n:'TruthFinder',u:'https://www.truthfinder.com',d:'Background check. Public records, criminal records, address history.',tags:['paid']},
+  {n:'Social Searcher',u:'https://www.social-searcher.com',d:'Real-time social media search across all major platforms.',tags:['free','login']},
+  {n:'Maigret',u:'https://github.com/soxoj/maigret',d:'Advanced username hunt. 2500+ sites, detailed profile collection.',tags:['free','cli']},
+]},
+
+{id:'social-media',icon:'&#128172;',name:'Social Media Intelligence',desc:'X/Twitter, Facebook, Instagram, LinkedIn, Reddit, TikTok OSINT',tools:[
+  {n:'X Advanced Search',u:'https://x.com/search-advanced',d:'Advanced Twitter/X search. Filters by user, date, location, keywords.',tags:['login']},
+  {n:'TweetDeck',u:'https://tweetdeck.twitter.com',d:'Multi-column X monitoring. Real-time keyword tracking, lists.',tags:['login']},
+  {n:'Nitter (archive)',u:'https://nitter.net',d:'Twitter frontend without login. View tweets, search without account.',tags:['free']},
+  {n:'Trendsmap',u:'https://www.trendsmap.com',d:'Real-time Twitter trending topics on a world map.',tags:['free','login']},
+  {n:'Twint',u:'https://github.com/twintproject/twint',d:'Twitter OSINT tool. Scrape tweets without API. Username, location.',tags:['free','cli']},
+  {n:'Social Bearing',u:'https://socialbearing.com',d:'Twitter analytics. Tweet analysis, follower insights, hashtag stats.',tags:['free']},
+  {n:'Reddit Search',u:'https://www.reddit.com/search',d:'Full Reddit search with filters. Sort by new, top, relevance.',tags:['free']},
+  {n:'Pushshift Reddit',u:'https://redditsearch.io',d:'Search deleted and historical Reddit posts and comments.',tags:['free']},
+  {n:'Reddit Investigator',u:'https://www.redditinvestigator.com',d:'Analyze any Reddit user. Post history, active subreddits, stats.',tags:['free']},
+  {n:'Facebook Graph Search',u:'https://www.facebook.com',d:'Search Facebook posts, pages, groups, people by keyword.',tags:['login']},
+  {n:'Sowdust FB Search',u:'https://sowdust.github.io/fb-search/',d:'Facebook search tool. Filter by type, date, location, language.',tags:['free']},
+  {n:'LinkedIn Search',u:'https://www.linkedin.com/search/results/all/',d:'Professional network search. People, companies, jobs, posts.',tags:['login']},
+  {n:'Instagram Search',u:'https://www.instagram.com',d:'Search Instagram by hashtag, location, username.',tags:['login']},
+  {n:'TikTok Search',u:'https://www.tiktok.com/search',d:'Search TikTok videos, users, hashtags.',tags:['free']},
+  {n:'Telegram Search',u:'https://t.me/s/',d:'Search Telegram public channels and messages.',tags:['free']},
+  {n:'TGStat',u:'https://tgstat.com',d:'Telegram channel analytics and search. Stats, growth, content.',tags:['free']},
+  {n:'Mastodon Search',u:'https://mastodon.social/explore',d:'Federated social network search. Infosec community.',tags:['free']},
+  {n:'Infosec.exchange',u:'https://infosec.exchange',d:'Mastodon instance for security professionals. Search by keyword.',tags:['free']},
+  {n:'Discord.me',u:'https://discord.me',d:'Discord server directory. Find servers by topic/keyword.',tags:['free']},
+  {n:'YouTube Search',u:'https://www.youtube.com',d:'Search videos by keyword, filter by date, duration, type.',tags:['free']},
+  {n:'TinEye',u:'https://tineye.com',d:'Reverse image search. Find where image appears online.',tags:['free']},
+  {n:'Social Analyzer',u:'https://github.com/qeeqbox/social-analyzer',d:'Find social media profiles across 1000+ sites by username.',tags:['free','cli']},
+]},
+
+{id:'search-engines',icon:'&#128270;',name:'Search Engines & Dorking',desc:'Advanced search operators, Google dorking, specialized search engines',tools:[
+  {n:'Google Advanced Search',u:'https://www.google.com/advanced_search',d:'Advanced Google search with filters for date, region, filetype.',tags:['free']},
+  {n:'Google Dork Generator',u:'https://www.dorkgenie.com',d:'Generate Google dork queries for specific targets.',tags:['free']},
+  {n:'Bing',u:'https://www.bing.com',d:'Microsoft search. Sometimes indexes different content than Google.',tags:['free']},
+  {n:'Yandex',u:'https://yandex.com',d:'Russian search engine. Good for reverse image search and Eastern EU.',tags:['free']},
+  {n:'DuckDuckGo',u:'https://duckduckgo.com',d:'Privacy search engine. Bang commands for site-specific search.',tags:['free']},
+  {n:'Startpage',u:'https://www.startpage.com',d:'Private Google search proxy. No tracking.',tags:['free']},
+  {n:'Baidu',u:'https://www.baidu.com',d:'Chinese search engine. Good for China-related threat actor research.',tags:['free']},
+  {n:'PublicWWW',u:'https://publicwww.com',d:'Source code search engine. Find sites using specific code/analytics.',tags:['free','login']},
+  {n:'GrepApp',u:'https://grep.app',d:'Search across GitHub repos with regex. Find code patterns.',tags:['free']},
+  {n:'BuiltWith',u:'https://builtwith.com',d:'Website technology profiler. CMS, analytics, hosting, frameworks.',tags:['free']},
+  {n:'Wappalyzer',u:'https://www.wappalyzer.com',d:'Identify web technologies. Browser extension or API.',tags:['free']},
+  {n:'Wayback Machine',u:'https://web.archive.org',d:'Internet Archive. View historical snapshots of any website.',tags:['free']},
+  {n:'CachedView',u:'https://cachedview.nl',d:'View cached versions of pages from Google, Bing, Archive.',tags:['free']},
+  {n:'Archive.today',u:'https://archive.ph',d:'Save and view archived copies of web pages.',tags:['free']},
+  {n:'Google Cache',u:'https://webcache.googleusercontent.com/search?q=cache:',d:'View Google cached version of any page.',tags:['free']},
+  {n:'Pastebin Search',u:'https://psbdmp.ws',d:'Search Pastebin dumps. Find leaked data, credentials, malware.',tags:['free']},
+  {n:'GrayhatWarfare',u:'https://grayhatwarfare.com',d:'Search public S3 buckets, Azure blobs, GCP storage for exposed files.',tags:['free','login']},
+  {n:'Shodan Dork Search',u:'https://www.shodanhq.com/research/dorks',d:'Shodan search queries for finding specific devices and services.',tags:['free']},
+  {n:'IntelX Search',u:'https://intelx.io',d:'Dark web, leaked data, paste sites, WHOIS, historical data search.',tags:['free','login']},
+  {n:'DataSploit',u:'https://github.com/DataSploit/datasploit',d:'OSINT framework. Emails, domains, IPs, phones, usernames.',tags:['free','cli']},
+  {n:'GHDB (Exploit-DB Dorks)',u:'https://www.exploit-db.com/google-hacking-database',d:'Google Hacking Database. 7000+ dorks for finding exposed info.',tags:['free']},
+]},
+
+{id:'vulnerability',icon:'&#128683;',name:'Vulnerability & CVE',desc:'CVE databases, exploit tracking, patch status, vulnerability scoring',tools:[
+  {n:'NVD NIST',u:'https://nvd.nist.gov',d:'National Vulnerability Database. CVE details, CVSS scores, CWE.',tags:['free']},
+  {n:'CISA KEV Catalog',u:'https://www.cisa.gov/known-exploited-vulnerabilities-catalog',d:'Known Exploited Vulnerabilities. CISA-confirmed active exploitation.',tags:['free']},
+  {n:'Exploit-DB',u:'https://www.exploit-db.com',d:'Public exploit archive. PoC code, shellcode, papers, GHDB.',tags:['free']},
+  {n:'GitHub Advisories',u:'https://github.com/advisories',d:'Security advisories for open source packages.',tags:['free']},
+  {n:'Packet Storm',u:'https://packetstormsecurity.com',d:'Security advisories, exploits, tools, papers.',tags:['free']},
+  {n:'Vulners',u:'https://vulners.com',d:'Vulnerability search engine. CVEs, exploits, advisories aggregated.',tags:['free','login']},
+  {n:'OpenCVE',u:'https://www.opencve.io',d:'CVE monitoring and alerting. Track new CVEs for your software.',tags:['free','login']},
+  {n:'VulDB',u:'https://vuldb.com',d:'Vulnerability database. Timeline, CVSS, affected software.',tags:['free','login']},
+  {n:'Snyk Vulnerability DB',u:'https://security.snyk.io',d:'Open source package vulnerabilities. Node, Python, Java, Ruby.',tags:['free']},
+  {n:'OSV.dev',u:'https://osv.dev',d:'Open Source Vulnerabilities. Google-maintained. Package-specific CVEs.',tags:['free']},
+  {n:'Metasploit Modules',u:'https://www.rapid7.com/db',d:'Metasploit exploit module database. CVE to module mapping.',tags:['free']},
+  {n:'Nuclei Templates',u:'https://github.com/projectdiscovery/nuclei-templates',d:'Nuclei vulnerability scanner templates. CVE-based detection rules.',tags:['free']},
+  {n:'GreyNoise Trends',u:'https://viz.greynoise.io/trends',d:'See what CVEs are being actively scanned/exploited in the wild.',tags:['free','login']},
+  {n:'ShadowServer',u:'https://www.shadowserver.org',d:'Internet scanning data. Compromised hosts, vulnerable services.',tags:['free']},
+  {n:'CVEDetails',u:'https://www.cvedetails.com',d:'CVE details with statistics, affected products, vendor info.',tags:['free']},
+  {n:'RiskSense (now Ivanti)',u:'https://www.ivanti.com',d:'Vulnerability intelligence and prioritization platform.',tags:['paid']},
+  {n:'AttackerKB',u:'https://attackerkb.com',d:'Rapid7 vulnerability assessments. Analyst commentary on CVEs.',tags:['free','login']},
+  {n:'VulnHub',u:'https://www.vulnhub.com',d:'Vulnerable VMs for practice. Research exploitation techniques.',tags:['free']},
+]},
+
+{id:'malware',icon:'&#128027;',name:'Malware Analysis',desc:'File analysis, sandboxing, hash lookup, malware families, YARA',tools:[
+  {n:'VirusTotal',u:'https://www.virustotal.com',d:'90+ AV engines, sandbox, behavioral analysis, file/URL/hash.',tags:['free','login']},
+  {n:'MalwareBazaar',u:'https://bazaar.abuse.ch',d:'Malware sample repository. Search by hash, family, tag, YARA.',tags:['free']},
+  {n:'Hybrid Analysis',u:'https://www.hybrid-analysis.com',d:'Free automated sandbox. Full behavior report, network traffic.',tags:['free','login']},
+  {n:'ANY.RUN',u:'https://app.any.run',d:'Interactive online sandbox. Watch malware execute in real time.',tags:['free','login']},
+  {n:'Joe Sandbox',u:'https://www.joesandbox.com',d:'Deep malware analysis. Windows, Mac, Linux, Android, iOS.',tags:['free','login']},
+  {n:'Triage',u:'https://tria.ge',d:'Fast malware triage. Family detection, config extraction, YARA.',tags:['free','login']},
+  {n:'Intezer Analyze',u:'https://analyze.intezer.com',d:'Code reuse analysis. Genetic-based malware classification.',tags:['free','login']},
+  {n:'CAPE Sandbox',u:'https://capev2.readthedocs.io',d:'Open source Cuckoo fork. Config extraction, behavioral analysis.',tags:['free','cli']},
+  {n:'Cuckoo Sandbox',u:'https://cuckoosandbox.org',d:'Original open source malware sandbox.',tags:['free','cli']},
+  {n:'PolySwarm',u:'https://polyswarm.io',d:'Multi-engine file scanning. Crowdsourced malware detection.',tags:['free','login']},
+  {n:'YARA Rules Repo',u:'https://github.com/Yara-Rules/rules',d:'Community YARA rules for malware detection.',tags:['free']},
+  {n:'Malpedia',u:'https://malpedia.caad.fkie.fraunhofer.de',d:'Malware library. Family descriptions, YARA, samples, actors.',tags:['free','login']},
+  {n:'VXUnderground',u:'https://vx-underground.org',d:'Malware sample archive. Papers, source code, presentations.',tags:['free']},
+  {n:'theZoo',u:'https://github.com/ytisf/theZoo',d:'Live malware repository for research purposes.',tags:['free','cli']},
+  {n:'VirusShare',u:'https://virusshare.com',d:'Malware sample sharing. Torrent-based malware dataset.',tags:['login']},
+  {n:'UnpacMe',u:'https://www.unpac.me',d:'Automated malware unpacker. Config extraction, IOC identification.',tags:['free','login']},
+  {n:'Hatching Triage',u:'https://tria.ge',d:'High-throughput malware sandbox. API available.',tags:['free','login']},
+]},
+
+{id:'network',icon:'&#128268;',name:'Network & Infrastructure',desc:'Network scanning, certificate analysis, BGP, port scanning, DNS',tools:[
+  {n:'Shodan',u:'https://www.shodan.io',d:'Internet-wide port scanner. Banners, services, vulnerabilities.',tags:['free','login']},
+  {n:'Censys',u:'https://search.censys.io',d:'Internet scan data. Certificates, open ports, services.',tags:['free','login']},
+  {n:'Nmap Online',u:'https://nmap.online',d:'Online Nmap port scanner. Detect open ports and services.',tags:['free']},
+  {n:'Masscan',u:'https://github.com/robertdavidgraham/masscan',d:'Fast internet-scale port scanner. Scans internet in 3 minutes.',tags:['free','cli']},
+  {n:'ZMap',u:'https://zmap.io',d:'Internet-wide network scanner. Single-packet SYN scanner.',tags:['free','cli']},
+  {n:'Wireshark',u:'https://www.wireshark.org',d:'Network packet analyzer. Capture and analyze network traffic.',tags:['free','cli']},
+  {n:'NetworkMiner',u:'https://www.netresec.com/?page=NetworkMiner',d:'PCAP parser. Extract files, credentials, DNS from captures.',tags:['free']},
+  {n:'crt.sh',u:'https://crt.sh',d:'Certificate transparency search. Find subdomains via SSL certs.',tags:['free']},
+  {n:'Certificate Search',u:'https://certstream.calidog.io',d:'Real-time certificate transparency stream.',tags:['free']},
+  {n:'RIPE Stat',u:'https://stat.ripe.net',d:'Internet measurement and data analysis. BGP, routing, prefixes.',tags:['free']},
+  {n:'PeeringDB',u:'https://www.peeringdb.com',d:'Network interconnection database. ASN, exchange points, contacts.',tags:['free']},
+  {n:'IANA',u:'https://www.iana.org/assignments/ipv4-address-space',d:'IP address space assignments and protocol parameters.',tags:['free']},
+  {n:'BGPView',u:'https://bgpview.io',d:'BGP routing info. ASN, prefixes, peers, whois, IP lookups.',tags:['free']},
+  {n:'Hurricane Electric BGP',u:'https://bgp.he.net',d:'BGP toolkit. AS information, IPv4/IPv6 prefixes, DNS.',tags:['free']},
+  {n:'Traceroute.org',u:'https://traceroute.org',d:'Network path tracing tools from multiple global locations.',tags:['free']},
+  {n:'Netcraft',u:'https://sitereport.netcraft.com',d:'Website tech, hosting history, SSL, risk ratings.',tags:['free']},
+  {n:'BBOT',u:'https://github.com/blacklanternsecurity/bbot',d:'Recursive internet scanner. Subdomain enum, port scan, vuln.',tags:['free','cli']},
+]},
+
+{id:'physical-weather',icon:'&#127782;',name:'Physical Threats & Weather',desc:'Floods, wildfires, earthquakes, severe weather, civil unrest monitoring',tools:[
+  {n:'NWS Active Alerts',u:'https://www.weather.gov/alerts',d:'NOAA National Weather Service. Active weather alerts for all US.',tags:['free','live']},
+  {n:'NHC Hurricane Center',u:'https://www.nhc.noaa.gov',d:'National Hurricane Center. Storm tracking, advisories, forecasts.',tags:['free','live']},
+  {n:'SPC Storm Prediction',u:'https://www.spc.noaa.gov',d:'Tornado/hail/wind outlooks. Watches and warnings. Mesoscale.',tags:['free','live']},
+  {n:'NWS API',u:'https://api.weather.gov',d:'Free weather API. Active alerts, forecasts, observations.',tags:['free']},
+  {n:'FEMA Disaster Declarations',u:'https://www.fema.gov/disasters',d:'Federal disaster declarations. Incident type, state, declaration date.',tags:['free','live']},
+  {n:'FEMA API',u:'https://www.fema.gov/api/open',d:'Open FEMA API. Disaster summaries, public assistance data.',tags:['free']},
+  {n:'USGS Earthquake Hazards',u:'https://earthquake.usgs.gov',d:'Real-time earthquake data. Magnitude, depth, ShakeMap, tsunami.',tags:['free','live']},
+  {n:'Watch Duty',u:'https://app.watchduty.org',d:'Wildfire tracking. Fire perimeter, containment, evacuation zones.',tags:['free','live']},
+  {n:'CAL FIRE',u:'https://www.fire.ca.gov',d:'California Department of Forestry. Active incident reports.',tags:['free','live']},
+  {n:'NIFC Fire Maps',u:'https://www.nifc.gov/fire-information',d:'National Interagency Fire Center. Wildfire statistics and maps.',tags:['free','live']},
+  {n:'AirNow',u:'https://www.airnow.gov',d:'Real-time air quality data. AQI, smoke, wildfire smoke tracking.',tags:['free','live']},
+  {n:'PurpleAir',u:'https://map.purpleair.com',d:'Real-time air quality from community sensors. Dense coverage.',tags:['free']},
+  {n:'Citizen App',u:'https://citizen.com/explore',d:'Crowdsourced local incident reports. Police, fire, accidents.',tags:['login']},
+  {n:'GDELT Project',u:'https://gdeltproject.org',d:'Global events database. Protest intensity, conflict, news events.',tags:['free']},
+  {n:'ACLED',u:'https://acleddata.com',d:'Armed Conflict Location & Event Data. Protests, violence, riots.',tags:['free','login']},
+  {n:'ReliefWeb',u:'https://reliefweb.int',d:'Humanitarian situation reports. Disasters, crisis maps, funding.',tags:['free']},
+  {n:'Global Incident Map',u:'https://www.globalincidentmap.com',d:'Real-time global incident tracking. Terrorism, HAZMAT, crime.',tags:['free']},
+  {n:'RSOE EDIS',u:'https://rsoe-edis.org',d:'Emergency and Disaster Information Service. Global event map.',tags:['free']},
+  {n:'FlightAware',u:'https://www.flightaware.com',d:'Real-time flight tracking. Useful for situational awareness.',tags:['free','login']},
+  {n:'MarineTraffic',u:'https://www.marinetraffic.com',d:'Real-time ship tracking. AIS vessel positions worldwide.',tags:['free']},
+  {n:'NASA Firms',u:'https://firms.modaps.eosdis.nasa.gov',d:'NASA satellite fire detection. Active fire maps worldwide.',tags:['free']},
+  {n:'Zoom.earth',u:'https://zoom.earth',d:'Real-time satellite imagery. Weather, fires, storms, clouds.',tags:['free']},
+  {n:'Windy',u:'https://www.windy.com',d:'Wind, weather, wildfire, hurricane visualization on interactive map.',tags:['free']},
+  {n:'Tropical Tidbits',u:'https://www.tropicaltidbits.com',d:'Hurricane model tracking. Multiple forecast models compared.',tags:['free']},
+  {n:'SpotterNetwork',u:'https://www.spotternetwork.org',d:'Storm spotter reports. Real-time severe weather spotter data.',tags:['free']},
+]},
+
+{id:'dark-web',icon:'&#127769;',name:'Dark Web & Deep Web',desc:'Onion sites, dark web monitoring, leaked data, paste sites',tools:[
+  {n:'Ahmia',u:'https://ahmia.fi',d:'Dark web search engine. Index of .onion sites. No Tor needed.',tags:['free']},
+  {n:'DarkSearch',u:'https://darksearch.io',d:'Dark web search engine. Search .onion sites via clearnet.',tags:['free']},
+  {n:'Tor Browser',u:'https://www.torproject.org',d:'Browser for accessing .onion sites directly on dark web.',tags:['free','cli']},
+  {n:'OnionScan',u:'https://github.com/s-rah/onionscan',d:'Scan .onion services for operational security issues.',tags:['free','cli']},
+  {n:'IntelX Dark Web',u:'https://intelx.io',d:'Search dark web, paste sites, leaked data, Tor links.',tags:['free','login']},
+  {n:'Have I Been Pwned',u:'https://haveibeenpwned.com',d:'Email breach check including dark web breaches.',tags:['free']},
+  {n:'Breach Forums Monitor',u:'https://breachforums.st',d:'Cybercrime forum where breaches are posted. Monitor for leaks.',tags:['login']},
+  {n:'Dehashed',u:'https://dehashed.com',d:'Breached data search. Access to leaked databases.',tags:['paid']},
+  {n:'Snusbase',u:'https://snusbase.com',d:'Data breach database. Search by email, username, hash, IP.',tags:['paid']},
+  {n:'Pastebin',u:'https://pastebin.com',d:'Text paste site. Monitor for leaked credentials, configs, data.',tags:['free']},
+  {n:'Ghostbin',u:'https://ghostbin.co',d:'Anonymous paste site. Check for data dumps.',tags:['free']},
+  {n:'Pastehunter',u:'https://github.com/kevthehermit/PasteHunter',d:'Monitor paste sites for sensitive data with YARA rules.',tags:['free','cli']},
+  {n:'H8mail',u:'https://github.com/khast3x/h8mail',d:'Email OSINT and breach hunting tool. Searches breach APIs.',tags:['free','cli']},
+]},
+
+{id:'geolocation',icon:'&#128205;',name:'Geolocation & Maps',desc:'Geographic intelligence, location verification, satellite imagery',tools:[
+  {n:'Google Maps',u:'https://maps.google.com',d:'Street view, satellite imagery, location search, directions.',tags:['free']},
+  {n:'Google Earth',u:'https://earth.google.com',d:'3D satellite imagery, historical imagery, terrain data.',tags:['free']},
+  {n:'Bing Maps',u:'https://www.bing.com/maps',d:'Alternative mapping with bird eye view and streetside.',tags:['free']},
+  {n:'Yandex Maps',u:'https://maps.yandex.com',d:'Russian map service. Good for Russia, Eastern Europe coverage.',tags:['free']},
+  {n:'Wikimapia',u:'https://wikimapia.org',d:'Collaborative mapping. User-annotated landmarks and locations.',tags:['free']},
+  {n:'OpenStreetMap',u:'https://www.openstreetmap.org',d:'Free open source collaborative world map.',tags:['free']},
+  {n:'GeoSpy',u:'https://geospy.ai',d:'AI-based image geolocation. Find where a photo was taken.',tags:['free']},
+  {n:'GeoHints',u:'https://geohints.com',d:'Visual geolocation tips. Identify locations from image clues.',tags:['free']},
+  {n:'SunCalc',u:'https://www.suncalc.org',d:'Sun position calculator. Verify image timestamps via shadow angles.',tags:['free']},
+  {n:'Sentinel Hub',u:'https://apps.sentinel-hub.com/eo-browser',d:'Free satellite imagery. Copernicus Sentinel data.',tags:['free']},
+  {n:'Planet Labs',u:'https://www.planet.com',d:'Daily satellite imagery of the entire Earth.',tags:['paid']},
+  {n:'Maxar',u:'https://www.maxar.com',d:'High-resolution satellite imagery. Crisis response.',tags:['paid']},
+  {n:'What3Words',u:'https://what3words.com',d:'3-word location addressing system. Global 3m grid.',tags:['free']},
+  {n:'GeoNames',u:'https://www.geonames.org',d:'Geographical database. 11M+ place names worldwide.',tags:['free']},
+  {n:'IPLocation',u:'https://www.iplocation.net',d:'IP geolocation from multiple providers. Compare results.',tags:['free']},
+  {n:'Creepy',u:'https://www.geocreepy.com',d:'Geolocation OSINT tool. Gather location from social media.',tags:['free','cli']},
+]},
+
+{id:'image-video',icon:'&#128247;',name:'Image & Video Analysis',desc:'Reverse image search, metadata extraction, deepfake detection, verification',tools:[
+  {n:'Google Reverse Image',u:'https://images.google.com',d:'Reverse image search. Find similar images and source.',tags:['free']},
+  {n:'TinEye',u:'https://tineye.com',d:'Dedicated reverse image search. Shows where image appears online.',tags:['free']},
+  {n:'Yandex Images',u:'https://yandex.com/images',d:'Russian reverse image search. Often better for faces.',tags:['free']},
+  {n:'Bing Visual Search',u:'https://www.bing.com/visualsearch',d:'Microsoft reverse image search with visual analysis.',tags:['free']},
+  {n:'PimEyes',u:'https://pimeyes.com',d:'Face recognition reverse image search. Find faces online.',tags:['free','login']},
+  {n:'FaceCheck.ID',u:'https://facecheck.id',d:'Reverse face search across social media.',tags:['free']},
+  {n:'ExifTool',u:'https://exiftool.org',d:'Read/write metadata from images, PDFs, audio, video files.',tags:['free','cli']},
+  {n:'Jeffrey EXIF Viewer',u:'https://exif.regex.info/exif.cgi',d:'Online EXIF metadata viewer. GPS, camera, date data.',tags:['free']},
+  {n:'FotoForensics',u:'https://fotoforensics.com',d:'Image forensics. Error level analysis, metadata, hash.',tags:['free']},
+  {n:'Forensically',u:'https://29a.ch/photo-forensics',d:'Image forensics tools. ELA, clone detection, noise analysis.',tags:['free']},
+  {n:'InVID / WeVerify',u:'https://weverify.eu/verification-plugin',d:'Video/image verification tool. Reverse search, metadata, keyframes.',tags:['free']},
+  {n:'Fake Image Detector',u:'https://www.fakeimagedetector.com',d:'Detect AI-generated or manipulated images.',tags:['free']},
+  {n:'Hive Moderation',u:'https://hivemoderation.com/ai-generated-content-detection',d:'AI-generated image, video, audio detection.',tags:['free']},
+  {n:'Deepware Scanner',u:'https://scanner.deepware.ai',d:'Deepfake video detection. Analyze video authenticity.',tags:['free']},
+  {n:'YouTube DataViewer',u:'https://citizenevidence.amnestytech.org',d:'Amnesty International tool. YouTube video metadata, thumbnails.',tags:['free']},
+]},
+
+{id:'breaches',icon:'&#128274;',name:'Breach & Leak Data',desc:'Data breach checking, credential leak monitoring, paste monitoring',tools:[
+  {n:'Have I Been Pwned',u:'https://haveibeenpwned.com',d:'Free email and phone breach check. 13B+ compromised accounts.',tags:['free']},
+  {n:'HIBP API',u:'https://haveibeenpwned.com/API/v3',d:'API for email and password breach checking.',tags:['free']},
+  {n:'Dehashed',u:'https://dehashed.com',d:'Extensive breach database. Email, username, password, IP, name.',tags:['paid']},
+  {n:'IntelX',u:'https://intelx.io',d:'Search leaked data, pastes, dark web archives.',tags:['free','login']},
+  {n:'LeakCheck',u:'https://leakcheck.io',d:'Database breach lookup. Emails, usernames, passwords.',tags:['free','login']},
+  {n:'Snusbase',u:'https://snusbase.com',d:'Breach search engine. 18B+ records from 10K+ breaches.',tags:['paid']},
+  {n:'Breachbase',u:'https://breachbase.com',d:'Search breached databases by email, username, domain.',tags:['paid']},
+  {n:'Ghostproject',u:'https://ghostproject.fr',d:'Gmail breach checker. Check if Gmail appears in breaches.',tags:['free']},
+  {n:'CyberNews Personal Data Leak',u:'https://cybernews.com/personal-data-leak-check',d:'Email and password breach check with recommendations.',tags:['free']},
+  {n:'BreachDirectory',u:'https://breachdirectory.org',d:'Search data breaches. Email, username, hash lookups.',tags:['free']},
+  {n:'Spycloud',u:'https://spycloud.com',d:'Enterprise breach monitoring. Recaptured criminal underground data.',tags:['paid']},
+  {n:'Flare',u:'https://flare.io',d:'Dark web monitoring. Threat exposure monitoring platform.',tags:['paid']},
+]},
+
+{id:'phone',icon:'&#128222;',name:'Phone Number OSINT',desc:'Phone lookup, carrier identification, spam detection, social accounts',tools:[
+  {n:'Truecaller',u:'https://www.truecaller.com',d:'Phone number identification. Caller name, carrier, spam score.',tags:['free','login']},
+  {n:'NumLookup',u:'https://www.numlookup.com',d:'Free phone number lookup. Carrier, line type, location.',tags:['free']},
+  {n:'PhoneInfoga',u:'https://github.com/sundowndev/phoneinfoga',d:'Advanced phone number OSINT. International formats, carriers.',tags:['free','cli']},
+  {n:'Sync.me',u:'https://sync.me',d:'Reverse phone lookup. Social media profiles linked to number.',tags:['free']},
+  {n:'WhitePages',u:'https://www.whitepages.com',d:'US reverse phone lookup. Name, address, carrier.',tags:['free']},
+  {n:'AnyWho',u:'https://www.anywho.com',d:'Reverse phone lookup. US residential and business numbers.',tags:['free']},
+  {n:'TextMagic Phone Validator',u:'https://www.textmagic.com/free-tools/phone-number-validation-tool',d:'Validate phone numbers. Country, carrier, line type.',tags:['free']},
+  {n:'Carrier Lookup',u:'https://www.carrierlookup.com',d:'Phone carrier identification. US numbers.',tags:['free']},
+  {n:'2FA Radar',u:'https://2fa.directory',d:'Which sites support 2FA and which methods.',tags:['free']},
+]},
+
+{id:'crypto',icon:'&#128176;',name:'Cryptocurrency & Blockchain',desc:'Wallet tracing, transaction analysis, blockchain forensics',tools:[
+  {n:'Blockchain.com Explorer',u:'https://www.blockchain.com/explorer',d:'Bitcoin blockchain explorer. Transactions, addresses, blocks.',tags:['free']},
+  {n:'Etherscan',u:'https://etherscan.io',d:'Ethereum blockchain explorer. Tokens, contracts, wallets.',tags:['free']},
+  {n:'Chainalysis Reactor',u:'https://www.chainalysis.com',d:'Blockchain analytics for law enforcement and compliance.',tags:['paid']},
+  {n:'Elliptic',u:'https://www.elliptic.co',d:'Crypto transaction monitoring and risk scoring.',tags:['paid']},
+  {n:'CipherTrace',u:'https://ciphertrace.com',d:'Cryptocurrency investigation and AML compliance.',tags:['paid']},
+  {n:'Crystal Blockchain',u:'https://crystalblockchain.com',d:'Blockchain analytics. Transaction monitoring, wallet scoring.',tags:['paid']},
+  {n:'Breadcrumbs',u:'https://www.breadcrumbs.app',d:'Free blockchain investigation tool. Wallet tracing, risk scoring.',tags:['free']},
+  {n:'Bitquery',u:'https://explorer.bitquery.io',d:'Blockchain analytics API. Multi-chain transaction analysis.',tags:['free','login']},
+  {n:'TRM Labs',u:'https://www.trmlabs.com',d:'Blockchain intelligence for financial crime risk.',tags:['paid']},
+  {n:'OXT',u:'https://oxt.me',d:'Bitcoin blockchain analytics. Address clustering, transaction flows.',tags:['free']},
+  {n:'WalletExplorer',u:'https://www.walletexplorer.com',d:'Bitcoin wallet clustering and labeling.',tags:['free']},
+  {n:'Scamsniffer',u:'https://scamsniffer.io',d:'Web3 phishing detection. Suspicious contract and address checker.',tags:['free']},
+]},
+
+{id:'documents',icon:'&#128196;',name:'Documents & Files',desc:'Document metadata, file analysis, PDF investigation, FOIA',tools:[
+  {n:'ExifTool',u:'https://exiftool.org',d:'Universal metadata reader/writer. Images, PDF, Office, audio.',tags:['free','cli']},
+  {n:'FOCA',u:'https://github.com/ElevenPaths/FOCA',d:'Metadata extraction from documents. Find hidden author info.',tags:['free','cli']},
+  {n:'DocScraper',u:'https://docscraper.net',d:'Extract metadata from Office and PDF documents online.',tags:['free']},
+  {n:'pdf-parser',u:'https://blog.didierstevens.com/programs/pdf-tools',d:'Analyze PDF structure. Find embedded objects, JavaScript.',tags:['free','cli']},
+  {n:'PDFExaminer',u:'https://www.pdfexaminer.com',d:'Online PDF malware analysis. Suspicious structures, JavaScript.',tags:['free']},
+  {n:'FOIA.gov',u:'https://www.foia.gov',d:'US Freedom of Information Act request portal.',tags:['free']},
+  {n:'DocumentCloud',u:'https://www.documentcloud.org',d:'Document hosting and search. Journalist and public records.',tags:['free']},
+  {n:'PACER',u:'https://pacer.uscourts.gov',d:'US federal court records. Cases, filings, judgments.',tags:['free','login']},
+  {n:'SEC EDGAR',u:'https://www.sec.gov/cgi-bin/browse-edgar',d:'US company filings. Annual reports, ownership disclosures.',tags:['free']},
+  {n:'OpenCorporates',u:'https://opencorporates.com',d:'Global company database. 200M+ companies, officers, filings.',tags:['free']},
+  {n:'Scribd',u:'https://www.scribd.com',d:'Document sharing. Leaked documents, reports, manuals.',tags:['free','login']},
+]},
+
+{id:'news',icon:'&#128240;',name:'News & Media Intelligence',desc:'News monitoring, media analysis, fact checking, news search',tools:[
+  {n:'Google News',u:'https://news.google.com',d:'Aggregated news from thousands of publishers. Keyword search.',tags:['free']},
+  {n:'Bleeping Computer',u:'https://www.bleepingcomputer.com',d:'Cybersecurity news. Malware, vulnerabilities, breaches.',tags:['free']},
+  {n:'The Hacker News',u:'https://thehackernews.com',d:'Cybersecurity and hacking news.',tags:['free']},
+  {n:'Krebs on Security',u:'https://krebsonsecurity.com',d:'Investigative cybercrime journalism by Brian Krebs.',tags:['free']},
+  {n:'Dark Reading',u:'https://www.darkreading.com',d:'Enterprise security news and analysis.',tags:['free']},
+  {n:'SecurityWeek',u:'https://www.securityweek.com',d:'Information security news and analysis.',tags:['free']},
+  {n:'Threatpost',u:'https://threatpost.com',d:'Independent security news site.',tags:['free']},
+  {n:'SANS Internet Storm Center',u:'https://isc.sans.edu',d:'Daily security diaries. Handler analysis of current threats.',tags:['free']},
+  {n:'CISA Alerts',u:'https://www.cisa.gov/news-events/cybersecurity-advisories',d:'US government cybersecurity advisories and alerts.',tags:['free']},
+  {n:'US-CERT',u:'https://www.cisa.gov/uscert',d:'US Computer Emergency Response Team alerts and bulletins.',tags:['free']},
+  {n:'Snopes',u:'https://www.snopes.com',d:'Fact checking. Verify rumors, misinformation, false narratives.',tags:['free']},
+  {n:'PolitiFact',u:'https://www.politifact.com',d:'Political fact checking. Verify public statements.',tags:['free']},
+  {n:'AFP Fact Check',u:'https://factcheck.afp.com',d:'Agence France-Presse fact checking service.',tags:['free']},
+  {n:'Media Bias Chart',u:'https://www.adfontesmedia.com',d:'Evaluate media source reliability and political bias.',tags:['free']},
+  {n:'AllSides',u:'https://www.allsides.com',d:'Compare news coverage across left, center, right sources.',tags:['free']},
+  {n:'NewsAPI',u:'https://newsapi.org',d:'Real-time news API. Search articles from 70,000+ sources.',tags:['free','login']},
+  {n:'GDELT',u:'https://gdeltproject.org',d:'Global database of news events. 100+ languages, real-time.',tags:['free']},
+  {n:'Media Cloud',u:'https://mediacloud.org',d:'Open source media analysis platform. News tracking and analysis.',tags:['free']},
+]},
+
+{id:'frameworks',icon:'&#9881;',name:'Frameworks & Automation',desc:'OSINT automation platforms, investigation frameworks, methodology',tools:[
+  {n:'OSINT Framework',u:'https://osintframework.com',d:'The original framework. Interactive tree of all OSINT tools.',tags:['free']},
+  {n:'Spiderfoot',u:'https://www.spiderfoot.net',d:'Automated OSINT. 200+ modules, web UI, API. Domains, IPs, emails.',tags:['free','cli']},
+  {n:'Maltego',u:'https://www.maltego.com',d:'Visual link analysis. Transforms connect data across sources.',tags:['paid']},
+  {n:'Recon-ng',u:'https://github.com/lanmaster53/recon-ng',d:'Web reconnaissance framework. Modular, similar to Metasploit.',tags:['free','cli']},
+  {n:'BBOT',u:'https://github.com/blacklanternsecurity/bbot',d:'Recursive internet scanner. Subdomain enum, port scan, OSINT.',tags:['free','cli']},
+  {n:'Datasploit',u:'https://github.com/DataSploit/datasploit',d:'OSINT framework for domains, emails, phones, usernames.',tags:['free','cli']},
+  {n:'Amass',u:'https://github.com/owasp-amass/amass',d:'OWASP attack surface mapping and asset discovery.',tags:['free','cli']},
+  {n:'Metagoofil',u:'https://github.com/laramies/metagoofil',d:'Extract metadata from public documents on target domain.',tags:['free','cli']},
+  {n:'IntelOwl',u:'https://github.com/intelowlproject/IntelOwl',d:'Intelligence orchestration. Analyze files, IPs, URLs at scale.',tags:['free','cli']},
+  {n:'MISP',u:'https://www.misp-project.org',d:'Malware Information Sharing Platform. IOC sharing and correlation.',tags:['free','cli']},
+  {n:'OpenCTI',u:'https://opencti.io',d:'Cyber threat intelligence management. STIX2, ATT&CK alignment.',tags:['free','cli']},
+  {n:'Harpoon',u:'https://github.com/Te-k/harpoon',d:'CLI OSINT tool. Virustotal, Shodan, Censys, HIBP, and more.',tags:['free','cli']},
+  {n:'Sn1per',u:'https://github.com/1N3/Sn1per',d:'Automated pentest and OSINT scanner.',tags:['free','cli']},
+  {n:'OnionSearch',u:'https://github.com/megadose/OnionSearch',d:'Search .onion sites from multiple dark web search engines.',tags:['free','cli']},
+  {n:'PhotonCrawler',u:'https://github.com/s0md3v/Photon',d:'Fast web crawler for OSINT. Extract URLs, files, secrets.',tags:['free','cli']},
+  {n:'Osintgram',u:'https://github.com/Datalux/Osintgram',d:'Instagram OSINT tool. Account analysis, followers, posts.',tags:['free','cli']},
+  {n:'IntelTechniques',u:'https://inteltechniques.com/tools',d:'Michael Bazzell OSINT tools and workflows.',tags:['free']},
+  {n:'TraceLabs',u:'https://www.tracelabs.org',d:'OSINT for good. Missing persons investigations.',tags:['free']},
+]}
+];
+
+function render(){
+  const nav=document.getElementById('cat-nav');
+  const main=document.getElementById('categories');
+  let total=0,free=0,login=0,paid=0;
+  CATS.forEach(c=>{
+    nav.innerHTML+=`<a href="#${c.id}">${c.icon} ${c.name}</a>`;
+    let html=`<div class="category" id="${c.id}"><div class="cat-title">${c.icon} ${c.name}</div><div class="cat-desc">${c.desc}</div><div class="tool-grid">`;
+    c.tools.forEach(t=>{
+      total++;
+      const tags=t.tags||[];
+      if(tags.includes('paid'))paid++;
+      else if(tags.includes('login'))login++;
+      else free++;
+      html+=`<a class="tool-card" href="${t.u}" target="_blank">
+        <div class="tool-name">${t.n}</div>
+        <div class="tool-desc">${t.d}</div>
+        <div class="tool-tags">${tags.map(tg=>`<span class="tag t-${tg}">${tg==='free'?'Free':tg==='login'?'Login':tg==='paid'?'Paid':tg==='cli'?'CLI Tool':tg==='live'?'Live':tg}</span>`).join('')}</div>
+      </a>`;
+    });
+    html+='</div></div>';
+    main.innerHTML+=html;
+  });
+  document.getElementById('total-count').textContent=total;
+  document.getElementById('free-count').textContent=free;
+  document.getElementById('login-count').textContent=login;
+  document.getElementById('paid-count').textContent=paid;
+}
+
+function filterTools(q){
+  if(!q){document.querySelectorAll('.tool-card,.category').forEach(el=>el.classList.remove('hidden'));return;}
+  const ql=q.toLowerCase();
+  document.querySelectorAll('.category').forEach(cat=>{
+    let hasVisible=false;
+    cat.querySelectorAll('.tool-card').forEach(card=>{
+      const match=card.innerText.toLowerCase().includes(ql);
+      card.classList.toggle('hidden',!match);
+      if(match)hasVisible=true;
+    });
+    cat.classList.toggle('hidden',!hasVisible);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
