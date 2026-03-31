@@ -200,138 +200,256 @@ async function ai(sys,prompt,useSearch,tok){
 //  STEP 1: REGEX-FIRST KEYWORD EXTRACTION
 //  Works without API key. AI refines if key available.
 // ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+//  PRECISE STRUCTURAL KEYWORD PARSER
+//  Parses field-by-field. Never uses full alert text as keyword.
+// ═══════════════════════════════════════════════════
+const STATE_MAP={
+  'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+  'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
+  'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA',
+  'Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD',
+  'Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO',
+  'Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ',
+  'New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH',
+  'Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC',
+  'South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT',
+  'Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
+};
+const CODE_MAP=Object.fromEntries(Object.entries(STATE_MAP).map(([k,v])=>[v,k]));
+
+function detectState(text){
+  for(const[name,code]of Object.entries(STATE_MAP)){
+    if(new RegExp('\\b'+name+'\\b','i').test(text))return{state:name,code};
+  }
+  for(const[code,name]of Object.entries(CODE_MAP)){
+    if(new RegExp('(?:^|[\\s,|\\[])'+code+'(?:$|[\\s,|\\]\\n])').test(text))return{state:name,code};
+  }
+  return null;
+}
+
 function extractKeywordsLocal(q){
-  const r={alert_type:'general',sub_type:'other',event_name:null,location:null,state:null,state_code:null,keywords:[],ioc:null,severity:'high'};
+  const r={alert_type:'physical',sub_type:'unknown',event_name:null,location:null,state:null,state_code:null,keywords:[],ioc:null,severity:'high'};
 
-  // Detect type
-  const isPhys=/flood|wildfire|wild fire|\bfire\b|earthquake|storm|hurricane|tornado|protest|riot|civil unrest|hazmat|chemical spill|evacuation|shooting|gunfire|active shooter|explosion|disaster|tsunami|blizzard/i.test(q);
+  // ── DETECT ALERT TYPE (cyber wins over physical) ──
   const isCVE=/CVE-\d{4}-\d+/i.test(q);
-  const isHash=/\b[0-9a-f]{32,64}\b/i.test(q);
+  const isHash=/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i.test(q);
   const isIP=/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(q);
-  const isCyber=/malware|ransomware|phishing|trojan|exploit|powershell|cobalt strike|mimikatz|lateral movement|privilege esc|credential|beacon|apt|t1\d{3}/i.test(q);
+  // Detect cyber keywords
+  const isCyber=/malware|ransomware|phishing|trojan|exploit|powershell|cobalt strike|mimikatz|lateral movement|privilege escalation|credential|beacon|apt\d|t1\d{3}/i.test(q);
+  const isPhys=/wildfire|wild fire|\bfire\b|flood|earthquake|quake|hurricane|tropical storm|tornado|protest|riot|civil unrest|hazmat|chemical spill|evacuation|shooting|gunfire|active shooter|explosion|disaster|tsunami|blizzard/i.test(q);
 
-  if(isPhys)r.alert_type='physical';
-  else if(isCVE)r.alert_type='cve';
-  else if(isHash)r.alert_type='hash';
-  else if(isIP)r.alert_type='ip';
-  else if(isCyber)r.alert_type='cyber';
+  // Cyber wins if explicit cyber keywords present
+  if(isCVE){r.alert_type='cve';r.sub_type='cve';}
+  else if(isHash){r.alert_type='hash';r.sub_type='hash';}
+  else if(isIP&&!isPhys){r.alert_type='ip';r.sub_type='ip';}
+  else if(isCyber&&!isPhys){r.alert_type='cyber';r.sub_type='malware';}
+  else if(isPhys){r.alert_type='physical';}
 
-  // Extract IOCs
-  const cveM=q.match(/CVE-\d{4}-\d+/i);if(cveM)r.ioc=cveM[0].toUpperCase();
-  const ipM=q.match(/\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b/);if(ipM&&!isPhys)r.ioc=ipM[1];
+  // ── EXTRACT EXACT IOCs ──
+  const cveM=q.match(/\b(CVE-\d{4}-\d+)\b/i);if(cveM)r.ioc=cveM[1].toUpperCase();
   const hashM=q.match(/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i);if(hashM&&!isPhys)r.ioc=hashM[1].toLowerCase();
+  const ipM=q.match(/\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b/);if(ipM&&!isPhys)r.ioc=r.ioc||ipM[1];
 
-  // Extract fire/event name — most important for physical
-  const fireM=q.match(/\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z0-9]+)*\s+(?:Fire|Wildfire|Flood|Hurricane|Earthquake|Shooting|Explosion|Tornado|Storm|Incident))\b/);
-  if(fireM)r.event_name=fireM[1];
-  else{const nF=q.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:Fire|Wildfire)\b/);if(nF)r.event_name=nF[0];}
-
-  // Extract malware names
-  const malM=q.match(/\b(LockBit[\s\d.]*|BlackCat|ALPHV|Ryuk|REvil|Conti|Hive|Cl0p|BlackMatter|Vice Society|Play Ransomware|Royal Ransomware|Emotet|TrickBot|QakBot|Cobalt Strike|APT\d+|Fancy Bear|Cozy Bear|Lazarus|Sandworm)/i);
-  if(malM){r.event_name=r.event_name||malM[1];}
-
-  // Extract product for CVE
-  const prodM=q.match(/\b(PAN-OS|GlobalProtect|Cisco IOS|Exchange|Log4j|Apache|Fortinet|Citrix|VMware|F5|Pulse Secure|Windows|Active Directory)\b/i);
-  if(prodM)r.affected_product=prodM[1];
-
-  // Extract US state
-  const states={'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA','Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'};
-  const codes={'CA':'California','TX':'Texas','FL':'Florida','NY':'New York','WA':'Washington','OR':'Oregon','AZ':'Arizona','NV':'Nevada','LA':'Louisiana','CO':'Colorado','GA':'Georgia','NC':'North Carolina','IL':'Illinois','PA':'Pennsylvania','OH':'Ohio','MI':'Michigan'};
-  for(const[name,code]of Object.entries(states)){if(new RegExp('\\b'+name+'\\b','i').test(q)){r.state=name;r.state_code=code;break;}}
-  if(!r.state_code){for(const[code,name]of Object.entries(codes)){if(new RegExp('[\\s,]'+code+'[\\s,\\|]|\\b'+code+'$','i').test(q)){r.state=name;r.state_code=code;break;}}}
-
-  // Extract county/city
-  const countyM=q.match(/\b([A-Z][a-zA-Z\s]+)\s+County\b/);if(countyM)r.location=countyM[1].trim()+' County';
-  else{const cityM=q.match(/(?:in|near|at|around)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\s*(?:,|\|)/);if(cityM)r.location=cityM[1].trim();}
-
-  // Detect sub-type
-  if(/wildfire|wild fire|\bfire\b/i.test(q))r.sub_type='wildfire';
-  else if(/flood|inundation|surge/i.test(q))r.sub_type='flood';
-  else if(/earthquake|quake|tremor/i.test(q))r.sub_type='earthquake';
-  else if(/shooting|gunfire|active shooter/i.test(q))r.sub_type='shooting';
-  else if(/hurricane|typhoon|cyclone/i.test(q))r.sub_type='hurricane';
+  // ── DETECT PRECISE SUB-TYPE FIRST ──
+  // Order matters — most specific first
+  if(/\bwildfire\b|\bwild fire\b/i.test(q))r.sub_type='wildfire';
+  else if(/\bfire\b/i.test(q)&&r.alert_type==='physical')r.sub_type='wildfire';
+  else if(/hurricane|tropical storm|typhoon|cyclone/i.test(q))r.sub_type='hurricane';
   else if(/tornado|twister/i.test(q))r.sub_type='tornado';
-  else if(/protest|riot|civil unrest/i.test(q))r.sub_type='protest';
-  else if(/hazmat|chemical spill|toxic/i.test(q))r.sub_type='hazmat';
+  else if(/\bflood\b|flash flood|coastal flood|river flood|inundation/i.test(q))r.sub_type='flood';
+  else if(/earthquake|\bquake\b|tremor|seismic/i.test(q))r.sub_type='earthquake';
+  else if(/shooting|gunfire|gun shot|active shooter|gunman/i.test(q))r.sub_type='shooting';
+  else if(/hazmat|chemical spill|toxic release|gas leak|chlorine|ammonia|radiation/i.test(q))r.sub_type='hazmat';
+  else if(/protest|riot|civil unrest|demonstration|march/i.test(q))r.sub_type='protest';
+  else if(/tsunami|tidal wave/i.test(q))r.sub_type='tsunami';
+  else if(/blizzard|winter storm|ice storm/i.test(q))r.sub_type='winter';
   else if(/ransomware/i.test(q))r.sub_type='ransomware';
   else if(/phishing/i.test(q))r.sub_type='phishing';
-  else if(isCVE)r.sub_type='cve';
-  else if(isHash)r.sub_type='hash';
-  else if(isIP)r.sub_type='ip';
 
-  const sevM=q.match(/\b(CRITICAL|EXTREME|SEVERE|HIGH|MAJOR|MODERATE|LOW)\b/i);
+  // ── STEP 1: PARSE STRUCTURED FIELD VALUES ──
+  // Handle Everbridge, CrowdStrike, Splunk pipe/colon delimited alerts
+  // Extract values from labeled fields — these are our most reliable keywords
+  const fieldPatterns=[
+    /\bFIRE\s*NAME\s*[:|]\s*([^\n|,]+)/i,
+    /\bINCIDENT\s*NAME\s*[:|]\s*([^\n|,]+)/i,
+    /\bFIRE\s*[:|]\s*([^\n|,]+)/i,
+    /\bEVENT\s*NAME\s*[:|]\s*([^\n|,]+)/i,
+    /\bINCIDENT\s*[:|]\s*([^\n|,]+)/i,
+  ];
+  let structuredEventName=null;
+  for(const pat of fieldPatterns){
+    const m=q.match(pat);
+    if(m){const v=m[1].trim().replace(/[|\[\]]/g,'').trim();if(v&&v.length>2&&v.length<80){structuredEventName=v;break;}}
+  }
+
+  // Location fields
+  const locFieldPatterns=[
+    /\bLOCATION\s*[:|]\s*([^\n|,]+)/i,
+    /\bAFFECTED\s*AREA\s*[:|]\s*([^\n|,]+)/i,
+    /\bCITY\s*[:|]\s*([^\n|,]+)/i,
+    /\bADDRESS\s*[:|]\s*([^\n|,]+)/i,
+  ];
+  let structuredLocation=null;
+  for(const pat of locFieldPatterns){
+    const m=q.match(pat);
+    if(m){const v=m[1].trim().replace(/[|\[\]]/g,'').trim();if(v&&v.length>2&&v.length<80){structuredLocation=v;break;}}
+  }
+
+  // ── STEP 2: EXTRACT EVENT NAME (fire name, storm name, etc.) ──
+  // Named event patterns — extract the specific proper name
+  const namedEventPatterns=[
+    // "Palisade Fire" "Hughes Fire" "Camp Fire" etc
+    /\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*)\s+(Wildfire|Fire)\b/,
+    // "Hurricane Milton" "Tropical Storm Debby"
+    /\b(Hurricane|Tropical Storm|Typhoon|Cyclone)\s+([A-Z][a-zA-Z]+)\b/,
+    // "Palisade Flood" "Maui Earthquake"
+    /\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*)\s+(Flood|Earthquake|Tornado|Explosion|Incident)\b/,
+  ];
+  if(structuredEventName){
+    r.event_name=structuredEventName;
+  } else {
+    for(const pat of namedEventPatterns){
+      const m=q.match(pat);
+      if(m){
+        if(pat.source.includes('Hurricane|Tropical')){r.event_name=m[1]+' '+m[2];}
+        else{r.event_name=m[0];}
+        break;
+      }
+    }
+  }
+
+  // ── STEP 3: EXTRACT MALWARE/THREAT NAME ──
+  const malwareNames=[
+    /\b(LockBit\s*[\d.x]*)\b/i,
+    /\b(BlackCat|ALPHV)\b/i,
+    /\b(Ryuk|Maze|REvil|Conti|Hive|Cl0p|BlackMatter|Vice Society|Play|Royal)\b/i,
+    /\b(Emotet|TrickBot|QakBot|Qbot|Dridex|IcedID|BazarLoader|BazaLoader)\b/i,
+    /\b(Cobalt Strike)\b/i,
+    /\b(Mimikatz)\b/i,
+    /\b(APT\d+)\b/i,
+    /\b(Fancy Bear|Cozy Bear|Lazarus Group|Sandworm|Charming Kitten|Volt Typhoon)\b/i,
+    /\b(WannaCry|NotPetya|SolarWinds)\b/i,
+  ];
+  for(const p of malwareNames){
+    const m=q.match(p);if(m){r.event_name=r.event_name||m[1];r.threat_name=m[1];break;}
+  }
+
+  // CVE product
+  const prodM=q.match(/\b(PAN-OS|GlobalProtect|Cisco IOS|Exchange Server|Log4j|Log4Shell|Apache Struts|Fortinet|Citrix|VMware|F5 BIG-IP|Pulse Secure|Active Directory|Windows|Exchange)\b/i);
+  if(prodM)r.affected_product=prodM[1];
+
+  // ── STEP 4: EXTRACT US LOCATION ──
+  // County (most precise)
+  const countyM=q.match(/\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\s+County\b/);
+  if(countyM)r.location=countyM[1].trim()+' County';
+  // City from structured field
+  if(structuredLocation&&!r.location)r.location=structuredLocation.split(',')[0].trim();
+  // City from common patterns
+  if(!r.location){
+    const cityM=q.match(/\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\s*,\s*(?:[A-Z]{2}|[A-Z][a-z]+)\b/);
+    if(cityM)r.location=cityM[1].trim();
+  }
+
+  // State
+  const stateRes=detectState(q);
+  if(stateRes){r.state=stateRes.state;r.state_code=stateRes.code;}
+
+  // Severity
+  const sevM=q.match(/\b(CRITICAL|EXTREME|SEVERE|MAJOR|HIGH|MODERATE|LOW|MINOR)\b/i);
   if(sevM)r.severity=sevM[1].toLowerCase();
 
-  // BUILD KEYWORDS — specific first
+  // Acreage — useful for fires
+  const acreM=q.match(/(\d[\d,]*)\s*acres?/i);if(acreM)r.acres=acreM[1];
+
+  // Containment
+  const contM=q.match(/(\d+)\s*%\s*contained|containment[:\s]+(\d+)\s*%/i);
+  if(contM)r.containment=(contM[1]||contM[2])+'%';
+
+  // ── STEP 5: BUILD PRECISE KEYWORDS — NO GARBAGE ──
+  // Rule: ONLY include specific identifiers. Never include generic words.
+  // Never include the raw alert text.
   const kws=[];
-  if(r.event_name)kws.push(r.event_name);
-  if(r.ioc&&r.ioc!==r.event_name)kws.push(r.ioc);
 
   if(r.alert_type==='physical'){
+    // Keyword 1: Named event (most specific)
+    if(r.event_name)kws.push(r.event_name);
+
+    // Keyword 2: Location + state
     if(r.location&&r.state_code)kws.push(r.location+', '+r.state_code);
     else if(r.location)kws.push(r.location);
     else if(r.state)kws.push(r.state);
-    if(r.sub_type!=='other'){const loc=r.location||r.state||'';if(loc)kws.push(loc+' '+r.sub_type);}
-    if(/evacuat/i.test(q)){const loc2=r.location||r.state||'';if(loc2)kws.push(loc2+' evacuation');}
+
+    // Keyword 3: Event type + location
+    const subLabel={wildfire:'wildfire',flood:'flooding',earthquake:'earthquake',hurricane:'hurricane',tornado:'tornado',shooting:'shooting',hazmat:'HAZMAT',protest:'protest',tsunami:'tsunami',winter:'winter storm'};
+    const evtType=subLabel[r.sub_type]||r.sub_type;
+    if(evtType&&evtType!=='unknown'){
+      const loc=r.location?r.location.split(' County')[0]:r.state||'';
+      if(loc&&loc!==r.event_name)kws.push(loc+' '+evtType);
+    }
+
+    // Keyword 4: Status details (evacuation, containment)
+    if(r.containment&&r.event_name)kws.push(r.event_name+' '+r.containment+' containment');
+    else if(/evacuat/i.test(q)){const loc2=r.location||r.state||'';if(loc2)kws.push(loc2+' evacuation');}
+    else if(r.acres&&r.event_name)kws.push(r.event_name+' '+r.acres+' acres');
+
+    // Keyword 5: State + event type for NWS/government searches
+    if(r.state_code&&evtType&&evtType!=='unknown')kws.push(r.state_code+' '+evtType+' 2025');
+
   } else {
-    if(r.affected_product)kws.push(r.affected_product);
-    if(r.ioc&&r.affected_product)kws.push(r.ioc+' '+r.affected_product);
+    // CYBER
+    // Keyword 1: IOC or threat name
+    if(r.ioc)kws.push(r.ioc);
+    if(r.event_name&&r.event_name!==r.ioc)kws.push(r.event_name);
+
+    // Keyword 2: Product + CVE
+    if(r.affected_product&&r.ioc)kws.push(r.ioc+' '+r.affected_product);
+    else if(r.affected_product)kws.push(r.affected_product+' vulnerability');
+
+    // Keyword 3: Threat name + exploit
+    if(r.threat_name)kws.push(r.threat_name+' ransomware');
+
+    // Extract process name for CrowdStrike alerts
+    const procM=q.match(/\bProcess[:\s]+([a-zA-Z0-9._-]+\.exe)\b/i)||q.match(/\b([a-zA-Z0-9._-]+\.exe)\b/i);
+    if(procM&&!kws.includes(procM[1]))kws.push(procM[1]+' malware');
+
+    // Tactic/technique
+    const tacticM=q.match(/\b(T1\d{3}(?:\.\d{3})?)\b/);
+    if(tacticM&&!kws.includes(tacticM[1]))kws.push(tacticM[1]);
+
+    // Hostname for pivot
+    const hostM=q.match(/\bHostname[:\s]+([^\s|,\n]+)/i)||q.match(/\bHost[:\s]+([A-Z][A-Z0-9-]{3,})\b/i);
+    if(hostM)kws.push(hostM[1]);
   }
 
-  // Pull more from Everbridge field values
-  const ebFields=q.match(/(?:FIRE NAME|INCIDENT NAME|LOCATION|AREA|REGION|THREAT|IOC|SHA256|DOMAIN|URL):\s*([^\n|]+)/gi)||[];
-  ebFields.forEach(f=>{
-    const v=(f.split(':')[1]||'').trim();
-    if(v&&v.length>2&&v.length<60&&!kws.includes(v))kws.push(v);
-  });
+  // Deduplicate and clean
+  r.keywords=[...new Set(kws)].filter(k=>{
+    if(!k||k.length<2)return false;
+    // Never allow these as keywords
+    const bad=['ALERT','DETECTION','SEVERITY','HIGH','LOW','CRITICAL','MODERATE','STATUS','TYPE','CATEGORY','NULL','NONE','N/A','UNKNOWN','THE','AND','FOR','FROM','WITH'];
+    if(bad.includes(k.toUpperCase()))return false;
+    return true;
+  }).slice(0,5);
 
-  // Fill remaining with capitalized proper nouns
-  if(kws.length<4){
-    const caps=q.match(/\b[A-Z][A-Za-z]{2,}\b/g)||[];
-    const skip=new Set(['ALERT','SEVERITY','HIGH','LOW','CRITICAL','MODERATE','USER','HOST','HOSTNAME','ACTION','BLOCKED','STATUS','TYPE','CATEGORY','EVENT','THE','AND','FOR','FROM','WITH','DETECTION','SENSOR','PROCESS','FILE','HASH','SHA','MD','SIGNAL','RULE','CLASS']);
-    caps.forEach(c=>{if(!skip.has(c.toUpperCase())&&!kws.includes(c)&&kws.length<6)kws.push(c);});
+  // Absolute fallback — ONLY if we got nothing useful
+  if(r.keywords.length===0){
+    // Extract first meaningful phrase from alert, not the whole thing
+    const lines=q.split(/[\n|]/);
+    for(const line of lines){
+      const trimmed=line.trim().replace(/[A-Z]+\s*[:=]\s*/,'').trim();
+      if(trimmed.length>3&&trimmed.length<60&&!/^[A-Z\s]+$/.test(trimmed)){
+        r.keywords=[trimmed];break;
+      }
+    }
   }
-
-  r.keywords=[...new Set(kws)].filter(k=>k&&k.length>2).slice(0,6);
-  if(r.keywords.length===0)r.keywords=[q.split(/[\n|,]/)[0].trim().substring(0,60)];
 
   return r;
 }
 
 async function extractEntities(q){
-  // Step 1: Regex (always works, instant)
-  const local=extractKeywordsLocal(q);
-
-  // Step 2: AI refinement if key available
-  const k=getKey();
-  if(k){
-    try{
-      const raw=await ai(
-        'Alert parser. Return ONLY valid JSON, no markdown, no explanation.',
-        `Improve this keyword extraction for a SOC tool. Return ONLY JSON:
-{"event_name":"specific event name or null","location":"city/county or null","state":"full state name or null","state_code":"2-letter code or null","keywords":["5 most specific search terms"],"ioc":"exact IP/hash/domain/CVE or null"}
-
-For keywords: be VERY specific. Use exact names found in the alert. Not generic terms.
-Current extraction: ${JSON.stringify({event_name:local.event_name,location:local.location,state:local.state,keywords:local.keywords,ioc:local.ioc})}
-Alert: ${q.substring(0,400)}`,
-        false,250
-      );
-      if(raw&&raw!=='__nokey__'&&!raw.startsWith('[')){
-        const ai_r=JSON.parse(raw.replace(/```json|```/g,'').trim());
-        if(ai_r.event_name&&ai_r.event_name!=='null')local.event_name=ai_r.event_name;
-        if(ai_r.location&&ai_r.location!=='null')local.location=ai_r.location;
-        if(ai_r.state&&ai_r.state!=='null')local.state=ai_r.state;
-        if(ai_r.state_code&&ai_r.state_code!=='null')local.state_code=ai_r.state_code;
-        if(ai_r.ioc&&ai_r.ioc!=='null')local.ioc=ai_r.ioc;
-        if(ai_r.keywords&&ai_r.keywords.length>0){
-          const aiKws=ai_r.keywords.filter(k=>k&&k.length>2&&k!=='null');
-          if(local.ioc&&!aiKws.includes(local.ioc))aiKws.unshift(local.ioc);
-          local.keywords=[...new Set(aiKws)].slice(0,6);
-        }
-      }
-    }catch(e){}
-  }
-  return local;
+  // Always use precise regex extraction — never let AI override the keywords
+  // AI is only used for the intelligence brief, not for keyword extraction
+  return extractKeywordsLocal(q);
 }
 
 // ═══════════════════════════════════════════════════
@@ -465,8 +583,10 @@ async function runSearch(q){
       <div style="font-size:10px;color:var(--blue-text);margin-top:6px;">Routing to: <strong>${isPhys?'Physical & emergency tools only':'Cyber threat intel tools only'}</strong> &nbsp;|&nbsp; Auto-refreshes every 15 minutes</div>`;
   }
 
-  // 2. Auto-open top X search immediately
+  // 2. Auto-open X and TweetDeck with extracted keywords
   window.open(`https://x.com/search?q=${enc}&f=live`,'_blank');
+  // Also open TweetDeck for analysts who use it
+  window.open(`https://tweetdeck.twitter.com`,'_blank');
 
   // 3. Fire all in parallel
   const [triR,briefR,nwsD,usgsD,femaD,gdeltD]=await Promise.all([
@@ -543,7 +663,304 @@ async function runSearch(q){
 // ═══════════════════════════════════════════════════
 //  BUILD TOOL RESULTS WITH BRIEF + LINK
 // ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+//  STRICT SUB-TYPE ROUTING
+//  Each alert type gets ONLY its relevant tools.
+//  No mixing. No irrelevant tools.
+// ═══════════════════════════════════════════════════
 function buildToolResults(ent,q){
+  const kws=ent.keywords||[];
+  const q0=kws[0]||ent.event_name||'';  // Primary keyword — fire name, CVE, IP etc.
+  const q1=kws[1]||'';                  // Secondary — location
+  const q2=kws[2]||'';                  // Tertiary — state + type
+  const enc0=encodeURIComponent(q0);
+  const enc1=encodeURIComponent(q1);
+  const enc2=encodeURIComponent(q2);
+  const ioc=ent.ioc||q0;
+  const iocE=encodeURIComponent(ioc);
+  const sub=ent.sub_type;
+  const isPhys=ent.alert_type==='physical';
+  const st=ent.state_code||'';
+  const loc=ent.location||q1||q0;
+
+  let html=`<div style="background:var(--amber-bg);color:var(--amber-text);padding:8px 12px;border-radius:var(--r);margin-bottom:10px;font-size:11px;">
+    &#9733; X / Twitter and TweetDeck auto-opened in new tabs with keyword: <strong>"${esc(q0)}"</strong><br>
+    Every tool below is pre-filled with your extracted keywords. Click <strong>Open</strong> to go directly to results.
+  </div>`;
+
+  if(isPhys){
+
+    // ── X / TWITTER (always first, using exact extracted keywords)
+    html+=`<div class="sl">&#120143; X / Twitter &amp; TweetDeck — Keyword: "${esc(q0)}"</div>`;
+    html+=toolResult('&#120143;','X — Live reports','Auto-opened','t-green',`Searching X right now for "<strong>${esc(q0)}</strong>" — live tweets from all accounts. Also auto-opened TweetDeck for multi-column monitoring.`,q0,`https://x.com/search?q=${enc0}&f=live`,'');
+    html+=toolResult('&#120143;','X — Breaking & eyewitness','Live','t-amber',`Eyewitness videos, photos, breaking reports about "${esc(q0)}"`,`${q0} #breaking OR video`,`https://x.com/search?q=${enc0}+%28%23breaking+OR+video%29&f=live`,'');
+    if(q1)html+=toolResult('&#120143;','X — Location: '+esc(q1),'Live','t-amber',`Tweets specifically mentioning the location "${esc(q1)}"`,q1,`https://x.com/search?q=${enc1}&f=live`,'');
+    html+=toolResult('&#120143;','X — Government & emergency accounts','Official','t-amber',`FEMA, NOAA, state emergency management posting about this event`,`${q0} emergency`,`https://x.com/search?q=${enc0}+%28from%3AFEMA+OR+from%3ANOAAweather+OR+from%3AUSGS+OR+%23emergency%29&f=live`,'');
+    html+=toolResult('&#120143;','TweetDeck — Multi-column monitoring','Login','t-blue',`TweetDeck was auto-opened. Add a search column for "<strong>${esc(q0)}</strong>" to monitor multiple streams simultaneously. Great for ongoing incidents.`,q0,'https://tweetdeck.twitter.com','');
+
+    // ── CITIZEN APP (always for physical — crime events prioritized)
+    html+=`<div class="sl">&#128205; Local Incident Monitoring</div>`;
+    const isCrime=sub==='shooting';
+    html+=toolResult('&#128205;','Citizen App'+(isCrime?' — PRIORITY':''),'Login',isCrime?'t-red':'t-gray',
+      isCrime?`<strong>PRIORITY for shooting/crime:</strong> Real-time crowdsourced incident reports. Log in → tap the search icon → search "<strong>${esc(loc)}</strong>" for police activity, active shooter reports, crime incidents.`:`Real-time crowdsourced local incident reports — police, fire, accidents. Search "<strong>${esc(loc)}</strong>" after logging in.`,
+      loc,'https://citizen.com/explore','');
+
+    // ── NWS (always for physical — US only)
+    html+=`<div class="sl">&#127782; Official US Government Sources</div>`;
+    html+=toolResult('&#127782;','NWS — National Weather Service',st?'Filtered to '+st:'US','t-blue',
+      `Official US weather alerts for ${ent.state||'the affected area'}. Searching for active alerts${st?' in '+ent.state:''}. This is the authoritative source for weather emergencies in the United States.`,
+      st||loc,`https://www.weather.gov/alerts${st?'?area='+st:''}`,''  );
+    html+=toolResult('&#128683;','FEMA — Federal Emergency Management','US Gov','t-blue',
+      `Check if a federal disaster declaration has been issued for ${ent.state||'the affected state'}. FEMA tracks all major US disasters and coordinates federal response.`,
+      loc,'https://www.fema.gov/disasters','');
+
+    // ── WILDFIRE-SPECIFIC TOOLS (only when sub_type is wildfire)
+    if(sub==='wildfire'){
+      html+=`<div class="sl">&#128293; Wildfire-Specific Tools — Searching: "${esc(q0)}"</div>`;
+      html+=toolResult('&#128293;','Watch Duty — Wildfire Tracker','Live','t-red',
+        `Real-time wildfire tracking — fire perimeter maps, containment %, evacuation zones, structures threatened. Search for "<strong>${esc(q0)}</strong>" in the app. This is the most important tool for wildfire tracking.`,
+        q0,'https://app.watchduty.org','');
+      html+=toolResult('&#128293;','CAL FIRE — California Incident List','Live','t-red',
+        `California Department of Forestry active incident list. Find "<strong>${esc(q0)}</strong>" to see containment %, acreage, resources deployed, and air quality impacts.`,
+        q0,'https://www.fire.ca.gov/incidents','');
+      html+=toolResult('&#128293;','NIFC — National Interagency Fire Center','Live','t-red',
+        `National wildfire situation report — resources deployed, total acres burned nationally, preparedness level. Check for incident named "<strong>${esc(q0)}</strong>".`,
+        q0,'https://www.nifc.gov/fire-information','');
+      html+=toolResult('&#127752;','NASA FIRMS — Satellite Fire Detection','Live','t-red',
+        `NASA satellite-detected fire hotspots from MODIS and VIIRS satellites. Shows thermal intensity and spread direction for "<strong>${esc(q0)}</strong>" fire perimeter.`,
+        q0,'https://firms.modaps.eosdis.nasa.gov/map','');
+      html+=toolResult('&#127754;','AirNow — Air Quality Index','Live','t-teal',
+        `Real-time air quality for ${ent.location||ent.state||'the affected area'}. Wildfire smoke levels, PM2.5 concentration, and health advisories. Critical for employee safety assessment.`,
+        loc,`https://www.airnow.gov${st?'?reportingArea='+loc:''}`,''  );
+      html+=toolResult('&#127788;','Windy — Fire Weather & Wind','Live','t-blue',
+        `Wind patterns, fire weather conditions (humidity, temperature, wind speed/direction) for ${ent.state||'affected area'}. Critical for predicting fire spread direction.`,
+        q0,'https://www.windy.com','');
+      html+=toolResult('&#127960;','PurpleAir — Community Air Sensors','Live','t-teal',
+        `Dense community sensor network showing real-time smoke levels. Often more local than AirNow. Useful for specific neighborhoods near "${esc(q0)}".`,
+        loc,'https://map.purpleair.com','');
+      html+=toolResult('&#128240;','Google News — This Fire','Live','t-teal',
+        `Latest news articles specifically about "${esc(q0)}". Best for getting current updates, evacuation orders, and official statements.`,
+        q0,`https://news.google.com/search?q=${enc0}`,''  );
+      html+=toolResult('&#128254;','Reddit — Local Community Reports','Live','t-amber',
+        `Eyewitness accounts and community updates about "${esc(q0)}". Sort by New for latest posts.`,
+        q0,`https://www.reddit.com/search/?q=${enc0}&sort=new`,''  );
+    }
+
+    // ── HURRICANE-SPECIFIC (only when sub_type is hurricane)
+    if(sub==='hurricane'){
+      html+=`<div class="sl">&#127754; Hurricane-Specific Tools — Searching: "${esc(q0)}"</div>`;
+      html+=toolResult('&#127754;','NHC — National Hurricane Center','Live','t-blue',
+        `Official storm track, category, advisory, and cone of uncertainty for "${esc(q0)}". The authoritative US source for hurricane data. Updated every 6 hours.`,
+        q0,'https://www.nhc.noaa.gov','');
+      html+=toolResult('&#127775;','SPC — Storm Prediction Center','Live','t-blue',
+        `Tornado, hail, and wind risk in ${esc(q0)}'s outer bands. Active watches and warnings for areas in the hurricane's projected path.`,
+        q0,'https://www.spc.noaa.gov','');
+      html+=toolResult('&#127756;','Tropical Tidbits','Live','t-blue',
+        `Multiple hurricane model forecast tracks, spaghetti plots, and intensity forecasts for "${esc(q0)}". Best site for comparing model outputs.`,
+        q0,'https://www.tropicaltidbits.com','');
+      html+=toolResult('&#127788;','Windy — Hurricane Tracker','Live','t-blue',
+        `Hurricane path visualization and wind field animation for "${esc(q0)}". Shows wind speeds by category at landfall zones.`,
+        q0,'https://www.windy.com','');
+      html+=toolResult('&#127806;','NOAA Ocean Service — Storm Surge','Live','t-blue',
+        `Storm surge forecast and inundation maps for "${esc(q0)}". Critical for coastal evacuation decisions.`,
+        q0,'https://oceanservice.noaa.gov/hazards/hurricanes/','');
+      html+=toolResult('&#128240;','Google News — Hurricane Updates','Live','t-teal',
+        `Latest news coverage of "${esc(q0)}" including evacuation orders, damage reports, and official statements.`,
+        q0,`https://news.google.com/search?q=${enc0}+hurricane`,''  );
+    }
+
+    // ── FLOOD-SPECIFIC (only when sub_type is flood)
+    if(sub==='flood'){
+      html+=`<div class="sl">&#127754; Flood-Specific Tools — Searching: "${esc(q0)}"</div>`;
+      html+=toolResult('&#127754;','NWS Flood Alerts','Live','t-blue',
+        `Active flood watches, warnings, and advisories${st?' for '+ent.state:''}. Searching for current flood statements affecting "${esc(q0)}".`,
+        q0,`https://www.weather.gov/alerts${st?'?area='+st:''}`,''  );
+      html+=toolResult('&#127754;','USGS Water Resources — Stream Gauges','Live','t-blue',
+        `Real-time stream gauge data, river levels, and flood stage status for waterways near "${esc(loc)}". Shows if rivers are above flood stage.`,
+        loc,'https://waterdata.usgs.gov/nwis/rt','');
+      html+=toolResult('&#128240;','Google News — Flood Updates','Live','t-teal',
+        `Latest news about "${esc(q0)}" flooding — road closures, evacuations, shelter locations.`,
+        q0,`https://news.google.com/search?q=${enc0}+flood`,''  );
+    }
+
+    // ── EARTHQUAKE-SPECIFIC (only when sub_type is earthquake)
+    if(sub==='earthquake'){
+      html+=`<div class="sl">&#127758; Earthquake-Specific Tools — Searching: "${esc(q0)}"</div>`;
+      html+=toolResult('&#127758;','USGS Earthquake Hazards','Live','t-blue',
+        `Real-time data for "${esc(q0)}" — magnitude, depth (km), ShakeMap intensity, tsunami warning status, aftershock forecast.`,
+        q0,'https://earthquake.usgs.gov/earthquakes/map','');
+      html+=toolResult('&#127758;','EMSC — European Seismological Center','Live','t-blue',
+        `Cross-check seismic data and felt reports for "${esc(q0)}". Often reports faster than USGS for initial detection.`,
+        q0,'https://www.emsc-csem.org/Earthquake/','');
+      html+=toolResult('&#128240;','Google News — Earthquake Updates','Live','t-teal',
+        `Latest news about "${esc(q0)}" — damage reports, aftershocks, emergency response.`,
+        q0,`https://news.google.com/search?q=${enc0}+earthquake`,''  );
+    }
+
+    // ── TORNADO-SPECIFIC
+    if(sub==='tornado'){
+      html+=`<div class="sl">&#127786; Tornado-Specific Tools — Searching: "${esc(q0)}"</div>`;
+      html+=toolResult('&#127786;','SPC — Storm Prediction Center','Live','t-blue',
+        `Tornado watches, warnings, and real-time storm reports${st?' for '+ent.state:''}. Check the "Storm Reports" section for confirmed tornadoes near "${esc(loc)}".`,
+        loc,'https://www.spc.noaa.gov','');
+      html+=toolResult('&#127786;','SpotterNetwork — Real-Time Reports','Live','t-blue',
+        `Storm spotter reports from trained weather observers near "${esc(loc)}". Earliest ground-truth of tornado activity.`,
+        loc,'https://www.spotternetwork.org','');
+    }
+
+    // ── SHOOTING/CRIME-SPECIFIC
+    if(sub==='shooting'){
+      html+=`<div class="sl">&#9888; Active Shooter / Crime-Specific Tools — Searching: "${esc(loc)}"</div>`;
+      html+=toolResult('&#9888;','Citizen App — PRIORITY','Login','t-red',
+        `<strong>Most important tool for this alert.</strong> Real-time police scanner integration and crowdsourced incident reports for "${esc(loc)}". Log in and search the location immediately.`,
+        loc,'https://citizen.com/explore','');
+      html+=toolResult('&#9888;','X — Police & crime reports','Live','t-amber',
+        `Police scanner reports, eyewitness accounts, and official statements about shooting in "${esc(loc)}". Using live filter for most recent.`,
+        `${loc} shooting`,`https://x.com/search?q=${encodeURIComponent(loc+' shooting')}&f=live`,'');
+      html+=toolResult('&#128240;','Google News — Shooting report','Live','t-teal',
+        `Latest news coverage from local and national media about "${esc(q0)}".`,
+        q0,`https://news.google.com/search?q=${enc0}+shooting`,''  );
+    }
+
+    // ── HAZMAT-SPECIFIC
+    if(sub==='hazmat'){
+      html+=`<div class="sl">&#128165; HAZMAT-Specific Tools — Searching: "${esc(q0)}"</div>`;
+      html+=toolResult('&#128165;','CAMEO Chemicals — NOAA HAZMAT Guide','Free','t-green',
+        `Chemical hazard information, reactivity data, and emergency response guide. Search for the specific chemical involved in "${esc(q0)}".`,
+        q0,'https://cameochemicals.noaa.gov','');
+      html+=toolResult('&#128165;','EPA ECHO — Facility Database','Free','t-green',
+        `Environmental compliance and hazardous facility database${st?' for '+ent.state:''}. Find nearby facilities that handle hazardous materials near "${esc(loc)}".`,
+        loc,`https://echo.epa.gov/facilities/facility-search?p_st=${st}`,'');
+    }
+
+    // ── GLOBAL INTEL (always for physical)
+    html+=`<div class="sl">&#127758; Global Intelligence Dashboards</div>`;
+    html+=toolResult('&#127758;','World Monitor — Global Intel','Free','t-green',
+      `25 data layers: geopolitical instability, military tracking, conflicts, natural disasters, markets. Click on ${ent.state||'the affected region'} for a full intelligence dossier.`,
+      q0,'https://worldmonitor.app','');
+    html+=toolResult('&#127760;','GDELT — Global News Events','Free','t-teal',
+      `Real-time global news event database. Shows media intensity score for "${esc(q0)}" — how much news coverage this event is generating.`,
+      q0,`https://gdeltproject.org`,'');
+
+  } else {
+    // ── CYBER TOOLS ──
+
+    html+=`<div class="sl">&#120143; X / Twitter &amp; TweetDeck — Keyword: "${esc(q0)}"</div>`;
+    html+=toolResult('&#120143;','X — Infosec community','Auto-opened','t-green',
+      `Searching X for "<strong>${esc(q0)}</strong>" in the infosec community — researchers, analysts, vendors discussing this threat.`,
+      q0,`https://x.com/search?q=${enc0}+%28%23infosec+OR+%23cybersecurity+OR+%23threatintel%29&f=live`,'');
+    html+=toolResult('&#120143;','X — Verified security researchers & CISA','Verified','t-amber',
+      `CISA, security vendor accounts, verified researchers posting about "${esc(q0)}".`,
+      q0,`https://x.com/search?q=${enc0}+filter%3Averified&f=live`,'');
+    html+=toolResult('&#120143;','TweetDeck — Multi-column monitoring','Login','t-blue',
+      `TweetDeck was auto-opened. Add a search column for "<strong>${esc(q0)}</strong>" to monitor the security community in real time.`,
+      q0,'https://tweetdeck.twitter.com','');
+
+    html+=`<div class="sl">&#128737; Threat Intelligence — Searching: "${esc(ioc)}"</div>`;
+    html+=toolResult('&#128027;','VirusTotal','Free','t-red',
+      `90+ AV engine scan results, sandbox behavioral analysis, community scores, and related IOCs for "<strong>${esc(ioc)}</strong>".`,
+      ioc,`https://www.virustotal.com/gui/search/${iocE}`,'');
+    html+=toolResult('&#127758;','Shodan','Free','t-blue',
+      `Internet scan data for "<strong>${esc(ioc)}</strong>" — open ports, running services, banner data, CVEs detected, geolocation, ASN, and organization.`,
+      ioc,`https://www.shodan.io/host/${iocE}`,'');
+    html+=toolResult('&#128267;','Greynoise','Free','t-teal',
+      `Classifies "<strong>${esc(ioc)}</strong>" as malicious/benign/unknown. Shows scanning intent, behavior tags, and first/last seen dates.`,
+      ioc,`https://viz.greynoise.io/ip/${iocE}`,'');
+    html+=toolResult('&#128204;','AlienVault OTX','Free','t-blue',
+      `Threat pulse count, related IOCs, malware family associations, and threat actor attribution for "<strong>${esc(ioc)}</strong>".`,
+      ioc,`https://otx.alienvault.com/indicator/${ent.alert_type==='ip'?'ip':ent.alert_type==='domain'?'domain':'file'}/${iocE}`,'');
+    html+=toolResult('&#127759;','AbuseIPDB','Free','t-red',
+      `Abuse confidence score and reports for "<strong>${esc(ioc)}</strong>" — country, ISP, usage type, total abuse reports.`,
+      ioc,`https://www.abuseipdb.com/check/${iocE}`,'');
+    html+=toolResult('&#128202;','Pulsedive','Free','t-purple',
+      `Risk score 1-10, threat feeds containing "<strong>${esc(ioc)}</strong>", linked threats, and threat type categorization.`,
+      ioc,`https://pulsedive.com/indicator/?ioc=${iocE}`,'');
+    html+=toolResult('&#128683;','ThreatFox','Free','t-red',
+      `Malware family, confidence level, reporter, and first seen date for IOC "<strong>${esc(ioc)}</strong>".`,
+      ioc,`https://threatfox.abuse.ch/browse/?q=${iocE}`,'');
+    html+=toolResult('&#128202;','IBM X-Force','Free','t-blue',
+      `IBM threat intelligence — risk score, threat category, malware associations for "<strong>${esc(ioc)}</strong>".`,
+      ioc,`https://exchange.xforce.ibmcloud.com/search/${iocE}`,'');
+    html+=toolResult('&#128202;','Cisco Talos','Free','t-blue',
+      `IP/domain reputation score and blacklist status for "<strong>${esc(ioc)}</strong>". Spam classification and network owner.`,
+      ioc,`https://talosintelligence.com/reputation_center/lookup?search=${iocE}`,'');
+    html+=toolResult('&#128267;','Censys','Free','t-teal',
+      `Internet scan data, SSL certificates, open services, and infrastructure history for "<strong>${esc(ioc)}</strong>".`,
+      ioc,`https://search.censys.io/search?resource=hosts&q=${iocE}`,'');
+    html+=toolResult('&#127776;','MITRE ATT&CK','Free','t-blue',
+      `TTP mapping, threat actor profiles, detection rules, and mitigations for "<strong>${esc(q0)}</strong>".`,
+      q0,`https://attack.mitre.org/search/?query=${enc0}`,'');
+    html+=toolResult('&#127760;','Urlscan.io','Free','t-teal',
+      `URL/website scanner — screenshots, DOM analysis, network requests, and IOCs for "<strong>${esc(ioc)}</strong>".`,
+      ioc,`https://urlscan.io/search/#${iocE}`,'');
+
+    // Hash-specific sandboxes
+    if(ent.alert_type==='hash'||sub==='malware'||sub==='ransomware'){
+      html+=`<div class="sl">&#128027; Malware Sandbox Analysis — Searching: "${esc(ioc)}"</div>`;
+      html+=toolResult('&#128027;','MalwareBazaar','Free','t-red',
+        `Malware family, file type, YARA rules, and tags for hash "<strong>${esc(ioc)}</strong>".`,
+        ioc,`https://bazaar.abuse.ch/sample/${iocE}/`,'');
+      html+=toolResult('&#128027;','Hybrid Analysis','Free','t-purple',
+        `Automated sandbox with MITRE ATT&CK mapping, network traffic, and behavioral report for "<strong>${esc(ioc)}</strong>".`,
+        ioc,`https://www.hybrid-analysis.com/search?query=${iocE}`,'');
+      html+=toolResult('&#128027;','ANY.RUN — Interactive Sandbox','Free','t-purple',
+        `Watch malware execute live in browser. See C2 connections, dropped files, registry changes for "<strong>${esc(ioc)}</strong>".`,
+        ioc,'https://app.any.run','');
+      html+=toolResult('&#128027;','Intezer Analyze','Free','t-purple',
+        `Genetic code analysis — finds which malware family "<strong>${esc(ioc)}</strong>" belongs to through code reuse detection.`,
+        ioc,'https://analyze.intezer.com','');
+    }
+
+    // CVE-specific
+    if(ent.alert_type==='cve'||sub==='cve'){
+      html+=`<div class="sl">&#128683; CVE Intelligence — Searching: "${esc(ioc)}"</div>`;
+      html+=toolResult('&#128683;','NVD NIST','Free','t-green',
+        `Official CVE entry for "<strong>${esc(ioc)}</strong>" — CVSS v3.1 score, attack vector, CWE type, affected CPEs, and published date.`,
+        ioc,`https://nvd.nist.gov/vuln/detail/${iocE}`,'');
+      html+=toolResult('&#128683;','CISA KEV Catalog','Free','t-green',
+        `Is "<strong>${esc(ioc)}</strong>" on the Known Exploited Vulnerabilities list? Check if CISA has confirmed active exploitation with required remediation deadline.`,
+        ioc,'https://www.cisa.gov/known-exploited-vulnerabilities-catalog','');
+      html+=toolResult('&#128683;','Exploit-DB','Free','t-red',
+        `Public exploit code for "<strong>${esc(ioc)}</strong>" — PoC availability, exploit maturity (weaponized/PoC/theoretical).`,
+        ioc,`https://www.exploit-db.com/search?cve=${iocE}`,'');
+      html+=toolResult('&#128683;','GitHub Advisories','Free','t-blue',
+        `Package advisories for "<strong>${esc(ioc)}</strong>" — affected versions, fixed versions, GHSA IDs.`,
+        ioc,`https://github.com/advisories?query=${iocE}`,'');
+      html+=toolResult('&#128683;','AttackerKB','Free','t-blue',
+        `Security analyst assessments of "<strong>${esc(ioc)}</strong>" — exploitability score and real-world attacker value rating.`,
+        ioc,`https://attackerkb.com/search?q=${iocE}`,'');
+      html+=toolResult('&#128683;','Greynoise Trends','Free','t-teal',
+        `Is "<strong>${esc(ioc)}</strong>" being actively scanned or exploited in the wild right now?`,
+        ioc,'https://viz.greynoise.io/trends','');
+      html+=toolResult('&#128683;','Metasploit DB','Free','t-red',
+        `Does a Metasploit module exist for "<strong>${esc(ioc)}</strong>"? Check module name and type.`,
+        ioc,`https://www.rapid7.com/db/?q=${iocE}`,'');
+    }
+
+    // News — always for cyber
+    html+=`<div class="sl">&#128240; News &amp; Community — Searching: "${esc(q0)}"</div>`;
+    html+=toolResult('&#128240;','Bleeping Computer','Free','t-teal',
+      `Leading cybersecurity news site. Search for "<strong>${esc(q0)}</strong>" — technical details, IOCs, affected organizations, patches.`,
+      q0,`https://www.bleepingcomputer.com/?s=${enc0}`,'');
+    html+=toolResult('&#128254;','Reddit r/netsec','Free','t-amber',
+      `Security community discussion about "<strong>${esc(q0)}</strong>" — PoC sharing, analyst notes, real-world impact.`,
+      q0,`https://www.reddit.com/r/netsec/search/?q=${enc0}&sort=new`,'');
+    html+=toolResult('&#128203;','SANS ISC','Free','t-blue',
+      `Daily handler diaries and severity assessment for "<strong>${esc(q0)}</strong>". SANS analysts write detailed IOC analysis.`,
+      q0,`https://isc.sans.edu/search.html#q=${enc0}`,'');
+    html+=toolResult('&#128202;','GitHub — PoC & Detection Rules','Free','t-blue',
+      `Public proof-of-concept repos, YARA rules, and Sigma detection rules for "<strong>${esc(q0)}</strong>".`,
+      q0,`https://github.com/search?q=${enc0}&type=repositories`,'');
+    html+=toolResult('&#128240;','Google News','Free','t-teal',
+      `News coverage of "<strong>${esc(q0)}</strong>" from security and mainstream media.`,
+      q0,`https://news.google.com/search?q=${enc0}+cybersecurity`,'');
+    html+=toolResult('&#128293;','PANW Threat Vault','Login','t-gray',
+      `Palo Alto threat signatures and WildFire verdicts for "<strong>${esc(ioc)}</strong>". Log in for full access.`,
+      ioc,'https://threatvault.paloaltonetworks.com','');
+  }
+
+  return html;
+}
   const kws=ent.keywords||[];
   const q0=kws[0]||ent.event_name||'';
   const q0e=encodeURIComponent(q0);
