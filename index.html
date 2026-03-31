@@ -14,7 +14,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hdr-logo{width:30px;height:30px;background:var(--red-bg);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:15px;}
 .hdr-title{font-size:14px;font-weight:600;}.hdr-sub{font-size:11px;color:var(--text3);}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.hdr-clock{font-size:11px;color:var(--text3);font-variant-numeric:tabular-nums;}
+.hdr-clock{font-size:11px;color:var(--text3);}
 .layout{display:flex;height:calc(100vh - 53px);}
 .sidebar{width:210px;flex-shrink:0;background:var(--bg);border-right:0.5px solid var(--border2);overflow-y:auto;}
 .sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:var(--border2);}
@@ -35,7 +35,7 @@ textarea{min-height:90px;resize:vertical;font-family:'SF Mono','Consolas',monosp
 .row{display:flex;gap:7px;align-items:center;margin-bottom:8px;}
 .btn{font-size:12px;padding:6px 12px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
 .btn:hover{background:var(--bg2);}.btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);font-weight:500;}.btn.primary:hover{opacity:.85;}
-.btn.go{background:#000;color:#fff;border-color:#000;font-size:13px;font-weight:600;height:38px;padding:0 16px;}.btn.go:hover{background:#222;}
+.btn.go{background:#000;color:#fff;border-color:#000;font-size:13px;font-weight:600;height:38px;padding:0 16px;}
 .btn.sm{font-size:11px;padding:3px 8px;}.btn-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
 .tag{font-size:10px;padding:2px 6px;border-radius:999px;font-weight:500;flex-shrink:0;}
 .t-red{background:var(--red-bg);color:var(--red-text);}.t-blue{background:var(--blue-bg);color:var(--blue-text);}.t-amber{background:var(--amber-bg);color:var(--amber-text);}.t-green{background:var(--green-bg);color:var(--green-text);}.t-purple{background:var(--purple-bg);color:var(--purple-text);}.t-teal{background:var(--teal-bg);color:var(--teal-text);}.t-gray{background:var(--bg2);color:var(--text3);}
@@ -48,34 +48,28 @@ textarea{min-height:90px;resize:vertical;font-family:'SF Mono','Consolas',monosp
 .res-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rl);overflow:hidden;}
 .res-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:0.5px solid var(--border);flex-wrap:wrap;gap:6px;}
 .res-title-wrap{display:flex;align-items:center;gap:6px;}
-.res-icon{font-size:15px;}
-.res-title{font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.04em;}
+.res-icon{font-size:15px;}.res-title{font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.04em;}
 .res-pill{font-size:10px;padding:2px 8px;border-radius:999px;}
 .p-wait{background:var(--amber-bg);color:var(--amber-text);}
 .p-done{background:var(--green-bg);color:var(--green-text);}
 .p-live{background:var(--blue-bg);color:var(--blue-text);}
-.p-skip{background:var(--bg2);color:var(--text3);}
 .res-body{padding:12px 14px;font-size:12px;color:var(--text);line-height:1.8;}
-.res-dim{padding:10px 14px;font-size:11px;color:var(--text3);line-height:1.6;}
+.res-dim{padding:10px 14px;font-size:11px;color:var(--text3);}
 /* KEYWORD BANNER */
 .kw-banner{background:var(--blue-bg);border:0.5px solid var(--blue-text);border-radius:var(--rl);padding:12px 16px;margin-bottom:12px;}
-.kw-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
-.kw-chip{background:var(--bg);border:0.5px solid var(--blue-text);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:500;color:var(--blue-text);}
-/* TOOL ROWS */
-.tool-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:9px 11px;background:var(--bg2);border-radius:var(--r);margin-bottom:5px;border:0.5px solid var(--border);}
-.tool-row:hover{border-color:var(--border2);}
-.tool-name{font-size:12px;font-weight:600;color:var(--text);}
-.tool-desc{font-size:10px;color:var(--text2);margin-top:2px;}
-.tool-query{font-size:10px;color:var(--blue-text);margin-top:2px;font-style:italic;}
-/* DATA ROWS */
-.data-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 10px;background:var(--bg2);border-radius:var(--r);margin-bottom:5px;}
-.data-name{font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;}
-.data-detail{font-size:11px;color:var(--text2);line-height:1.5;}
-.data-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
-/* NEWS ROWS */
-.news-row{padding:9px 10px;background:var(--bg2);border-radius:var(--r);margin-bottom:5px;}
-.news-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px;}
-.news-meta{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.kw-chip{display:inline-block;background:var(--bg);border:0.5px solid var(--blue-text);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:600;color:var(--blue-text);margin:2px;}
+/* TOOL RESULT ROWS — show brief + link */
+.tool-result{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:6px;}
+.tool-result:hover{border-color:var(--border2);}
+.tr-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px;}
+.tr-name{font-size:12px;font-weight:700;color:var(--text);}
+.tr-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;}
+.tr-brief{font-size:12px;color:var(--text2);line-height:1.6;}
+.tr-query{font-size:10px;color:var(--blue-text);margin-top:4px;font-style:italic;}
+.tr-live{font-size:11px;color:var(--text);line-height:1.6;margin-top:5px;padding-top:5px;border-top:0.5px solid var(--border);}
+/* REFRESH BAR */
+.refresh-bar{background:var(--green-bg);border:0.5px solid var(--green-text);border-radius:var(--r);padding:7px 12px;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--green-text);}
+.refresh-bar.warn{background:var(--amber-bg);border-color:var(--amber-text);color:var(--amber-text);}
 /* MISC */
 .sp{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border2);border-top-color:var(--text2);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:4px;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -92,7 +86,6 @@ textarea{min-height:90px;resize:vertical;font-family:'SF Mono','Consolas',monosp
 .url-entry{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:6px;}
 .url-time{font-size:10px;color:var(--text3);margin-bottom:4px;}
 .url-new{font-size:10px;background:var(--amber-bg);color:var(--amber-text);padding:1px 5px;border-radius:999px;margin-left:5px;}
-.copy-btn{font-size:10px;padding:2px 8px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;margin-top:6px;}
 .empty{text-align:center;padding:36px 16px;color:var(--text3);font-size:12px;}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;}
 .modal-bg.on{display:flex;}
@@ -101,7 +94,7 @@ textarea{min-height:90px;resize:vertical;font-family:'SF Mono','Consolas',monosp
 .login-table th{text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;padding:5px 8px;border-bottom:0.5px solid var(--border);}
 .login-table td{padding:6px 8px;border-bottom:0.5px solid var(--border);vertical-align:top;color:var(--text2);}
 .login-table tr:last-child td{border-bottom:none;}
-.login-table td:first-child{font-weight:500;color:var(--text);white-space:nowrap;}
+.login-table td:first-child{font-weight:500;color:var(--text);}
 .tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px;margin-bottom:12px;}
 .tool-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:9px 11px;display:flex;flex-direction:column;gap:3px;text-decoration:none;color:var(--text);}
 .tool-card:hover{border-color:var(--border2);background:var(--bg2);}
@@ -114,40 +107,35 @@ textarea{min-height:90px;resize:vertical;font-family:'SF Mono','Consolas',monosp
 .tg-live{background:var(--blue-bg);color:var(--blue-text);}
 .tg-cli{background:var(--purple-bg);color:var(--purple-text);}
 .osint-search{width:100%;padding:9px 12px;border-radius:var(--r);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px;margin-bottom:14px;outline:none;}
-.gemini-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#4285F4,#34A853,#FBBC05,#EA4335);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;font-size:11px;}
 </style>
 </head>
 <body>
-
 <div class="hdr">
   <div class="hdr-logo">&#128737;</div>
   <div>
-    <div class="hdr-title">SOC Alert Intel Hub <span class="gemini-badge">&#10022; Gemini AI</span></div>
-    <div class="hdr-sub">Real internet search &middot; Smart routing &middot; All OSINT tools &middot; One page</div>
+    <div class="hdr-title">SOC Alert Intel Hub</div>
+    <div class="hdr-sub">Gemini AI + Google Search &middot; Smart routing &middot; Real results &middot; Auto-refresh 15 min</div>
   </div>
   <div class="hdr-right">
     <div class="hdr-clock" id="clock"></div>
-    <button id="key-dot" onclick="showSettings()" style="width:9px;height:9px;border-radius:50%;background:#E24B4A;cursor:pointer;flex-shrink:0;border:none;padding:0;" title="API key status"></button>
+    <button id="key-dot" onclick="showSettings()" style="width:9px;height:9px;border-radius:50%;background:#E24B4A;cursor:pointer;flex-shrink:0;border:none;padding:0;"></button>
     <button onclick="showSettings()" class="btn" style="font-size:11px;padding:4px 10px;">&#9881; API Key</button>
   </div>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div class="modal-bg" id="settings-modal">
   <div class="modal">
-    <div style="font-size:15px;font-weight:600;margin-bottom:4px;">&#9881; Gemini API Key <span style="font-size:11px;color:var(--green-text);font-weight:400;">— 100% Free, No Credit Card</span></div>
-    <div style="background:var(--green-bg);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--green-text);line-height:1.6;">
-      <strong>How to get your free key (2 minutes):</strong><br>
+    <div style="font-size:15px;font-weight:600;margin-bottom:4px;">&#9881; Gemini API Key <span style="font-size:11px;color:var(--green-text);">— Free, No Credit Card</span></div>
+    <div style="background:var(--green-bg);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--green-text);line-height:1.7;">
       1. Go to <a href="https://aistudio.google.com" target="_blank" style="color:var(--green-text);font-weight:600;">aistudio.google.com</a><br>
-      2. Sign in with your Google account<br>
-      3. Click <strong>Get API Key</strong> → <strong>Create API key</strong><br>
-      4. Copy the key (starts with AIza...) and paste below
+      2. Sign in with Google &rarr; click <strong>Get API Key</strong> &rarr; <strong>Create API key</strong><br>
+      3. Copy key (starts with AIza...) and paste below
     </div>
     <input type="password" id="key-input" placeholder="AIza..." style="margin-bottom:10px;font-family:monospace;font-size:12px;"/>
     <div id="key-status" style="font-size:11px;margin-bottom:12px;min-height:16px;"></div>
     <div style="display:flex;gap:7px;justify-content:flex-end;">
       <button class="btn" onclick="closeSettings()">Cancel</button>
-      <button class="btn primary" onclick="saveKey()">Save key &amp; activate</button>
+      <button class="btn primary" onclick="saveKey()">Save key</button>
     </div>
   </div>
 </div>
@@ -178,90 +166,232 @@ textarea{min-height:90px;resize:vertical;font-family:'SF Mono','Consolas',monosp
 </div>
 
 <script>
-// ══════════════════════════════════════════════════
-//  GEMINI API — with Google Search grounding
-//  Real internet browsing — completely free
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+//  GEMINI API
+// ═══════════════════════════════════════════════════
 const GEMINI_URL='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-
-function getKey(){
-  const s=localStorage.getItem('soc_gemini_key');
-  if(s&&s.trim())return s.trim();
-  if(window.SOC_CONFIG&&window.SOC_CONFIG.GEMINI_API_KEY&&window.SOC_CONFIG.GEMINI_API_KEY!=='YOUR_KEY_HERE')return window.SOC_CONFIG.GEMINI_API_KEY;
-  return null;
-}
-function showSettings(){
-  document.getElementById('settings-modal').classList.add('on');
-  const inp=document.getElementById('key-input');
-  inp.value=localStorage.getItem('soc_gemini_key')||'';
-  const st=document.getElementById('key-status');
-  if(getKey()){st.textContent='✓ Key saved — Gemini AI with internet search is active';st.style.color='var(--green-text)';}
-  else{st.textContent='No key yet — follow steps above';st.style.color='var(--amber-text)';}
-  setTimeout(()=>inp.focus(),50);
-}
+function getKey(){const s=localStorage.getItem('soc_gemini_key');if(s&&s.trim())return s.trim();if(window.SOC_CONFIG&&window.SOC_CONFIG.GEMINI_API_KEY&&window.SOC_CONFIG.GEMINI_API_KEY!=='YOUR_KEY_HERE')return window.SOC_CONFIG.GEMINI_API_KEY;return null;}
+function showSettings(){document.getElementById('settings-modal').classList.add('on');const inp=document.getElementById('key-input');inp.value=localStorage.getItem('soc_gemini_key')||'';const st=document.getElementById('key-status');st.textContent=getKey()?'✓ Active — Gemini AI with internet search enabled':'No key yet';st.style.color=getKey()?'var(--green-text)':'var(--amber-text)';setTimeout(()=>inp.focus(),50);}
 function closeSettings(){document.getElementById('settings-modal').classList.remove('on');}
-function saveKey(){
-  const v=(document.getElementById('key-input').value||'').trim();
-  if(!v){document.getElementById('key-status').textContent='Please paste your Gemini API key first.';document.getElementById('key-status').style.color='var(--red-text)';return;}
-  localStorage.setItem('soc_gemini_key',v);
-  document.getElementById('key-status').textContent='✓ Saved! Gemini AI with internet search is now active.';
-  document.getElementById('key-status').style.color='var(--green-text)';
-  updateDot();setTimeout(closeSettings,1200);
-}
+function saveKey(){const v=(document.getElementById('key-input').value||'').trim();if(!v)return;localStorage.setItem('soc_gemini_key',v);document.getElementById('key-status').textContent='✓ Saved!';document.getElementById('key-status').style.color='var(--green-text)';updateDot();setTimeout(closeSettings,1000);}
 function updateDot(){const d=document.getElementById('key-dot');if(d)d.style.background=getKey()?'#639922':'#E24B4A';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSettings();});
 setInterval(()=>{const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleString();},1000);
 function M(){return document.getElementById('M');}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// ── GEMINI API CALL WITH GOOGLE SEARCH GROUNDING ──
-// This makes Gemini actually browse the internet while analyzing your alert
-async function ai(systemPrompt, userPrompt, useSearch, tok){
-  const k=getKey();
-  if(!k)return'__nokey__';
+async function ai(sys,prompt,useSearch,tok){
+  const k=getKey();if(!k)return'__nokey__';
   try{
     const body={
-      system_instruction:{parts:[{text:systemPrompt}]},
-      contents:[{parts:[{text:userPrompt}]}],
-      generationConfig:{maxOutputTokens:tok||800,temperature:0.2}
+      system_instruction:{parts:[{text:sys}]},
+      contents:[{parts:[{text:prompt}]}],
+      generationConfig:{maxOutputTokens:tok||800,temperature:0.1}
     };
-    // Enable Google Search grounding for internet-aware analysis
-    if(useSearch){
-      body.tools=[{google_search:{}}];
-    }
-    const r=await fetch(GEMINI_URL+'?key='+k,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(body)
-    });
+    if(useSearch)body.tools=[{google_search:{}}];
+    const r=await fetch(GEMINI_URL+'?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await r.json();
-    if(d.error){
-      if(d.error.code===429)return'[Rate limit hit — wait 1 minute and try again. Free Gemini tier allows 10 requests/minute.]';
-      if(d.error.code===400)return'[Invalid API key — please check your Gemini key in settings.]';
-      return'[Error: '+d.error.message+']';
-    }
+    if(d.error){if(d.error.code===429)return'[Rate limit — wait 1 min and retry]';if(d.error.code===400)return'[Invalid API key — check settings]';return'[Error: '+d.error.message+']';}
     return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
-  }catch(e){return'[Network error: '+e.message+'. Check your internet connection.]';}
+  }catch(e){return'[Network error: '+e.message+']';}
 }
 
-// ── NAVIGATION ──
-let curPage='inv',curTool='';
-function go(p,tool){
-  curPage=p;curTool=tool||'';
-  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
-  const sb=document.getElementById('sb-'+(p==='tool'?'tool-'+tool:p));if(sb)sb.classList.add('active');
-  const mc=M();
-  if(p==='inv')renderInv(mc);
-  else if(p==='twitter')renderTwitter(mc);
-  else if(p==='physical')renderPhysical(mc);
-  else if(p==='urlmon')renderUrlMon(mc);
-  else if(p==='logins')renderLogins(mc);
-  else if(p==='tool')renderTool(mc,tool);
-  else if(p==='osint')renderOsintDir(mc);
-  else if(p==='about')renderAbout(mc);
+// ═══════════════════════════════════════════════════
+//  STEP 1: REGEX-FIRST KEYWORD EXTRACTION
+//  Works without API key. AI refines if key available.
+// ═══════════════════════════════════════════════════
+function extractKeywordsLocal(q){
+  const r={alert_type:'general',sub_type:'other',event_name:null,location:null,state:null,state_code:null,keywords:[],ioc:null,severity:'high'};
+
+  // Detect type
+  const isPhys=/flood|wildfire|wild fire|\bfire\b|earthquake|storm|hurricane|tornado|protest|riot|civil unrest|hazmat|chemical spill|evacuation|shooting|gunfire|active shooter|explosion|disaster|tsunami|blizzard/i.test(q);
+  const isCVE=/CVE-\d{4}-\d+/i.test(q);
+  const isHash=/\b[0-9a-f]{32,64}\b/i.test(q);
+  const isIP=/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(q);
+  const isCyber=/malware|ransomware|phishing|trojan|exploit|powershell|cobalt strike|mimikatz|lateral movement|privilege esc|credential|beacon|apt|t1\d{3}/i.test(q);
+
+  if(isPhys)r.alert_type='physical';
+  else if(isCVE)r.alert_type='cve';
+  else if(isHash)r.alert_type='hash';
+  else if(isIP)r.alert_type='ip';
+  else if(isCyber)r.alert_type='cyber';
+
+  // Extract IOCs
+  const cveM=q.match(/CVE-\d{4}-\d+/i);if(cveM)r.ioc=cveM[0].toUpperCase();
+  const ipM=q.match(/\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b/);if(ipM&&!isPhys)r.ioc=ipM[1];
+  const hashM=q.match(/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i);if(hashM&&!isPhys)r.ioc=hashM[1].toLowerCase();
+
+  // Extract fire/event name — most important for physical
+  const fireM=q.match(/\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z0-9]+)*\s+(?:Fire|Wildfire|Flood|Hurricane|Earthquake|Shooting|Explosion|Tornado|Storm|Incident))\b/);
+  if(fireM)r.event_name=fireM[1];
+  else{const nF=q.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:Fire|Wildfire)\b/);if(nF)r.event_name=nF[0];}
+
+  // Extract malware names
+  const malM=q.match(/\b(LockBit[\s\d.]*|BlackCat|ALPHV|Ryuk|REvil|Conti|Hive|Cl0p|BlackMatter|Vice Society|Play Ransomware|Royal Ransomware|Emotet|TrickBot|QakBot|Cobalt Strike|APT\d+|Fancy Bear|Cozy Bear|Lazarus|Sandworm)/i);
+  if(malM){r.event_name=r.event_name||malM[1];}
+
+  // Extract product for CVE
+  const prodM=q.match(/\b(PAN-OS|GlobalProtect|Cisco IOS|Exchange|Log4j|Apache|Fortinet|Citrix|VMware|F5|Pulse Secure|Windows|Active Directory)\b/i);
+  if(prodM)r.affected_product=prodM[1];
+
+  // Extract US state
+  const states={'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA','Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'};
+  const codes={'CA':'California','TX':'Texas','FL':'Florida','NY':'New York','WA':'Washington','OR':'Oregon','AZ':'Arizona','NV':'Nevada','LA':'Louisiana','CO':'Colorado','GA':'Georgia','NC':'North Carolina','IL':'Illinois','PA':'Pennsylvania','OH':'Ohio','MI':'Michigan'};
+  for(const[name,code]of Object.entries(states)){if(new RegExp('\\b'+name+'\\b','i').test(q)){r.state=name;r.state_code=code;break;}}
+  if(!r.state_code){for(const[code,name]of Object.entries(codes)){if(new RegExp('[\\s,]'+code+'[\\s,\\|]|\\b'+code+'$','i').test(q)){r.state=name;r.state_code=code;break;}}}
+
+  // Extract county/city
+  const countyM=q.match(/\b([A-Z][a-zA-Z\s]+)\s+County\b/);if(countyM)r.location=countyM[1].trim()+' County';
+  else{const cityM=q.match(/(?:in|near|at|around)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\s*(?:,|\|)/);if(cityM)r.location=cityM[1].trim();}
+
+  // Detect sub-type
+  if(/wildfire|wild fire|\bfire\b/i.test(q))r.sub_type='wildfire';
+  else if(/flood|inundation|surge/i.test(q))r.sub_type='flood';
+  else if(/earthquake|quake|tremor/i.test(q))r.sub_type='earthquake';
+  else if(/shooting|gunfire|active shooter/i.test(q))r.sub_type='shooting';
+  else if(/hurricane|typhoon|cyclone/i.test(q))r.sub_type='hurricane';
+  else if(/tornado|twister/i.test(q))r.sub_type='tornado';
+  else if(/protest|riot|civil unrest/i.test(q))r.sub_type='protest';
+  else if(/hazmat|chemical spill|toxic/i.test(q))r.sub_type='hazmat';
+  else if(/ransomware/i.test(q))r.sub_type='ransomware';
+  else if(/phishing/i.test(q))r.sub_type='phishing';
+  else if(isCVE)r.sub_type='cve';
+  else if(isHash)r.sub_type='hash';
+  else if(isIP)r.sub_type='ip';
+
+  const sevM=q.match(/\b(CRITICAL|EXTREME|SEVERE|HIGH|MAJOR|MODERATE|LOW)\b/i);
+  if(sevM)r.severity=sevM[1].toLowerCase();
+
+  // BUILD KEYWORDS — specific first
+  const kws=[];
+  if(r.event_name)kws.push(r.event_name);
+  if(r.ioc&&r.ioc!==r.event_name)kws.push(r.ioc);
+
+  if(r.alert_type==='physical'){
+    if(r.location&&r.state_code)kws.push(r.location+', '+r.state_code);
+    else if(r.location)kws.push(r.location);
+    else if(r.state)kws.push(r.state);
+    if(r.sub_type!=='other'){const loc=r.location||r.state||'';if(loc)kws.push(loc+' '+r.sub_type);}
+    if(/evacuat/i.test(q)){const loc2=r.location||r.state||'';if(loc2)kws.push(loc2+' evacuation');}
+  } else {
+    if(r.affected_product)kws.push(r.affected_product);
+    if(r.ioc&&r.affected_product)kws.push(r.ioc+' '+r.affected_product);
+  }
+
+  // Pull more from Everbridge field values
+  const ebFields=q.match(/(?:FIRE NAME|INCIDENT NAME|LOCATION|AREA|REGION|THREAT|IOC|SHA256|DOMAIN|URL):\s*([^\n|]+)/gi)||[];
+  ebFields.forEach(f=>{
+    const v=(f.split(':')[1]||'').trim();
+    if(v&&v.length>2&&v.length<60&&!kws.includes(v))kws.push(v);
+  });
+
+  // Fill remaining with capitalized proper nouns
+  if(kws.length<4){
+    const caps=q.match(/\b[A-Z][A-Za-z]{2,}\b/g)||[];
+    const skip=new Set(['ALERT','SEVERITY','HIGH','LOW','CRITICAL','MODERATE','USER','HOST','HOSTNAME','ACTION','BLOCKED','STATUS','TYPE','CATEGORY','EVENT','THE','AND','FOR','FROM','WITH','DETECTION','SENSOR','PROCESS','FILE','HASH','SHA','MD','SIGNAL','RULE','CLASS']);
+    caps.forEach(c=>{if(!skip.has(c.toUpperCase())&&!kws.includes(c)&&kws.length<6)kws.push(c);});
+  }
+
+  r.keywords=[...new Set(kws)].filter(k=>k&&k.length>2).slice(0,6);
+  if(r.keywords.length===0)r.keywords=[q.split(/[\n|,]/)[0].trim().substring(0,60)];
+
+  return r;
 }
 
-// ── RESULT SECTION HELPERS ──
+async function extractEntities(q){
+  // Step 1: Regex (always works, instant)
+  const local=extractKeywordsLocal(q);
+
+  // Step 2: AI refinement if key available
+  const k=getKey();
+  if(k){
+    try{
+      const raw=await ai(
+        'Alert parser. Return ONLY valid JSON, no markdown, no explanation.',
+        `Improve this keyword extraction for a SOC tool. Return ONLY JSON:
+{"event_name":"specific event name or null","location":"city/county or null","state":"full state name or null","state_code":"2-letter code or null","keywords":["5 most specific search terms"],"ioc":"exact IP/hash/domain/CVE or null"}
+
+For keywords: be VERY specific. Use exact names found in the alert. Not generic terms.
+Current extraction: ${JSON.stringify({event_name:local.event_name,location:local.location,state:local.state,keywords:local.keywords,ioc:local.ioc})}
+Alert: ${q.substring(0,400)}`,
+        false,250
+      );
+      if(raw&&raw!=='__nokey__'&&!raw.startsWith('[')){
+        const ai_r=JSON.parse(raw.replace(/```json|```/g,'').trim());
+        if(ai_r.event_name&&ai_r.event_name!=='null')local.event_name=ai_r.event_name;
+        if(ai_r.location&&ai_r.location!=='null')local.location=ai_r.location;
+        if(ai_r.state&&ai_r.state!=='null')local.state=ai_r.state;
+        if(ai_r.state_code&&ai_r.state_code!=='null')local.state_code=ai_r.state_code;
+        if(ai_r.ioc&&ai_r.ioc!=='null')local.ioc=ai_r.ioc;
+        if(ai_r.keywords&&ai_r.keywords.length>0){
+          const aiKws=ai_r.keywords.filter(k=>k&&k.length>2&&k!=='null');
+          if(local.ioc&&!aiKws.includes(local.ioc))aiKws.unshift(local.ioc);
+          local.keywords=[...new Set(aiKws)].slice(0,6);
+        }
+      }
+    }catch(e){}
+  }
+  return local;
+}
+
+// ═══════════════════════════════════════════════════
+//  LIVE DATA FETCHERS
+// ═══════════════════════════════════════════════════
+async function fetchNWS(stateCode,kws){
+  try{
+    const url=stateCode?`https://api.weather.gov/alerts/active?area=${stateCode}&status=actual&limit=20`:'https://api.weather.gov/alerts/active?status=actual&limit=20';
+    const r=await fetch(url,{headers:{Accept:'application/geo+json','User-Agent':'SOCHub/10'}});
+    if(!r.ok)return[];
+    const d=await r.json();
+    let feats=d.features||[];
+    // Try to filter to relevant
+    const kl=(kws||[]).map(k=>k.toLowerCase());
+    if(kl.length){
+      const rel=feats.filter(f=>{const p=f.properties||{};const t=((p.areaDesc||'')+(p.headline||'')+(p.event||'')).toLowerCase();return kl.some(k=>t.includes(k.toLowerCase())||/fire|flood|wind|rain|storm/.test(k.toLowerCase()));});
+      if(rel.length>0)feats=rel;
+    }
+    return feats.slice(0,8).map(f=>{const p=f.properties||{};return{title:p.event||'NWS Alert',area:(p.areaDesc||'').substring(0,80),severity:p.severity||'Unknown',headline:(p.headline||'').substring(0,160),sent:p.sent||'',url:'https://www.weather.gov/alerts'};});
+  }catch(e){return[];}
+}
+async function fetchUSGS(){
+  try{
+    const r=await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson');
+    if(!r.ok)return[];
+    const d=await r.json();
+    return(d.features||[]).slice(0,5).map(f=>{const p=f.properties||{};return{title:`M${p.mag||'?'} Earthquake`,area:(p.place||'').substring(0,60),severity:p.mag>=7?'Extreme':p.mag>=5?'Severe':'Moderate',headline:p.title||'',sent:new Date(p.time||Date.now()).toISOString(),url:p.url||'https://earthquake.usgs.gov'};});
+  }catch(e){return[];}
+}
+async function fetchFEMA(stateCode){
+  try{
+    const f=stateCode?`&$filter=state%20eq%20'${stateCode}'`:'';
+    const r=await fetch(`https://www.fema.gov/api/open/v2/disasterDeclarationsSummaries?$orderby=declarationDate%20desc&$top=8${f}`);
+    if(!r.ok)return[];
+    const d=await r.json();
+    return(d.DisasterDeclarationsSummaries||[]).slice(0,5).map(f=>({title:`FEMA: ${f.incidentType}`,area:`${f.declarationTitle} — ${f.state}`,severity:'Severe',sent:f.declarationDate||'',url:`https://www.fema.gov/disaster/${f.disasterNumber}`}));
+  }catch(e){return[];}
+}
+async function fetchGDELT(kws){
+  try{
+    const q=encodeURIComponent((kws||[]).slice(0,3).join(' OR ')||'disaster');
+    const r=await fetch(`https://api.gdeltproject.org/api/v2/doc/doc?query=${q}&mode=artlist&maxrecords=15&format=json&sort=DateDesc`);
+    if(!r.ok)return[];
+    const d=await r.json();
+    return(d.articles||[]).filter(a=>a.title&&a.url).slice(0,12).map(a=>({title:a.title,source:a.domain||'',url:a.url,date:a.seendate?a.seendate.substring(0,8):''}));
+  }catch(e){return[];}
+}
+
+// ═══════════════════════════════════════════════════
+//  RESULT UI HELPERS
+// ═══════════════════════════════════════════════════
+function setPill(id,state,lbl){
+  const p=document.getElementById('pill-'+id);if(!p)return;
+  const cls={done:'p-done',live:'p-live',wait:'p-wait'};
+  p.className='res-pill '+(cls[state]||'p-wait');
+  p.innerHTML=state==='done'?'&#10003; '+lbl:state==='live'?'&#9679; '+lbl:'<span class="sp"></span>'+lbl;
+}
+function setBody(id,html){const b=document.getElementById('body-'+id);if(!b)return;b.className='res-body fade';b.innerHTML=html;}
+function noKey(id){setPill(id,'wait','No API key');const b=document.getElementById('body-'+id);if(b){b.className='res-dim';b.innerHTML='Add your free Gemini key — click &#9881; API Key in the header.'}}
+
 function mkCard(id,icon,title,hint){
   return`<div class="res-card" id="card-${id}">
     <div class="res-hdr">
@@ -271,503 +401,346 @@ function mkCard(id,icon,title,hint){
     <div id="body-${id}" class="res-dim">${hint}</div>
   </div>`;
 }
-function skipCard(icon,title,reason){
-  return`<div class="res-card">
-    <div class="res-hdr">
-      <div class="res-title-wrap"><span class="res-icon">${icon}</span><span class="res-title">${title}</span></div>
-      <span class="res-pill p-skip">&#8212; Not relevant</span>
+
+// Tool result row with brief + link
+function toolResult(icon,name,tag,tagCls,brief,query,url,liveData){
+  return`<div class="tool-result">
+    <div class="tr-header">
+      <div class="tr-name">${icon} ${name}</div>
+      <div class="tr-actions">
+        <span class="tag ${tagCls}">${tag}</span>
+        <a href="${url}" target="_blank" class="btn sm" style="text-decoration:none;">Open &#8599;</a>
+      </div>
     </div>
-    <div class="res-dim">${reason}</div>
+    <div class="tr-brief">${brief}</div>
+    <div class="tr-query">&#128269; Searching: "${esc(query)}"</div>
+    ${liveData?`<div class="tr-live">${liveData}</div>`:''}
   </div>`;
 }
-function setPill(id,state,lbl){
-  const p=document.getElementById('pill-'+id);if(!p)return;
-  const cls={done:'p-done',live:'p-live',wait:'p-wait',skip:'p-skip'};
-  p.className='res-pill '+(cls[state]||'p-wait');
-  p.innerHTML=state==='done'?'&#10003; '+lbl:state==='live'?'&#9679; '+lbl:state==='skip'?'&#8212; '+lbl:'<span class="sp"></span>'+lbl;
-}
-function setBody(id,html){const b=document.getElementById('body-'+id);if(!b)return;b.className='res-body fade';b.innerHTML=html;}
-function setDim(id,t){const b=document.getElementById('body-'+id);if(!b)return;b.className='res-dim';b.innerHTML=t;}
-function noKey(id){setPill(id,'skip','No API key');setDim(id,'Click &#9881; API Key in the header → follow the steps to get your free Gemini key from aistudio.google.com');}
-function cpBtn(){return'<button class="copy-btn" onclick="var t=this.closest(\'.res-body\').innerText;navigator.clipboard.writeText(t).then(()=>{this.textContent=\'Copied!\';setTimeout(()=>this.textContent=\'Copy\',1800)})">Copy</button>';}
 
+// Triage parse
 function parseTriage(text){
   const lines=(text||'').trim().split('\n'),metrics=[],details=[];
   lines.forEach(line=>{const ci=line.indexOf(':');if(ci<0)return;const l=line.substring(0,ci).trim(),v=line.substring(ci+1).trim();if(!v)return;if(['SEVERITY','ALERT TYPE','WATCH POSTURE','CONFIDENCE'].includes(l))metrics.push({l,v});else details.push({l,v});});
   let h='';
   if(metrics.length)h+=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;margin-bottom:10px;">`+metrics.map(m=>`<div style="background:var(--bg2);border-radius:var(--r);padding:8px 10px;"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">${m.l}</div><div style="font-size:14px;font-weight:500;">${m.v}</div></div>`).join('')+'</div>';
-  details.forEach(d=>h+=`<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;margin-top:7px;">${d.l}</div><div style="font-size:12px;color:var(--text);line-height:1.6;">${d.v}</div>`);
-  return h+cpBtn();
+  details.forEach(d=>h+=`<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;margin-top:7px;">${d.l}</div><div style="font-size:12px;color:var(--text);line-height:1.6;margin-bottom:4px;">${d.v}</div>`);
+  return h+`<button style="font-size:10px;padding:2px 8px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;margin-top:6px;" onclick="var t=this.closest('.res-body').innerText;navigator.clipboard.writeText(t).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1800)})">Copy</button>`;
 }
 
-function toolRow(name,desc,query,url,badgeCls,badgeLbl,autoOpened){
-  return`<div class="tool-row">
-    <div style="flex:1;min-width:0;">
-      <div class="tool-name">${name}${autoOpened?'<span class="tag t-green" style="margin-left:6px;font-size:9px;">Auto-opened</span>':''}</div>
-      <div class="tool-desc">${desc}</div>
-      <div class="tool-query">&#128269; Searching: "${esc(query)}"</div>
-    </div>
-    <div class="data-actions">
-      <span class="tag ${badgeCls}">${badgeLbl}</span>
-      <a href="${url}" target="_blank" class="btn sm" style="text-decoration:none;">Open &#8599;</a>
-    </div>
-  </div>`;
+let curPage='inv',curTool='';
+function go(p,tool){
+  curPage=p;curTool=tool||'';
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
+  const sb=document.getElementById('sb-'+(p==='tool'?'tool-'+tool:p));if(sb)sb.classList.add('active');
+  const mc=M();
+  if(p==='inv')renderInv(mc);else if(p==='twitter')renderTwitter(mc);else if(p==='physical')renderPhysical(mc);else if(p==='urlmon')renderUrlMon(mc);else if(p==='logins')renderLogins(mc);else if(p==='tool')renderTool(mc,tool);else if(p==='osint')renderOsintDir(mc);else if(p==='about')renderAbout(mc);
 }
 
-function dataRow(title,sub,sev,url,source){
-  const sc=sev==='Extreme'||sev==='Severe'?'t-red':sev==='High'||sev==='Moderate'?'t-amber':'t-green';
-  return`<div class="data-row">
-    <div style="flex:1;min-width:0;">
-      <div class="data-name">${title}</div>
-      <div class="data-detail">${sub}</div>
-    </div>
-    <div class="data-actions">
-      <span class="tag t-gray">${source}</span>
-      <span class="tag ${sc}">${sev}</span>
-      <a href="${url}" target="_blank" class="btn sm" style="text-decoration:none;">View &#8599;</a>
-    </div>
-  </div>`;
-}
-
-function newsRow(title,source,url,date){
-  return`<div class="news-row">
-    <div class="news-title"><a href="${url}" target="_blank" style="color:var(--text);text-decoration:none;">${title}</a></div>
-    <div class="news-meta"><span>${source}</span>${date?`<span>${date}</span>`:''}<a href="${url}" target="_blank" style="color:var(--blue-text);text-decoration:none;">Read &#8599;</a></div>
-  </div>`;
-}
-
-// ══════════════════════════════════════════════════
-//  STEP 1: EXTRACT KEYWORDS & DETECT ALERT TYPE
-// ══════════════════════════════════════════════════
-async function extractEntities(q){
-  const raw=await ai(
-    'You are an alert parser for a SOC security tool. Extract structured entities and return ONLY valid JSON.',
-    `Extract from this alert and return ONLY this JSON structure (no markdown, no explanation):
-{
-  "alert_type": "physical|cyber|cve|hash|ip|domain",
-  "sub_type": "wildfire|flood|earthquake|shooting|protest|hazmat|hurricane|tornado|ransomware|phishing|intrusion|malware|cve|ip|domain|hash",
-  "event_name": "specific event name like Palisade Fire or LockBit 3.0 or CVE-2024-3400 or null",
-  "location": "city or county name or null",
-  "state": "full state name or null",
-  "state_code": "2-letter US state code or null",
-  "keywords": ["keyword1","keyword2","keyword3","keyword4","keyword5"],
-  "ioc": "the specific IP/hash/domain/CVE or null",
-  "severity": "critical|high|medium|low"
-}
-
-Rules:
-- For wildfire/flood/earthquake/shooting: keywords = [event name, location, state + event type, key detail, impact]
-- For cyber/malware: keywords = [threat name, CVE number if any, affected product, IOC, tactic]
-- event_name must be the SPECIFIC name (Palisade Fire, LockBit, CVE-2024-3400) not generic
-
-Alert to parse:
-${q}`,
-    false, 300
-  );
-  try{
-    const clean=(raw||'').replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(clean);
-    return parsed;
-  }catch(e){
-    // Fallback detection
-    const isPhys=/flood|fire|wildfire|earthquake|storm|hurricane|tornado|protest|riot|hazmat|chemical|evacuation|shooting|gunfire|explosion|disaster/i.test(q);
-    const words=q.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*/g)||[];
-    return{
-      alert_type:isPhys?'physical':'cyber',
-      sub_type:isPhys?'other':'malware',
-      event_name:words[0]||null,
-      location:null,state:null,state_code:null,
-      keywords:[q.substring(0,50).trim()],
-      ioc:null,severity:'high'
-    };
-  }
-}
-
-// ══════════════════════════════════════════════════
-//  STEP 2: LIVE DATA FETCHERS
-// ══════════════════════════════════════════════════
-async function fetchNWS(stateCode,keywords){
-  try{
-    const url=stateCode
-      ?`https://api.weather.gov/alerts/active?area=${stateCode}&status=actual&limit=20`
-      :'https://api.weather.gov/alerts/active?status=actual&limit=20';
-    const r=await fetch(url,{headers:{Accept:'application/geo+json','User-Agent':'SOCHub/10.0'}});
-    if(!r.ok)return[];
-    const d=await r.json();
-    let features=d.features||[];
-    // Filter by keywords if possible
-    const kl=(keywords||[]).map(k=>k.toLowerCase());
-    if(kl.length){
-      const rel=features.filter(f=>{
-        const p=f.properties||{};
-        const txt=((p.areaDesc||'')+(p.headline||'')+(p.event||'')).toLowerCase();
-        return kl.some(k=>txt.includes(k.toLowerCase()));
-      });
-      if(rel.length)features=rel;
-    }
-    return features.slice(0,8).map(f=>{
-      const p=f.properties||{};
-      return{title:p.event||'NWS Alert',area:(p.areaDesc||'').substring(0,80),severity:p.severity||'Unknown',headline:(p.headline||'').substring(0,150),sent:p.sent||'',url:'https://www.weather.gov/alerts'};
-    });
-  }catch(e){return[];}
-}
-async function fetchUSGS(){
-  try{
-    const r=await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson');
-    if(!r.ok)return[];
-    const d=await r.json();
-    return(d.features||[]).slice(0,5).map(f=>{
-      const p=f.properties||{};
-      return{title:`M${p.mag||'?'} Earthquake`,area:(p.place||'').substring(0,60),severity:p.mag>=7?'Extreme':p.mag>=5?'Severe':'Moderate',sent:new Date(p.time||Date.now()).toISOString(),url:p.url||'https://earthquake.usgs.gov'};
-    });
-  }catch(e){return[];}
-}
-async function fetchFEMA(stateCode){
-  try{
-    const filter=stateCode?`&$filter=state%20eq%20'${stateCode}'`:'';
-    const r=await fetch(`https://www.fema.gov/api/open/v2/disasterDeclarationsSummaries?$orderby=declarationDate%20desc&$top=8${filter}`);
-    if(!r.ok)return[];
-    const d=await r.json();
-    return(d.DisasterDeclarationsSummaries||[]).slice(0,5).map(f=>({
-      title:`FEMA: ${f.incidentType}`,area:`${f.declarationTitle} — ${f.state}`,
-      severity:'Severe',sent:f.declarationDate||'',
-      url:`https://www.fema.gov/disaster/${f.disasterNumber}`
-    }));
-  }catch(e){return[];}
-}
-async function fetchGDELT(keywords){
-  try{
-    const q=encodeURIComponent((keywords||[]).slice(0,3).join(' OR ')||'disaster');
-    const r=await fetch(`https://api.gdeltproject.org/api/v2/doc/doc?query=${q}&mode=artlist&maxrecords=15&format=json&sort=DateDesc`);
-    if(!r.ok)return[];
-    const d=await r.json();
-    return(d.articles||[]).slice(0,12).map(a=>({
-      title:a.title||'',source:a.domain||'',url:a.url||'',
-      date:a.seendate?a.seendate.substring(0,8):''
-    })).filter(a=>a.title&&a.url);
-  }catch(e){return[];}
-}
-
-// ══════════════════════════════════════════════════
-//  STEP 3: BUILD PRE-FILLED TOOL SEARCH ROWS
-// ══════════════════════════════════════════════════
-function buildPhysicalTools(entities){
-  const kws=entities.keywords||[];
-  const q0=kws[0]||entities.event_name||'';
-  const q=kws.slice(0,3).join(' ');
-  const q0Enc=encodeURIComponent(q0);
-  const qEnc=encodeURIComponent(q);
-  const loc=entities.location||q0;
-  const locEnc=encodeURIComponent(loc);
-  const st=entities.state_code||'';
-  const sub=entities.sub_type||'';
-  const isCrime=/shooting|gunfire|gun|crime|robbery|assault|stabbing|active shooter/i.test(q+entities.event_name);
-  const isFire=sub==='wildfire'||/fire|wildfire|burn|smoke/i.test(q);
-  const isHurricane=sub==='hurricane'||/hurricane|tropical|cyclone/i.test(q);
-  const isFlood=sub==='flood'||/flood|surge|overflow|bayou|river/i.test(q);
-  const isQuake=sub==='earthquake'||/earthquake|quake|tremor/i.test(q);
-  const isProtest=sub==='protest'||/protest|riot|civil unrest|demonstration/i.test(q);
-  const isHazmat=sub==='hazmat'||/hazmat|chemical|spill|toxic/i.test(q);
-
-  const tools=[];
-
-  // ── X / TWITTER — always first for physical
-  tools.push({name:'X / Twitter — Live reports',desc:'Real-time tweets about this specific event',query:q0,url:`https://x.com/search?q=${q0Enc}&f=live`,badge:'t-amber',lbl:'Live',auto:true});
-  tools.push({name:'X / Twitter — Breaking & eyewitness',desc:'Videos, photos, first-hand reports from the ground',query:`${q0} #breaking OR video`,url:`https://x.com/search?q=${q0Enc}+%28%23breaking+OR+video+OR+%23alert%29&f=live`,badge:'t-amber',lbl:'Eyewitness'});
-  tools.push({name:'X / Twitter — Government & emergency',desc:'FEMA, NOAA, state emergency management accounts',query:`${q0} emergency`,url:`https://x.com/search?q=${q0Enc}+%28from%3AFEMA+OR+from%3ANOAAweather+OR+from%3AUSGS+OR+%23emergency%29&f=live`,badge:'t-amber',lbl:'Official'});
-  tools.push({name:'X / Twitter — News media',desc:'CNN, Reuters, NPR, BBC coverage of this event',query:`${q0} news`,url:`https://x.com/search?q=${q0Enc}+%28from%3ACNN+OR+from%3Areuters+OR+from%3ANPR+OR+from%3ABBCWorld%29&f=live`,badge:'t-amber',lbl:'News'});
-
-  // ── CITIZEN APP — always for physical, highlighted for crime
-  tools.push({name:'Citizen App'+(isCrime?' ⚠ Priority for this alert':''),desc:isCrime?'PRIORITY: Real-time crime incidents, police activity, shooting reports — log in and search your location':'Real-time local incident reports, crowdsourced alerts from the area',query:loc,url:'https://citizen.com/explore',badge:isCrime?'t-red':'t-gray',lbl:isCrime?'Priority':'Login'});
-
-  // ── NWS — always for physical
-  tools.push({name:'NWS Active Alerts',desc:'Current official weather alerts for '+( entities.state||'affected area'),query:st||loc,url:`https://www.weather.gov/alerts${st?'?area='+st:''}`,badge:'t-blue',lbl:'Live'});
-
-  // ── FEMA — always for physical
-  tools.push({name:'FEMA Disaster Declarations',desc:'Federal disaster declarations for '+(entities.state||'affected state'),query:loc,url:`https://www.fema.gov/disasters`,badge:'t-blue',lbl:'Live'});
-
-  // ── WILDFIRE specific
-  if(isFire){
-    tools.push({name:'Watch Duty',desc:'Fire perimeter, containment %, evacuation zones, structures threatened',query:q0,url:'https://app.watchduty.org',badge:'t-red',lbl:'Live'});
-    tools.push({name:'CAL FIRE',desc:'California wildfire incident reports, containment percentage',query:q0,url:'https://www.fire.ca.gov/incidents',badge:'t-red',lbl:'Live'});
-    tools.push({name:'NASA FIRMS — Fire Map',desc:'Satellite-detected fire hotspots, thermal intensity, spread direction',query:q0,url:'https://firms.modaps.eosdis.nasa.gov/map',badge:'t-red',lbl:'Live'});
-    tools.push({name:'NIFC Fire Center',desc:'National wildfire statistics, situation report, resources deployed',query:q0,url:'https://www.nifc.gov/fire-information',badge:'t-red',lbl:'Live'});
-    tools.push({name:'AirNow — Air Quality',desc:'Air quality index, wildfire smoke levels, health advisories for area',query:loc,url:'https://www.airnow.gov',badge:'t-teal',lbl:'Live'});
-    tools.push({name:'Windy — Fire Weather',desc:'Wind patterns, fire weather conditions, humidity, temperature',query:q0,url:'https://www.windy.com',badge:'t-blue',lbl:'Live'});
-  }
-
-  // ── HURRICANE specific
-  if(isHurricane){
-    tools.push({name:'NHC — National Hurricane Center',desc:'Storm track, category, advisory, cone of uncertainty, impact area',query:q0,url:'https://www.nhc.noaa.gov',badge:'t-blue',lbl:'Live'});
-    tools.push({name:'Tropical Tidbits',desc:'Multiple model tracks, spaghetti plots, intensity forecast',query:q0,url:'https://www.tropicaltidbits.com',badge:'t-blue',lbl:'Live'});
-    tools.push({name:'SPC Storm Prediction Center',desc:'Tornado/hail/wind risk in storm bands, active watches',query:q0,url:'https://www.spc.noaa.gov',badge:'t-blue',lbl:'Live'});
-  }
-
-  // ── FLOOD specific
-  if(isFlood){
-    tools.push({name:'NWS Flood Alerts',desc:'Active flood watches, warnings, advisories for affected counties',query:q0,url:`https://www.weather.gov/alerts${st?'?area='+st:''}`,badge:'t-blue',lbl:'Live'});
-    tools.push({name:'USGS Water Resources',desc:'Stream gauge data, river levels, flood stage status',query:loc,url:'https://waterdata.usgs.gov/nwis/rt',badge:'t-blue',lbl:'Live'});
-  }
-
-  // ── EARTHQUAKE specific
-  if(isQuake){
-    tools.push({name:'USGS Earthquake Hazards',desc:'Magnitude, depth, ShakeMap, tsunami warning status, aftershock forecast',query:q0,url:'https://earthquake.usgs.gov/earthquakes/map',badge:'t-blue',lbl:'Live'});
-    tools.push({name:'EMSC Earthquakes',desc:'European seismological center real-time data, felt reports',query:q0,url:'https://www.emsc-csem.org/Earthquake/',badge:'t-blue',lbl:'Live'});
-  }
-
-  // ── PROTEST / CIVIL UNREST specific
-  if(isProtest){
-    tools.push({name:'ACLED — Conflict Data',desc:'Armed conflict and protest event tracking, fatalities, location data',query:q0,url:'https://acleddata.com/data-export-tool/',badge:'t-amber',lbl:'Login'});
-    tools.push({name:'GDELT — Civil Unrest',desc:'News event intensity, protest activity index, conflict clustering',query:q0,url:`https://gdeltproject.org`,badge:'t-teal',lbl:'Free'});
-  }
-
-  // ── HAZMAT specific
-  if(isHazmat){
-    tools.push({name:'CAMEO Chemicals',desc:'Chemical hazard info, reactivity, emergency response guide',query:q0,url:'https://cameochemicals.noaa.gov',badge:'t-green',lbl:'Free'});
-    tools.push({name:'EPA ECHO',desc:'Environmental compliance, hazmat facility database by location',query:locEnc,url:`https://echo.epa.gov/facilities/facility-search?p_st=${st}`,badge:'t-green',lbl:'Free'});
-  }
-
-  // ── ALWAYS: Global intelligence platforms
-  tools.push({name:'World Monitor — Global Intel',desc:'25 data layers: geopolitical instability, military tracking, conflicts, disasters, cyber',query:q0,url:'https://worldmonitor.app',badge:'t-green',lbl:'Free'});
-  tools.push({name:'Global Incident Map',desc:'Real-time worldwide incidents — terrorism, HAZMAT, civil unrest, crime',query:q0,url:'https://www.globalincidentmap.com',badge:'t-amber',lbl:'Free'});
-  tools.push({name:'GDELT — Real-Time News Events',desc:'Global news event database, protest index, conflict intensity score',query:q0,url:`https://gdeltproject.org`,badge:'t-teal',lbl:'Free'});
-  tools.push({name:'ReliefWeb',desc:'Humanitarian reports, crisis maps, affected populations, international response',query:q0,url:`https://reliefweb.int/updates?search=${q0Enc}`,badge:'t-teal',lbl:'Free'});
-  tools.push({name:'Zoom.earth — Satellite',desc:'Real-time satellite imagery, storm tracking, fire visualization',query:loc,url:'https://zoom.earth',badge:'t-blue',lbl:'Free'});
-
-  // ── ALWAYS: News with specific keywords
-  tools.push({name:'Google News — This event',desc:'Latest news articles about this specific event',query:q,url:`https://news.google.com/search?q=${qEnc}`,badge:'t-teal',lbl:'Free'});
-  tools.push({name:'Reddit — Local reports',desc:'Community reports, eyewitness accounts, local discussion',query:q,url:`https://www.reddit.com/search/?q=${qEnc}&sort=new`,badge:'t-amber',lbl:'Free'});
-  tools.push({name:'YouTube — Live & Recent',desc:'Live streams and recent video uploads about this event',query:q,url:`https://www.youtube.com/results?search_query=${qEnc}`,badge:'t-red',lbl:'Free'});
-
-  return tools;
-}
-
-function buildCyberTools(entities){
-  const kws=entities.keywords||[];
-  const ioc=entities.ioc||kws[0]||'';
-  const enc=encodeURIComponent(ioc);
-  const threat=entities.event_name||kws[0]||ioc;
-  const tEnc=encodeURIComponent(threat);
-  const sub=entities.sub_type||entities.alert_type||'';
-  const isHash=sub==='hash'||entities.alert_type==='hash';
-  const isDomain=entities.alert_type==='domain';
-  const isIP=entities.alert_type==='ip';
-  const isCVE=sub==='cve'||entities.alert_type==='cve'||/CVE-/i.test(ioc);
-
-  const tools=[];
-
-  // ── X / TWITTER — infosec community
-  tools.push({name:'X / Twitter — Infosec community',desc:'Security researchers, analysts discussing this threat right now',query:threat,url:`https://x.com/search?q=${tEnc}+%28%23infosec+OR+%23cybersecurity+OR+%23threatintel%29&f=live`,badge:'t-amber',lbl:'Live',auto:true});
-  tools.push({name:'X / Twitter — Verified researchers & CISA',desc:'CISA, security vendors, verified researcher accounts',query:threat,url:`https://x.com/search?q=${tEnc}+filter%3Averified&f=live`,badge:'t-amber',lbl:'Verified'});
-
-  // ── CORE THREAT INTEL — always for cyber
-  tools.push({name:'VirusTotal',desc:'90+ AV engines, sandbox analysis, behavioral report, community score',query:ioc,url:`https://www.virustotal.com/gui/search/${enc}`,badge:'t-red',lbl:'Free'});
-  tools.push({name:'Shodan',desc:'Open ports, services, banner data, CVEs on host, geolocation, ASN',query:ioc,url:`https://www.shodan.io/host/${enc}`,badge:'t-blue',lbl:'Free'});
-  tools.push({name:'Greynoise',desc:'Malicious/benign/unknown, scanning intent, tags, first/last seen',query:ioc,url:`https://viz.greynoise.io/ip/${enc}`,badge:'t-teal',lbl:'Free'});
-  tools.push({name:'AlienVault OTX',desc:'Threat pulses, related IOCs, malware families, threat actor associations',query:ioc,url:`https://otx.alienvault.com/indicator/${isIP?'ip':isDomain?'domain':'file'}/${enc}`,badge:'t-blue',lbl:'Free'});
-  tools.push({name:'AbuseIPDB',desc:'Abuse confidence score, total reports, country, ISP, usage type',query:ioc,url:`https://www.abuseipdb.com/check/${enc}`,badge:'t-red',lbl:'Free'});
-  tools.push({name:'Pulsedive',desc:'Risk score 1-10, threat feeds, linked threats, threat type category',query:ioc,url:`https://pulsedive.com/indicator/?ioc=${enc}`,badge:'t-purple',lbl:'Free'});
-  tools.push({name:'ThreatFox',desc:'Malware family, confidence level, reporter, first seen date',query:ioc,url:`https://threatfox.abuse.ch/browse/?q=${enc}`,badge:'t-red',lbl:'Free'});
-  tools.push({name:'IBM X-Force Exchange',desc:'Risk score, threat category, malware associations, CVE intelligence',query:ioc,url:`https://exchange.xforce.ibmcloud.com/search/${enc}`,badge:'t-blue',lbl:'Free'});
-  tools.push({name:'Cisco Talos',desc:'IP/domain reputation, spam classification, blacklist status, network owner',query:ioc,url:`https://talosintelligence.com/reputation_center/lookup?search=${enc}`,badge:'t-blue',lbl:'Free'});
-  tools.push({name:'Censys',desc:'Internet scan data, SSL certificates, open services, infrastructure history',query:ioc,url:`https://search.censys.io/search?resource=hosts&q=${enc}`,badge:'t-teal',lbl:'Free'});
-  tools.push({name:'MITRE ATT&CK',desc:'Technique mapping, threat actor profiles, detection opportunities',query:threat,url:`https://attack.mitre.org/search/?query=${tEnc}`,badge:'t-blue',lbl:'Free'});
-  tools.push({name:'Urlscan.io',desc:'URL/site scanner, screenshots, DOM analysis, network requests, IOCs',query:ioc,url:`https://urlscan.io/search/#${enc}`,badge:'t-teal',lbl:'Free'});
-
-  // ── HASH specific — malware sandboxes
-  if(isHash||sub==='malware'||sub==='ransomware'){
-    tools.push({name:'MalwareBazaar',desc:'Malware family, file type, YARA rules matched, tags, first seen',query:ioc,url:`https://bazaar.abuse.ch/sample/${enc}/`,badge:'t-red',lbl:'Free'});
-    tools.push({name:'Hybrid Analysis',desc:'Automated sandbox, MITRE ATT&CK mapping, network traffic, screenshots',query:ioc,url:`https://www.hybrid-analysis.com/search?query=${enc}`,badge:'t-purple',lbl:'Free'});
-    tools.push({name:'ANY.RUN',desc:'Interactive sandbox, watch malware execute live, C2 connections, config',query:ioc,url:`https://app.any.run`,badge:'t-purple',lbl:'Free'});
-    tools.push({name:'Intezer Analyze',desc:'Code reuse analysis, genetic malware classification, family detection',query:ioc,url:'https://analyze.intezer.com',badge:'t-purple',lbl:'Free'});
-    tools.push({name:'Joe Sandbox',desc:'Deep malware analysis, Windows/Mac/Linux/Android supported',query:ioc,url:'https://www.joesandbox.com',badge:'t-purple',lbl:'Free'});
-    tools.push({name:'Malpedia',desc:'Malware family descriptions, YARA rules, actor associations',query:threat,url:`https://malpedia.caad.fkie.fraunhofer.de/search?q=${tEnc}`,badge:'t-blue',lbl:'Free'});
-  }
-
-  // ── DOMAIN specific
-  if(isDomain||sub==='phishing'){
-    tools.push({name:'URLhaus',desc:'Malicious URL status, threat category, payload type, reporter',query:ioc,url:`https://urlhaus.abuse.ch/browse/?q=${enc}`,badge:'t-red',lbl:'Free'});
-    tools.push({name:'SecurityTrails',desc:'DNS history, WHOIS history, subdomains, IP change history',query:ioc,url:`https://securitytrails.com/domain/${enc}/dns`,badge:'t-blue',lbl:'Login'});
-    tools.push({name:'crt.sh',desc:'Certificate transparency logs, subdomain discovery via SSL certs',query:ioc,url:`https://crt.sh/?q=${enc}`,badge:'t-teal',lbl:'Free'});
-    tools.push({name:'ViewDNS',desc:'Reverse IP, DNS records, WHOIS, IP history, traceroute',query:ioc,url:`https://viewdns.info/reverseip/?host=${enc}&t=1`,badge:'t-blue',lbl:'Free'});
-    tools.push({name:'Spamhaus',desc:'Domain blacklist check, ZEN, DBL, phishing reputation',query:ioc,url:`https://check.spamhaus.org/listed/?searchterm=${enc}`,badge:'t-red',lbl:'Free'});
-  }
-
-  // ── CVE specific
-  if(isCVE){
-    tools.push({name:'NVD NIST',desc:'CVSS v3.1 score, CWE, affected CPEs, published date, official details',query:ioc,url:`https://nvd.nist.gov/vuln/detail/${enc}`,badge:'t-green',lbl:'Free'});
-    tools.push({name:'CISA KEV Catalog',desc:'Is this on the Known Exploited Vulnerabilities list? Required action?',query:ioc,url:'https://www.cisa.gov/known-exploited-vulnerabilities-catalog',badge:'t-green',lbl:'Free'});
-    tools.push({name:'Exploit-DB',desc:'Public exploit code, PoC availability, exploit maturity level',query:ioc,url:`https://www.exploit-db.com/search?cve=${enc}`,badge:'t-red',lbl:'Free'});
-    tools.push({name:'GitHub Advisories',desc:'Package advisories, affected versions, patch information',query:ioc,url:`https://github.com/advisories?query=${enc}`,badge:'t-blue',lbl:'Free'});
-    tools.push({name:'AttackerKB',desc:'Analyst assessment, exploitability score, attacker value rating',query:ioc,url:`https://attackerkb.com/search?q=${enc}`,badge:'t-blue',lbl:'Free'});
-    tools.push({name:'Vulners',desc:'Aggregated vulnerability database, exploit count, all references',query:ioc,url:`https://vulners.com/search?query=${enc}`,badge:'t-amber',lbl:'Free'});
-    tools.push({name:'Metasploit DB',desc:'Exploit module availability, module name, module type',query:ioc,url:`https://www.rapid7.com/db/?q=${enc}`,badge:'t-red',lbl:'Free'});
-    tools.push({name:'Greynoise Trends',desc:'Is this CVE being actively scanned or exploited in the wild right now?',query:ioc,url:'https://viz.greynoise.io/trends',badge:'t-teal',lbl:'Free'});
-    tools.push({name:'Packet Storm',desc:'Security advisories, exploit code, technical research papers',query:ioc,url:`https://packetstormsecurity.com/search/?q=${enc}`,badge:'t-red',lbl:'Free'});
-  }
-
-  // ── NEWS — always for cyber
-  tools.push({name:'Bleeping Computer',desc:'News coverage, technical details, IOCs, affected organizations',query:threat,url:`https://www.bleepingcomputer.com/?s=${tEnc}`,badge:'t-teal',lbl:'Free'});
-  tools.push({name:'Reddit r/netsec',desc:'Security community, PoC discussion, analyst commentary',query:threat,url:`https://www.reddit.com/r/netsec/search/?q=${tEnc}&sort=new`,badge:'t-amber',lbl:'Free'});
-  tools.push({name:'SANS ISC',desc:'Daily handler diaries, severity assessment, IOC analysis',query:threat,url:`https://isc.sans.edu/search.html#q=${tEnc}`,badge:'t-blue',lbl:'Free'});
-  tools.push({name:'GitHub — PoC & Detection',desc:'Public proof-of-concept repos, YARA rules, Sigma detection rules',query:threat,url:`https://github.com/search?q=${tEnc}&type=repositories`,badge:'t-blue',lbl:'Free'});
-  tools.push({name:'Google News',desc:'Mainstream and industry coverage of this threat',query:threat,url:`https://news.google.com/search?q=${tEnc}+cybersecurity`,badge:'t-teal',lbl:'Free'});
-  tools.push({name:'PANW Threat Vault',desc:'Threat signatures, WildFire verdicts, severity rating — log in for full access',query:ioc,url:'https://threatvault.paloaltonetworks.com',badge:'t-gray',lbl:'Login'});
-  tools.push({name:'Recorded Future',desc:'Threat actor intel, risk score, dark web mentions, campaign tracking',query:ioc,url:`https://app.recordedfuture.com/live/sc/search/?q=${enc}`,badge:'t-gray',lbl:'Login'});
-
-  return tools;
-}
-
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  MASTER SEARCH ENGINE
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 async function runSearch(q){
-  // STEP 1: Extract entities first
-  const entities=await extractEntities(q);
-  const isPhys=entities.alert_type==='physical';
-  const isCyber=!isPhys;
-  const kws=entities.keywords||[];
+  // 1. Extract keywords (regex first, AI refines)
+  const ent=await extractEntities(q);
+  const isPhys=ent.alert_type==='physical';
+  const kws=ent.keywords||[];
+  const q0=kws[0]||ent.event_name||q.substring(0,40);
+  const enc=encodeURIComponent(q0);
 
   // Show keyword banner
   const kb=document.getElementById('kw-banner');
   if(kb){
-    const typeCls=isPhys?'t-amber':'t-red';
-    const typeLabel=isPhys?'Physical / Environmental Threat':'Cyber / Technical Threat';
+    const tc=isPhys?'t-amber':'t-red';
+    const tl=isPhys?'Physical / Emergency':'Cyber / Technical';
     kb.innerHTML=`
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
-        <span class="tag ${typeCls}">${typeLabel}</span>
-        ${entities.event_name?`<span style="font-size:12px;font-weight:600;color:var(--blue-text);">${esc(entities.event_name)}</span>`:''}
-        ${entities.location?`<span style="font-size:11px;color:var(--blue-text);">&#128205; ${esc(entities.location)}${entities.state?' · '+esc(entities.state):''}</span>`:''}
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+        <span class="tag ${tc}">${tl}</span>
+        ${ent.event_name?`<strong style="color:var(--blue-text);font-size:13px;">${esc(ent.event_name)}</strong>`:''}
+        ${ent.location?`<span style="font-size:11px;color:var(--blue-text);">&#128205; ${esc(ent.location)}${ent.state_code?' · '+esc(ent.state_code):''}</span>`:''}
+        ${ent.ioc?`<span class="tag t-red" style="font-size:11px;">${esc(ent.ioc)}</span>`:''}
       </div>
-      <div style="font-size:11px;color:var(--blue-text);margin-bottom:6px;">Extracted keywords — used in every tool below:</div>
-      <div class="kw-chips">${kws.map(k=>`<span class="kw-chip">${esc(k)}</span>`).join('')}</div>
-      <div style="font-size:10px;color:var(--blue-text);margin-top:6px;">Routing to: <strong>${isPhys?'Physical & emergency tools only (Watch Duty, Citizen, NWS, FEMA, CAL FIRE, World Monitor...)':'Cyber threat intel tools only (VirusTotal, Shodan, Greynoise, OTX...)'}</strong></div>`;
+      <div style="font-size:11px;color:var(--blue-text);margin-bottom:5px;font-weight:500;">Keywords extracted — used in every tool search below:</div>
+      <div>${kws.map(k=>`<span class="kw-chip">${esc(k)}</span>`).join('')}</div>
+      <div style="font-size:10px;color:var(--blue-text);margin-top:6px;">Routing to: <strong>${isPhys?'Physical & emergency tools only':'Cyber threat intel tools only'}</strong> &nbsp;|&nbsp; Auto-refreshes every 15 minutes</div>`;
   }
 
-  // STEP 2: Build tool rows immediately (before AI)
-  const toolRows=isPhys?buildPhysicalTools(entities):buildCyberTools(entities);
-  const autoTool=toolRows.find(t=>t.auto);
+  // 2. Auto-open top X search immediately
+  window.open(`https://x.com/search?q=${enc}&f=live`,'_blank');
 
-  // Auto-open top X search
-  if(autoTool)window.open(autoTool.url,'_blank');
-
-  // Show tool rows right away
-  setPill('tools','done','Done');
-  setBody('tools',
-    `<div style="font-size:11px;background:var(--amber-bg);color:var(--amber-text);padding:8px 10px;border-radius:var(--r);margin-bottom:10px;">
-      &#9733; Each tool below is pre-filled with your extracted keywords. Click <strong>Open</strong> to go directly to results for this specific event.
-      ${autoTool?`<br>&#9654; <strong>${esc(autoTool.name)}</strong> auto-opened in a new tab.`:''}
-    </div>`+
-    toolRows.map(t=>toolRow(t.name,t.desc,t.query,t.url,t.badge,t.lbl,t.auto)).join('')
-  );
-
-  // STEP 3: Fire all remaining calls in parallel
-  const searchQuery=`${entities.event_name||''} ${entities.location||''} ${kws.slice(0,2).join(' ')}`.trim();
-
-  const [triR, briefR, livePhys, liveUSGS, liveFEMA, gdeltData] = await Promise.all([
-
-    // TRIAGE — no search needed, fast
-    ai(
-      'You are a senior SOC analyst. Analyze this alert and respond ONLY in this exact format:\nALERT TYPE: [Physical/Cyber/CVE/Malware/Ransomware/Phishing/IOC/Unknown]\nSEVERITY: [Critical/High/Medium/Low]\nCONFIDENCE: [High/Medium/Low]\nWATCH POSTURE: [Elevated/Standard/Informational]\nSUMMARY: [3 sentences — what happened, where, immediate risk]\nAFFECTED: [specific systems, areas, populations impacted]\nTHREAT ACTORS: [named groups or N/A]\nIMMEDIATE ACTIONS: [3 specific things an analyst should do RIGHT NOW]\nMITRE TTPS: [top 3 ATT&CK IDs and names — or N/A for physical alerts]',
-      `Triage this alert:\n${q}`,
-      false, 600
-    ),
-
-    // INTELLIGENCE BRIEF — WITH GOOGLE SEARCH for real internet results
-    isPhys ? ai(
-      'You are a physical security and emergency intelligence analyst with access to Google Search. Search for current real-time information about this event and write a detailed intelligence brief. Search specifically for: current status, containment percentage if wildfire, road closures, evacuation orders, affected population, emergency response status, weather conditions. Include actual current data you find from CAL FIRE, NWS, Watch Duty, FEMA, local news, and government sources. Be specific with numbers, percentages, and locations.',
-      `Search the internet right now and provide a detailed intelligence brief for this physical/emergency event:\n\nEvent: ${entities.event_name||kws[0]}\nLocation: ${entities.location||'unknown'} ${entities.state||''}\nKeywords to search: ${kws.join(', ')}\n\nFull alert:\n${q}\n\nWrite a comprehensive brief covering: current situation status, affected area and population, emergency response, weather/environmental conditions, evacuation status, and recommended watch posture for the next 24 hours.`,
-      true, 900
-    ) : ai(
-      'You are a cyber threat intelligence analyst with access to Google Search. Search for current real-time information about this threat and write a detailed intelligence brief. Search for: recent news coverage, VirusTotal reports, vulnerability details, active exploitation reports, threat actor information, affected organizations, patches available. Include actual current data you find from threat intel sources, security news, and vendor advisories.',
-      `Search the internet right now and provide a detailed threat intelligence brief:\n\nThreat: ${entities.event_name||entities.ioc||kws[0]}\nType: ${entities.sub_type||entities.alert_type}\nKeywords to search: ${kws.join(', ')}\n\nFull alert:\n${q}\n\nWrite a comprehensive brief covering: threat description, current exploitation status, affected systems, MITRE ATT&CK techniques, IOC details, what security tools currently show, patch/mitigation status, and recommended response actions.`,
-      true, 900
-    ),
-
-    // Live data — physical only
-    isPhys ? fetchNWS(entities.state_code, kws) : Promise.resolve([]),
-    isPhys ? fetchUSGS() : Promise.resolve([]),
-    isPhys ? fetchFEMA(entities.state_code) : Promise.resolve([]),
-
-    // GDELT news — always
+  // 3. Fire all in parallel
+  const [triR,briefR,nwsD,usgsD,femaD,gdeltD]=await Promise.all([
+    ai('Senior SOC analyst. Respond ONLY in this exact format:\nALERT TYPE: [Physical/Cyber/CVE/Malware/Ransomware/Phishing/IOC/Unknown]\nSEVERITY: [Critical/High/Medium/Low]\nCONFIDENCE: [High/Medium/Low]\nWATCH POSTURE: [Elevated/Standard/Informational]\nSUMMARY: [3 sentences — what happened, where, immediate risk]\nAFFECTED: [systems, areas, populations]\nTHREAT ACTORS: [named groups or N/A]\nIMMEDIATE ACTIONS: [3 specific analyst actions right now]\nMITRE TTPS: [top 3 IDs and names, or N/A for physical]',
+      'Triage:\n'+q,false,600),
+    ai(isPhys
+      ?'Physical security analyst with Google Search access. Search for CURRENT real-time information about this event. Find actual current data: containment %, evacuations, road closures, injuries, affected population, emergency resources deployed. Search news sites, government sites, fire agencies. Include specific numbers and current status. Write a structured intelligence brief with sections for: Current Status, Affected Area, Emergency Response, Environmental Conditions, and Recommended Watch Posture.'
+      :'Cyber threat intelligence analyst with Google Search access. Search for CURRENT information about this threat. Find: recent CVE details, active exploitation reports, VirusTotal community info, affected organizations, patches available, threat actor attribution. Write a structured brief with sections for: Threat Overview, Current Exploitation Status, Affected Systems, MITRE ATT&CK Mapping, IOC Details, and Recommended Response.',
+      (isPhys?'Search internet now for current status of: ':'Search internet now for current threat info on: ')+kws.join(', ')+'\n\nFull alert:\n'+q.substring(0,400),
+      true,900),
+    isPhys?fetchNWS(ent.state_code,kws):Promise.resolve([]),
+    isPhys?fetchUSGS():Promise.resolve([]),
+    isPhys?fetchFEMA(ent.state_code):Promise.resolve([]),
     fetchGDELT(kws)
   ]);
 
-  // RENDER TRIAGE
+  // ── TRIAGE
   if(triR==='__nokey__')noKey('triage');
   else{setPill('triage','done','Done');setBody('triage',parseTriage(triR));}
 
-  // RENDER INTELLIGENCE BRIEF
+  // ── INTELLIGENCE BRIEF
   if(briefR==='__nokey__')noKey('brief');
   else if(briefR.startsWith('[Error')||briefR.startsWith('[Network')||briefR.startsWith('[Rate')){
-    setPill('brief','skip','Error');
-    setBody('brief',`<div style="color:var(--red-text);background:var(--red-bg);padding:10px;border-radius:var(--r);">${briefR}<br><br>If you see "rate limit" — wait 1 minute and try again. The free Gemini tier allows 10 requests per minute.</div>`);
-  }
-  else{
+    setPill('brief','wait','Error');
+    setBody('brief',`<div style="background:var(--red-bg);color:var(--red-text);padding:10px;border-radius:var(--r);font-size:12px;">${esc(briefR)}<br><br><strong>If "rate limit":</strong> Free Gemini allows 10 requests/minute. Wait 1 minute and search again.</div>`);
+  }else{
     setPill('brief','done','Gemini + Google Search');
-    setBody('brief',`<div style="line-height:1.8;">${(briefR||'').replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>')}</div>${cpBtn()}`);
+    setBody('brief',`<div style="line-height:1.8;">${(briefR||'').replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/###\s*(.+)/g,'<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin:10px 0 4px;">$1</div>').replace(/##\s*(.+)/g,'<div style="font-size:13px;font-weight:600;margin:10px 0 4px;">$1</div>')}</div><button style="font-size:10px;padding:2px 8px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;margin-top:8px;" onclick="var t=this.closest('.res-body').innerText;navigator.clipboard.writeText(t).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1800)})">Copy</button>`);
   }
 
-  // RENDER LIVE DATA (physical only)
+  // ── LIVE DATA (physical)
   if(isPhys){
-    const allLive=[
-      ...(livePhys||[]).map(a=>({...a,source:'NWS',sevCls:a.severity==='Extreme'||a.severity==='Severe'?'t-red':'t-amber',url:a.url||'https://www.weather.gov/alerts'})),
-      ...(liveUSGS||[]).map(a=>({...a,source:'USGS',sevCls:a.severity==='Extreme'||a.severity==='Severe'?'t-red':'t-amber'})),
-      ...(liveFEMA||[]).map(a=>({...a,source:'FEMA',sevCls:'t-amber'}))
+    const all=[
+      ...(nwsD||[]).map(a=>({...a,src:'NWS',sc:a.severity==='Extreme'||a.severity==='Severe'?'t-red':'t-amber'})),
+      ...(usgsD||[]).map(a=>({...a,src:'USGS',sc:'t-amber'})),
+      ...(femaD||[]).map(a=>({...a,src:'FEMA',sc:'t-amber'}))
     ];
-    if(allLive.length){
-      setPill('livedata','live','Live — fetched now');
-      setBody('livedata',allLive.map(a=>dataRow(
-        a.title,
-        a.area+(a.headline?'<br><span style="font-size:10px;color:var(--text2);">'+a.headline.substring(0,120)+'</span>':''),
-        a.severity,a.url,a.source
-      )).join(''));
+    if(all.length){
+      setPill('livedata','live','Live now');
+      setBody('livedata',all.map(a=>`<div class="tool-result">
+        <div class="tr-header"><div class="tr-name">${a.title}</div><div class="tr-actions"><span class="tag t-gray">${a.src}</span><span class="tag ${a.sc}">${a.severity}</span><a href="${a.url}" target="_blank" class="btn sm" style="text-decoration:none;">View &#8599;</a></div></div>
+        <div class="tr-brief">${a.area}${a.headline?'<br>'+a.headline:''}</div>
+        <div class="tr-query">${a.sent?new Date(a.sent).toLocaleString():''}</div>
+      </div>`).join(''));
     }else{
       setPill('livedata','done','No active alerts');
-      setBody('livedata','No active alerts found for this location in NWS, USGS, or FEMA right now. The event may not yet have an official declaration, or the location was not detected. Check the tool links above directly.');
+      setBody('livedata','No active alerts in NWS, USGS, or FEMA for this location right now. The event may be too recent for official declarations. Check Watch Duty and Citizen App directly.');
     }
   }
 
-  // RENDER GDELT NEWS
-  if(gdeltData&&gdeltData.length){
-    setPill('gdelt','live','Live — fetched now');
+  // ── GDELT NEWS
+  if(gdeltD&&gdeltD.length){
+    setPill('gdelt','live','Live now');
     setBody('gdelt',
-      `<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Real-time news articles from GDELT matching your keywords: <strong>${kws.slice(0,3).join(', ')}</strong></div>`+
-      gdeltData.map(a=>newsRow(a.title,a.source,a.url,a.date)).join('')
+      `<div style="font-size:11px;color:var(--text3);margin-bottom:8px;font-weight:500;">Real news articles from GDELT — keywords: ${kws.slice(0,3).map(k=>`<strong>${esc(k)}</strong>`).join(', ')}</div>`+
+      gdeltD.map(a=>`<div class="tool-result">
+        <div class="tr-header">
+          <div class="tr-name"><a href="${a.url}" target="_blank" style="color:var(--text);text-decoration:none;">${esc(a.title)}</a></div>
+          <div class="tr-actions"><span class="tag t-teal">${esc(a.source)}</span><a href="${a.url}" target="_blank" class="btn sm" style="text-decoration:none;">Read &#8599;</a></div>
+        </div>
+        <div class="tr-query">${a.date}</div>
+      </div>`).join('')
     );
   }else{
     setPill('gdelt','done','No results');
-    setBody('gdelt',`No GDELT news articles found for these keywords right now. <a href="https://gdeltproject.org" target="_blank" style="color:var(--blue-text);">Check GDELT directly &#8599;</a>`);
+    setBody('gdelt',`No GDELT news for these keywords right now. <a href="https://gdeltproject.org" target="_blank" style="color:var(--blue-text);">Open GDELT &#8599;</a>`);
   }
+
+  // ── ALL TOOL LINKS WITH BRIEF INTRO
+  setPill('tools','done','Done');
+  setBody('tools',buildToolResults(ent,q));
 }
 
-// ── BUILD RESULT PAGE SKELETON ──
-function buildResultPage(q){
-  const isPhys=q?/flood|fire|wildfire|earthquake|storm|hurricane|tornado|protest|riot|civil|hazmat|chemical|spill|evacuation|shooting|gunfire|explosion|disaster|emergency/i.test(q):true;
-  return`<div class="kw-banner" id="kw-banner" style="background:var(--blue-bg);border:0.5px solid var(--blue-text);border-radius:var(--rl);padding:12px 16px;margin-bottom:12px;">
-    <span class="sp"></span><span style="color:var(--blue-text);font-size:12px;">Extracting keywords from your alert and routing to relevant tools...</span>
+// ═══════════════════════════════════════════════════
+//  BUILD TOOL RESULTS WITH BRIEF + LINK
+// ═══════════════════════════════════════════════════
+function buildToolResults(ent,q){
+  const kws=ent.keywords||[];
+  const q0=kws[0]||ent.event_name||'';
+  const q0e=encodeURIComponent(q0);
+  const qAll=kws.slice(0,3).join(' ');
+  const qAllE=encodeURIComponent(qAll);
+  const ioc=ent.ioc||q0;
+  const iocE=encodeURIComponent(ioc);
+  const isPhys=ent.alert_type==='physical';
+  const sub=ent.sub_type||'';
+  const loc=ent.location||q0;
+  const locE=encodeURIComponent(loc);
+  const st=ent.state_code||'';
+  const isCrime=/shooting|gunfire|active shooter/i.test(q);
+  const isFire=sub==='wildfire'||/fire/i.test(q0);
+  const isHurricane=sub==='hurricane';
+  const isFlood=sub==='flood';
+  const isQuake=sub==='earthquake';
+  const isCVE=ent.alert_type==='cve'||sub==='cve';
+  const isHash=ent.alert_type==='hash'||sub==='hash';
+  const isDomain=ent.alert_type==='domain';
+  const isIP=ent.alert_type==='ip';
+
+  let html=`<div style="background:var(--amber-bg);color:var(--amber-text);padding:8px 12px;border-radius:var(--r);margin-bottom:10px;font-size:11px;">
+    &#9733; Auto-opened X search in new tab. Each tool below shows what it will search and a brief description. Click <strong>Open</strong> to go directly to results for this specific event.
+  </div>`;
+
+  if(isPhys){
+    // X SEARCHES — always first
+    html+=`<div class="sl">&#120143; X / Twitter — Auto-extracted searches</div>`;
+    const xSearches=[
+      {name:'X — Live reports (auto-opened)',brief:'Real-time tweets about this specific event — all accounts, latest posts',q:q0,url:`https://x.com/search?q=${q0e}&f=live`,badge:'t-amber',lbl:'Auto-opened'},
+      {name:'X — Breaking & eyewitness',brief:'Videos, photos, first-hand reports from people on the ground',q:`${q0} #breaking OR video`,url:`https://x.com/search?q=${q0e}+%28%23breaking+OR+video+OR+%23alert%29&f=live`,badge:'t-amber',lbl:'Eyewitness'},
+      {name:'X — Emergency & government',brief:'FEMA, NOAA, state emergency management, local officials',q:`${q0} emergency`,url:`https://x.com/search?q=${q0e}+%28from%3AFEMA+OR+from%3ANOAAweather+OR+from%3AUSGS+OR+%23emergency%29&f=live`,badge:'t-amber',lbl:'Official'},
+      {name:'X — News media',brief:'CNN, Reuters, NPR, BBC, local TV stations covering this event',q:`${q0} news`,url:`https://x.com/search?q=${q0e}+%28from%3ACNN+OR+from%3Areuters+OR+from%3ANPR%29&f=live`,badge:'t-amber',lbl:'News'},
+    ];
+    xSearches.forEach(t=>{html+=toolResult('&#120143;',t.name,t.lbl,t.badge,t.brief,t.q,t.url,'');});
+
+    // CITIZEN APP — always, highlighted for crime
+    html+=`<div class="sl">${isCrime?'&#9888;':'&#128205;'} Local Incident Monitoring</div>`;
+    html+=toolResult('&#128205;','Citizen App'+(isCrime?' — PRIORITY for shooting/crime alerts':''),isCrime?'Priority':'Login',isCrime?'t-red':'t-gray',
+      isCrime?'Real-time crowdsourced crime and incident reports. Log in → search your location. This is the most important tool for active shooter and crime events.':'Real-time crowdsourced local incidents — police activity, fires, accidents, emergencies.',
+      loc,'https://citizen.com/explore','');
+
+    html+=toolResult('&#128293;','Watch Duty — Wildfires','Live','t-red',
+      'Real-time wildfire tracking — fire perimeter maps, containment percentage, evacuation zones, structures threatened, air quality. Updated continuously by fire agencies and community.',
+      q0,'https://app.watchduty.org','');
+
+    html+=toolResult('&#127782;','NWS Active Weather Alerts','Live','t-blue',
+      `Current official weather alerts, watches, and warnings from the National Weather Service for ${ent.state||'the affected area'}. Includes severe weather, flood, fire weather alerts.`,
+      st||loc,`https://www.weather.gov/alerts${st?'?area='+st:''}`,''  );
+
+    html+=toolResult('&#128683;','FEMA Disaster Declarations','Live','t-blue',
+      `Federal disaster declarations and emergency response status for ${ent.state||'affected state'}. Check if a federal disaster declaration has been issued for this event.`,
+      loc,'https://www.fema.gov/disasters','');
+
+    if(isFire){
+      html+=`<div class="sl">&#128293; Wildfire-Specific Tools</div>`;
+      html+=toolResult('&#128293;','CAL FIRE — California Incidents','Live','t-red','California Department of Forestry active incident list. Containment percentage, acreage, resources deployed, air quality impacts.',q0,'https://www.fire.ca.gov/incidents','');
+      html+=toolResult('&#127752;','NASA FIRMS — Satellite Fire Detection','Live','t-red','NASA satellite-detected fire hotspots. Thermal intensity, fire spread direction, geographic coverage from MODIS and VIIRS satellites.',q0,'https://firms.modaps.eosdis.nasa.gov/map','');
+      html+=toolResult('&#127754;','NIFC — National Fire Center','Live','t-red','National Interagency Fire Center statistics and situation reports. Resources deployed, total acres, national preparedness level.',q0,'https://www.nifc.gov/fire-information','');
+      html+=toolResult('&#127810;','AirNow — Air Quality','Live','t-teal','Real-time air quality index and wildfire smoke levels for the affected area. Health advisories and PM2.5 levels.',loc,'https://www.airnow.gov','');
+      html+=toolResult('&#127788;','Windy — Fire Weather','Live','t-blue','Wind patterns, fire weather conditions, critical humidity and temperature. Essential for predicting fire spread direction.',q0,'https://www.windy.com','');
+    }
+
+    if(isHurricane){
+      html+=`<div class="sl">&#127754; Hurricane-Specific Tools</div>`;
+      html+=toolResult('&#127754;','NHC — National Hurricane Center','Live','t-blue','Storm track, category, advisory, cone of uncertainty, projected landfall. Official National Hurricane Center briefings.',q0,'https://www.nhc.noaa.gov','');
+      html+=toolResult('&#127775;','Tropical Tidbits','Live','t-blue','Multiple model forecast tracks, spaghetti plots, intensity forecasts. Best site for comparing hurricane model outputs.',q0,'https://www.tropicaltidbits.com','');
+      html+=toolResult('&#9928;','SPC Storm Prediction Center','Live','t-blue','Tornado, hail, and wind risk in storm bands. Active watches and warnings for areas in the hurricane\'s path.',q0,'https://www.spc.noaa.gov','');
+    }
+
+    if(isFlood){
+      html+=`<div class="sl">&#127754; Flood-Specific Tools</div>`;
+      html+=toolResult('&#127754;','USGS Water Resources — Stream Gauges','Live','t-blue','Real-time stream gauge data, river levels, and flood stage status. Check if rivers are above flood stage in your area.',loc,'https://waterdata.usgs.gov/nwis/rt','');
+    }
+
+    if(isQuake){
+      html+=`<div class="sl">&#127758; Earthquake-Specific Tools</div>`;
+      html+=toolResult('&#127758;','USGS Earthquake Hazards','Live','t-blue','Magnitude, depth, ShakeMap intensity, tsunami warning status, aftershock forecast. Official USGS real-time data.',q0,'https://earthquake.usgs.gov/earthquakes/map','');
+      html+=toolResult('&#127758;','EMSC — European Seismological Center','Live','t-blue','European seismological center felt reports and real-time earthquake data. Good for cross-checking USGS.',q0,'https://www.emsc-csem.org/Earthquake/','');
+    }
+
+    // ALWAYS: Global intel
+    html+=`<div class="sl">&#127758; Global Intelligence Platforms</div>`;
+    html+=toolResult('&#127758;','World Monitor — Global Intel Dashboard','Free','t-green','25 data layers: geopolitical instability index, military tracking, conflict zones, disasters, financial markets, cyber threats. Click country for full intelligence dossier.',q0,'https://worldmonitor.app','');
+    html+=toolResult('&#127760;','GDELT Project','Free','t-teal','Global news event database. Real-time protest activity index, conflict intensity score, news volume spikes. Search for event keywords to see media intensity.',q0,`https://gdeltproject.org`,'');
+    html+=toolResult('&#128204;','Global Incident Map','Free','t-amber','Real-time worldwide incidents including terrorism, HAZMAT, civil unrest, crime, and natural disasters.',q0,'https://www.globalincidentmap.com','');
+    html+=toolResult('&#128274;','ReliefWeb','Free','t-teal','Humanitarian situation reports, crisis maps, affected population estimates, international response coordination.',q0,`https://reliefweb.int/updates?search=${q0e}`,'');
+    html+=toolResult('&#127760;','Zoom.earth — Satellite Imagery','Free','t-blue','Real-time satellite imagery — track fire spread, storm position, flood extent, and disaster impact from space.',loc,'https://zoom.earth','');
+
+    // News
+    html+=`<div class="sl">&#128240; News & Community</div>`;
+    html+=toolResult('&#128240;','Google News — This Event','Free','t-teal','Latest news articles from thousands of publishers about this specific event. Filter by date to see most recent coverage.',qAll,`https://news.google.com/search?q=${qAllE}`,'');
+    html+=toolResult('&#128254;','Reddit — Local & Community Reports','Free','t-amber','Reddit posts with eyewitness accounts, local updates, community discussion. Sort by New for latest.',qAll,`https://www.reddit.com/search/?q=${qAllE}&sort=new`,'');
+    html+=toolResult('&#128253;','YouTube — Live Streams & Recent Videos','Free','t-red','Live streams and recent video uploads. Look for local news channels and first-person footage of the event.',qAll,`https://www.youtube.com/results?search_query=${qAllE}`,'');
+
+  } else {
+    // CYBER TOOLS
+    html+=`<div class="sl">&#120143; X / Twitter — Infosec Community</div>`;
+    html+=toolResult('&#120143;','X — Infosec community (auto-opened)','Auto-opened','t-amber','Security researchers, analysts, and vendors discussing this threat. Check for PoC links, patches, IOC sharing.',ioc,`https://x.com/search?q=${iocE}+%28%23infosec+OR+%23cybersecurity%29&f=live`,'');
+    html+=toolResult('&#120143;','X — Verified researchers & CISA','Verified','t-amber','CISA, security vendor accounts, verified researcher commentary on this threat.',ioc,`https://x.com/search?q=${iocE}+filter%3Averified&f=live`,'');
+
+    html+=`<div class="sl">&#128737; Threat Intelligence</div>`;
+    html+=toolResult('&#128027;','VirusTotal','Free','t-red','90+ AV engine scan results, sandbox behavioral analysis, community comments, and related IOCs. Most comprehensive file/URL/IP/domain analysis.',ioc,`https://www.virustotal.com/gui/search/${iocE}`,'');
+    html+=toolResult('&#127758;','Shodan','Free','t-blue','Internet scan data — open ports, running services, banner information, CVEs detected on host, geolocation, ASN and organization details.',ioc,`https://www.shodan.io/host/${iocE}`,'');
+    html+=toolResult('&#128267;','Greynoise','Free','t-teal','Classifies IP as malicious/benign/unknown. Shows scanning intent (opportunistic vs targeted), tags, and first/last seen dates.',ioc,`https://viz.greynoise.io/ip/${iocE}`,'');
+    html+=toolResult('&#128202;','Censys','Free','t-teal','Internet scan data, SSL certificate details, open services history, associated infrastructure. Good for domain/IP relationships.',ioc,`https://search.censys.io/search?resource=hosts&q=${iocE}`,'');
+    html+=toolResult('&#128204;','AlienVault OTX','Free','t-blue','Threat pulse count, related IOCs, malware family associations, threat actor attribution, community intelligence sharing.',ioc,`https://otx.alienvault.com/indicator/${isIP?'ip':isDomain?'domain':'file'}/${iocE}`,'');
+    html+=toolResult('&#128200;','Pulsedive','Free','t-purple','Risk score 1-10, threat feeds this indicator appears in, linked threats, categorized threat type.',ioc,`https://pulsedive.com/indicator/?ioc=${iocE}`,'');
+    html+=toolResult('&#128683;','ThreatFox','Free','t-red','Malware family, confidence level, reporter, first seen date. Submit and look up malware indicators.',ioc,`https://threatfox.abuse.ch/browse/?q=${iocE}`,'');
+    html+=toolResult('&#127759;','AbuseIPDB','Free','t-red','Abuse confidence score (0-100%), total report count, country, ISP, and usage type for this IP.',ioc,`https://www.abuseipdb.com/check/${iocE}`,'');
+    html+=toolResult('&#128202;','IBM X-Force Exchange','Free','t-blue','IBM threat intelligence — risk score, threat category, malware associations, CVE intelligence.',ioc,`https://exchange.xforce.ibmcloud.com/search/${iocE}`,'');
+    html+=toolResult('&#128202;','Cisco Talos','Free','t-blue','IP/domain reputation score, spam classification, blacklist status, network owner, sending IP reputation.',ioc,`https://talosintelligence.com/reputation_center/lookup?search=${iocE}`,'');
+    html+=toolResult('&#127776;','MITRE ATT&CK','Free','t-blue','Technique and tactic mapping, threat actor profiles, detection opportunities, and mitigation recommendations.',kws[0]||ioc,`https://attack.mitre.org/search/?query=${iocE}`,'');
+    html+=toolResult('&#127760;','Urlscan.io','Free','t-teal','URL and website scanner — screenshots, DOM analysis, network requests made, indicators of compromise.',ioc,`https://urlscan.io/search/#${iocE}`,'');
+
+    if(isHash||sub==='malware'||sub==='ransomware'){
+      html+=`<div class="sl">&#128027; Malware Sandbox Analysis</div>`;
+      html+=toolResult('&#128027;','MalwareBazaar','Free','t-red','Malware sample database — malware family, file type, YARA rules matched, tags, first seen date.',ioc,`https://bazaar.abuse.ch/sample/${iocE}/`,'');
+      html+=toolResult('&#128027;','Hybrid Analysis','Free','t-purple','Automated sandbox — MITRE ATT&CK technique mapping, network traffic analysis, screenshots of execution, behavioral report.',ioc,`https://www.hybrid-analysis.com/search?query=${iocE}`,'');
+      html+=toolResult('&#128027;','ANY.RUN Interactive','Free','t-purple','Watch malware execute live in a browser. See C2 connections, dropped files, registry changes, network traffic in real time.',ioc,`https://app.any.run`,'');
+      html+=toolResult('&#128027;','Intezer Analyze','Free','t-purple','Genetic code analysis — identifies malware by code reuse. Finds which malware family this code came from.',ioc,`https://analyze.intezer.com`,'');
+      html+=toolResult('&#128027;','Joe Sandbox','Free','t-purple','Deep malware analysis supporting Windows, Mac, Linux, Android, and iOS. Config extraction and behavioral analysis.',ioc,`https://www.joesandbox.com`,'');
+    }
+
+    if(isDomain){
+      html+=`<div class="sl">&#127760; Domain Intelligence</div>`;
+      html+=toolResult('&#127760;','URLhaus','Free','t-red','Malicious URL status (online/offline), threat category, associated payload, reporter information.',ioc,`https://urlhaus.abuse.ch/browse/?q=${iocE}`,'');
+      html+=toolResult('&#127760;','SecurityTrails','Login','t-blue','Complete DNS history, WHOIS history, subdomain enumeration, IP change history. Essential for domain infrastructure mapping.',ioc,`https://securitytrails.com/domain/${iocE}/dns`,'');
+      html+=toolResult('&#127760;','crt.sh Certificate Transparency','Free','t-teal','Find all subdomains via SSL certificate transparency logs. No login required.',ioc,`https://crt.sh/?q=${iocE}`,'');
+      html+=toolResult('&#127760;','ViewDNS','Free','t-blue','Reverse IP lookup, DNS records, WHOIS, IP history, traceroute. Find all domains on same IP.',ioc,`https://viewdns.info/reverseip/?host=${iocE}&t=1`,'');
+      html+=toolResult('&#127760;','Spamhaus Blacklist Check','Free','t-red','Check if domain/IP is on Spamhaus ZEN, DBL, or SBL blacklists. Leading anti-spam and malware reputation list.',ioc,`https://check.spamhaus.org/listed/?searchterm=${iocE}`,'');
+    }
+
+    if(isCVE){
+      html+=`<div class="sl">&#128683; Vulnerability Intelligence</div>`;
+      html+=toolResult('&#128683;','NVD NIST','Free','t-green','Official CVE database — CVSS v3.1 score, attack vector, CWE type, affected CPE list, published date.',ioc,`https://nvd.nist.gov/vuln/detail/${iocE}`,'');
+      html+=toolResult('&#128683;','CISA KEV Catalog','Free','t-green','Is this on the Known Exploited Vulnerabilities list? Check if CISA has confirmed active exploitation with required remediation deadline.',ioc,'https://www.cisa.gov/known-exploited-vulnerabilities-catalog','');
+      html+=toolResult('&#128683;','Exploit-DB','Free','t-red','Public exploit code and proof-of-concept. Check exploit maturity — weaponized, PoC, or theoretical. GHDB dorks also available.',ioc,`https://www.exploit-db.com/search?cve=${iocE}`,'');
+      html+=toolResult('&#128683;','GitHub Advisories','Free','t-blue','Package security advisories — affected versions, fixed versions, GHSA IDs, severity.',ioc,`https://github.com/advisories?query=${iocE}`,'');
+      html+=toolResult('&#128683;','AttackerKB','Free','t-blue','Security analyst assessments — exploitability score, attacker value rating, analyst commentary and notes.',ioc,`https://attackerkb.com/search?q=${iocE}`,'');
+      html+=toolResult('&#128683;','Greynoise Trends','Free','t-teal','Is this CVE being actively scanned or exploited in the wild right now? Real-time exploitation activity.',ioc,'https://viz.greynoise.io/trends','');
+      html+=toolResult('&#128683;','Metasploit Module DB','Free','t-red','Check if a Metasploit exploit module exists for this CVE. Module name, type, and reliability rating.',ioc,`https://www.rapid7.com/db/?q=${iocE}`,'');
+      html+=toolResult('&#128683;','Vulners','Free','t-amber','Aggregated vulnerability database — total exploit count, all references, exploit availability score.',ioc,`https://vulners.com/search?query=${iocE}`,'');
+    }
+
+    html+=`<div class="sl">&#128240; News & Community</div>`;
+    html+=toolResult('&#128240;','Bleeping Computer','Free','t-teal','Leading cybersecurity news — technical details, IOCs published, affected organizations, patches, incident timeline.',kws[0]||ioc,`https://www.bleepingcomputer.com/?s=${iocE}`,'');
+    html+=toolResult('&#128254;','Reddit r/netsec','Free','t-amber','Security community discussion, PoC sharing, analyst notes, real-world impact reports.',kws[0]||ioc,`https://www.reddit.com/r/netsec/search/?q=${iocE}&sort=new`,'');
+    html+=toolResult('&#128203;','SANS Internet Storm Center','Free','t-blue','Daily handler diaries and severity assessment. SANS analysts write about emerging threats with IOC details.',kws[0]||ioc,`https://isc.sans.edu/search.html#q=${iocE}`,'');
+    html+=toolResult('&#128202;','GitHub — PoC & Detection Rules','Free','t-blue','Public proof-of-concept repos, YARA rules, Sigma detection rules, and security tools for this threat.',kws[0]||ioc,`https://github.com/search?q=${iocE}&type=repositories`,'');
+    html+=toolResult('&#128240;','Google News','Free','t-teal','Mainstream and industry news coverage of this threat.',kws[0]||ioc,`https://news.google.com/search?q=${iocE}+cybersecurity`,'');
+    html+=toolResult('&#128293;','PANW Threat Vault','Login','t-gray','Palo Alto threat signatures, WildFire verdicts, severity rating. Log in for full access.',ioc,'https://threatvault.paloaltonetworks.com','');
+    html+=toolResult('&#128202;','Recorded Future','Login','t-gray','Threat actor intel, risk score, dark web mentions, campaign tracking. Enterprise threat intelligence.',ioc,`https://app.recordedfuture.com/live/sc/search/?q=${iocE}`,'');
+  }
+
+  return html;
+}
+
+// ═══════════════════════════════════════════════════
+//  RESULT PAGE SKELETON + AUTO-REFRESH
+// ═══════════════════════════════════════════════════
+function buildResultPage(q,lastRun){
+  const isPhys=q?/flood|fire|wildfire|earthquake|storm|hurricane|tornado|protest|riot|civil|hazmat|chemical|evacuation|shooting|gunfire|explosion|disaster/i.test(q):true;
+  const refreshTime=new Date(Date.now()+15*60*1000).toLocaleTimeString();
+  return`
+  <div class="kw-banner" id="kw-banner" style="background:var(--blue-bg);border:0.5px solid var(--blue-text);border-radius:var(--rl);padding:12px 16px;margin-bottom:12px;">
+    <span class="sp"></span><span style="color:var(--blue-text);font-size:12px;">Extracting keywords from alert...</span>
   </div>
+  ${lastRun?`<div class="refresh-bar"><span class="dot live"></span><strong>Last updated: ${lastRun}</strong> &nbsp;|&nbsp; Next auto-refresh at: ${refreshTime} &nbsp;|&nbsp; <a href="javascript:void(0)" onclick="document.querySelector('button.primary').click()" style="color:var(--green-text);font-weight:600;">Refresh now</a></div>`:''}
   <div class="res-page" id="result-page">
-    ${mkCard('triage','&#128683;','Triage Brief','Analyzing alert type, severity, watch posture, recommended actions...')}
-    ${mkCard('brief','&#128200;',isPhys?'Physical Intelligence Brief — Gemini searches internet now':'Cyber Threat Brief — Gemini searches internet now',isPhys?'Gemini AI is searching Google right now for: current status, containment %, evacuation orders, emergency response, weather conditions, news coverage...':'Gemini AI is searching Google right now for: threat details, VirusTotal reports, CVE info, active exploitation, affected orgs, patches...')}
-    ${isPhys?mkCard('livedata','&#9679;','Live Data — NWS · USGS · FEMA','Fetching real alerts from NWS weather service, USGS earthquake feed, and FEMA disaster declarations with your location...'):''}
-    ${mkCard('gdelt','&#128240;','Live News — GDELT Real-Time Feed','Fetching real news articles from GDELT global database using your extracted keywords...')}
-    ${mkCard('tools','&#128269;',isPhys?'Physical OSINT Tools — Pre-filled with your keywords':'Cyber OSINT Tools — Pre-filled with your keywords','Building pre-filled tool search links...')}
+    ${mkCard('triage','&#128683;','Triage Brief','Analyzing alert type, severity, watch posture, MITRE TTPs...')}
+    ${mkCard('brief','&#128200;',isPhys?'Intelligence Brief — Gemini searches internet now':'Threat Intel Brief — Gemini searches internet now',isPhys?'Gemini AI is searching Google for current status, containment %, evacuations, emergency response...':'Gemini AI is searching Google for threat details, CVE info, active exploitation, affected organizations...')}
+    ${isPhys?mkCard('livedata','&#9679;','Live Data — NWS · USGS · FEMA','Fetching live official alerts with your location keywords...'):''}
+    ${mkCard('gdelt','&#128240;','Live News — GDELT Global Feed','Fetching real news articles using your extracted keywords...')}
+    ${mkCard('tools','&#128269;',isPhys?'Physical OSINT Tools — Searched with your keywords':'Cyber OSINT Tools — Searched with your keywords','Building tool results with brief descriptions and direct search links...')}
   </div>`;
 }
 
-// ══════════════════════════════════════════════════
-//  INVESTIGATION TABS
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+//  INVESTIGATION TABS WITH AUTO-REFRESH
+// ═══════════════════════════════════════════════════
 let invTabs=[],invActive=null,invN=0;
-function invNew(lbl){const id='i'+(++invN);invTabs.push({id,label:lbl||'Alert '+invN,sub:'paste',q:'',hasRes:false,resHTML:''});invActive=id;renderInv(M());return id;}
+function invNew(lbl){const id='i'+(++invN);invTabs.push({id,label:lbl||'Alert '+invN,sub:'paste',q:'',hasRes:false,resHTML:'',intv:null,lastRun:null});invActive=id;renderInv(M());return id;}
 function invSel(id){invActive=id;renderInv(M());}
-function invClose(id){invTabs=invTabs.filter(t=>t.id!==id);if(invActive===id)invActive=invTabs.length?invTabs[invTabs.length-1].id:null;renderInv(M());}
+function invClose(id){
+  const t=invTabs.find(x=>x.id===id);
+  if(t&&t.intv)clearInterval(t.intv);
+  invTabs=invTabs.filter(t=>t.id!==id);
+  if(invActive===id)invActive=invTabs.length?invTabs[invTabs.length-1].id:null;
+  renderInv(M());
+}
 function invGet(){return invTabs.find(t=>t.id===invActive);}
 
 function renderInv(mc){
   if(!mc)return;const tab=invGet();
-  const bar='<div class="tabbar">'+invTabs.map(t=>'<div class="t-item '+(t.id===invActive?'active':'')+'" onclick="invSel(\''+t.id+'\')">'+esc(t.label.substring(0,14))+(t.label.length>14?'...':'')+'<span class="t-x" onclick="event.stopPropagation();invClose(\''+t.id+'\')">&#215;</span></div>').join('')+'<button class="t-add" onclick="invNew()">+</button></div>';
+  const bar='<div class="tabbar">'+invTabs.map(t=>'<div class="t-item '+(t.id===invActive?'active':'')+'" onclick="invSel(\''+t.id+'\')">'+esc(t.label.substring(0,14))+(t.label.length>14?'...':'')+(t.intv?'<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#639922;margin-left:3px;vertical-align:middle;"></span>':'')+'<span class="t-x" onclick="event.stopPropagation();invClose(\''+t.id+'\')">&#215;</span></div>').join('')+'<button class="t-add" onclick="invNew()">+</button></div>';
   if(!tab){mc.innerHTML=bar+'<div class="empty">Click + to open a new investigation.</div>';return;}
   mc.innerHTML=bar+`
   <div class="card">
@@ -779,15 +752,22 @@ function renderInv(mc){
       </select>
     </div>
     ${tab.sub==='manual'
-      ?`<input type="text" id="inv-q" value="${esc(tab.q)}" placeholder="Fire name · CVE number · IP address · hash · threat name · location" onkeydown="if(event.key==='Enter')invRun()"/>`
-      :`<textarea id="inv-q" placeholder="Paste any alert here — Everbridge, Splunk, CrowdStrike, Defender, SentinelOne, Palo Alto, Genetec, or any raw text.&#10;&#10;Examples:&#10;• EVERBRIDGE: WILDFIRE | Palisade Fire | Los Angeles County, CA | 15% containment&#10;• CROWDSTRIKE: powershell.exe spawned from winword.exe | T1059.001 | HIGH&#10;• Active shooter reported at 123 Main St, Houston TX&#10;• CVE-2024-3400 PAN-OS GlobalProtect CVSS 10.0&#10;&#10;Gemini AI will search the internet and pull real current results.">${esc(tab.q)}</textarea>`}
+      ?`<input type="text" id="inv-q" value="${esc(tab.q)}" placeholder="Fire name · CVE · IP · hash · threat name · location" onkeydown="if(event.key==='Enter')invRun()"/>`
+      :`<textarea id="inv-q" placeholder="Paste any alert here — Everbridge, Splunk, CrowdStrike, Defender, SentinelOne, Palo Alto, Genetec, raw text.
+
+Examples:
+• EVERBRIDGE | WILDFIRE | Palisade Fire | Los Angeles County, CA | 15% containment | 2,400 acres
+• CROWDSTRIKE | Severity: HIGH | powershell.exe from winword.exe | SHA256: 44d88612... | T1059.001
+• Active shooter reported 123 Main St Houston TX — multiple victims
+• CVE-2024-3400 | PAN-OS GlobalProtect | CVSS 10.0 | Active exploitation confirmed">${esc(tab.q)}</textarea>`}
     <div class="btn-row">
-      <button class="btn primary" onclick="invRun()">&#128269; Search — Gemini browses internet + fires relevant tools</button>
+      <button class="btn primary" onclick="invRun()">&#128269; Search — extracts keywords &amp; fires relevant tools</button>
+      ${tab.intv?`<button class="btn" onclick="invStopRefresh()" style="color:var(--amber-text);border-color:var(--amber-text);">&#9679; Stop auto-refresh</button>`:`<button class="btn" onclick="invStartRefresh()" style="color:var(--green-text);border-color:var(--green-text);">&#8635; Start 15-min refresh</button>`}
       <button class="btn" onclick="invClear()">Clear</button>
     </div>
     ${!getKey()?`<div style="margin-top:8px;font-size:12px;background:var(--amber-bg);color:var(--amber-text);padding:10px 12px;border-radius:var(--r);line-height:1.6;">
-      &#9888; No API key — click <strong>&#9881; API Key</strong> in the header.<br>
-      Get your FREE Gemini key at <a href="https://aistudio.google.com" target="_blank" style="color:var(--amber-text);font-weight:600;">aistudio.google.com</a> — no credit card, takes 2 minutes.
+      &#9888; No API key — click <strong>&#9881; API Key</strong> in header.<br>
+      Get free Gemini key at <a href="https://aistudio.google.com" target="_blank" style="color:var(--amber-text);font-weight:600;">aistudio.google.com</a> — takes 2 minutes, no credit card.
     </div>`:''}
   </div>
   ${tab.hasRes?tab.resHTML:''}`;
@@ -800,55 +780,80 @@ async function invRun(){
   tab.q=(document.getElementById('inv-q').value||'').trim();
   if(!tab.q)return;
   tab.hasRes=true;
-  tab.resHTML=buildResultPage(tab.q);
+  tab.lastRun=new Date().toLocaleTimeString();
+  tab.resHTML=buildResultPage(tab.q,null);
   renderInv(M());
   await runSearch(tab.q);
   const rp=document.getElementById('result-page');
   const kb=document.getElementById('kw-banner');
-  if(rp)tab.resHTML=(kb?'<div class="kw-banner" style="background:var(--blue-bg);border:0.5px solid var(--blue-text);border-radius:var(--rl);padding:12px 16px;margin-bottom:12px;">'+kb.innerHTML+'</div>':'')+rp.outerHTML;
+  if(rp)tab.resHTML=`<div class="refresh-bar"><span class="dot live"></span><strong>Last updated: ${tab.lastRun}</strong> &nbsp;|&nbsp; ${tab.intv?'Auto-refresh active — next in 15 min':'Click "Start 15-min refresh" to auto-update'} &nbsp;|&nbsp; <a href="javascript:invRun()" style="color:var(--green-text);font-weight:600;">Refresh now</a></div>`+(kb?kb.outerHTML:'')+rp.outerHTML;
 }
-function invClear(){const tab=invGet();if(!tab)return;tab.q='';tab.hasRes=false;tab.resHTML='';renderInv(M());}
+
+function invStartRefresh(){
+  const tab=invGet();if(!tab||!tab.q)return;
+  if(tab.intv)clearInterval(tab.intv);
+  tab.intv=setInterval(async()=>{
+    const t=invTabs.find(x=>x.id===tab.id);if(!t||!t.q)return;
+    t.lastRun=new Date().toLocaleTimeString();
+    if(curPage==='inv'&&invActive===tab.id){
+      t.resHTML=buildResultPage(t.q,t.lastRun);
+      renderInv(M());
+    }
+    await runSearch(t.q);
+    const rp=document.getElementById('result-page');
+    const kb=document.getElementById('kw-banner');
+    if(rp)t.resHTML=`<div class="refresh-bar"><span class="dot live"></span><strong>Auto-updated: ${t.lastRun}</strong> &nbsp;|&nbsp; Next refresh in 15 min &nbsp;|&nbsp; <a href="javascript:invRun()" style="color:var(--green-text);font-weight:600;">Refresh now</a></div>`+(kb?kb.outerHTML:'')+rp.outerHTML;
+    if(curPage==='inv'&&invActive===tab.id)renderInv(M());
+  },15*60*1000);
+  renderInv(M());
+  alert('Auto-refresh started. Results will update every 15 minutes automatically.');
+}
+
+function invStopRefresh(){
+  const tab=invGet();if(!tab)return;
+  if(tab.intv){clearInterval(tab.intv);tab.intv=null;}
+  renderInv(M());
+}
+
+function invClear(){
+  const tab=invGet();if(!tab)return;
+  if(tab.intv){clearInterval(tab.intv);tab.intv=null;}
+  tab.q='';tab.hasRes=false;tab.resHTML='';tab.lastRun=null;
+  renderInv(M());
+}
 
 // ── TOOL SOURCE TABS ──
-const PORTALS={
-  CrowdStrike:{url:'https://falcon.crowdstrike.com',sp:'/hunting/indicators?search=',note:'Threat hunting, IOC search, endpoint detections'},
-  SentinelOne:{url:'https://usea1-purple.sentinelone.net',sp:'/dashboard',note:'Endpoint detections, deep visibility, threat intel'},
-  Defender:{url:'https://security.microsoft.com',sp:'/threatintelligence/searchresults?search=',note:'Advanced hunting, threat intel, incidents'},
-  Splunk:{url:'https://splunkcloud.com',sp:'',note:'Log search, correlation, alert investigation'},
-  Everbridge:{url:'https://app.everbridge.net',sp:'',note:'Physical risk events, mass notification, risk intel'},
-  PaloAlto:{url:'https://apps.paloaltonetworks.com',sp:'',note:'Cortex XDR, WildFire, Threat Vault, XSIAM'}
-};
+const PORTALS={CrowdStrike:{url:'https://falcon.crowdstrike.com',sp:'/hunting/indicators?search='},SentinelOne:{url:'https://usea1-purple.sentinelone.net',sp:'/dashboard'},Defender:{url:'https://security.microsoft.com',sp:'/threatintelligence/searchresults?search='},Splunk:{url:'https://splunkcloud.com',sp:''},Everbridge:{url:'https://app.everbridge.net',sp:''},PaloAlto:{url:'https://apps.paloaltonetworks.com',sp:''}};
 const TS={};
 function renderTool(mc,tool){
   if(!mc)return;const s=TS[tool]||{},p=PORTALS[tool]||{};
   mc.innerHTML=`<div class="card">
     <div style="font-size:13px;font-weight:600;margin-bottom:4px;">${tool}</div>
-    <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5;">${p.note||''}<br>Paste an alert → Gemini AI searches internet → opens ${tool} portal pre-loaded with your indicator → auto-refreshes every 15 min.</div>
-    <textarea id="tool-ta" placeholder="Paste ${tool} alert text here...">${esc(s.q||'')}</textarea>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5;">Paste an alert → extracts keywords → Gemini searches internet → opens ${tool} portal pre-loaded with indicator → auto-refreshes every 15 min.</p>
+    <textarea id="tool-ta" placeholder="Paste ${tool} alert...">${esc(s.q||'')}</textarea>
     <div class="btn-row">
       <button class="btn primary" onclick="toolRun('${tool}')">&#128269; Search</button>
       ${p.url?`<a href="${p.url}" target="_blank" class="btn" style="text-decoration:none;">Open ${tool} &#8599;</a>`:''}
       <button class="btn" onclick="toolClear('${tool}')">Clear</button>
     </div>
-    <div style="margin-top:7px;font-size:10px;color:var(--text3);">&#128273; Log into ${tool} once in your browser — the portal link opens pre-loaded with your indicator automatically.</div>
   </div>
-  ${!getKey()?'<div style="background:var(--amber-bg);border:0.5px solid var(--amber-text);border-radius:var(--rl);padding:12px 16px;margin-bottom:12px;font-size:12px;color:var(--amber-text);">&#9888; No API key — click &#9881; API Key in header to add your free Gemini key.</div>':''}
-  <div id="tool-res">${s.resHTML||''}</div>
-  <div id="tool-log"></div>`;
+  ${!getKey()?'<div style="background:var(--amber-bg);border:0.5px solid var(--amber-text);border-radius:var(--rl);padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--amber-text);">&#9888; Add Gemini API key in header.</div>':''}
+  <div id="tool-res">${s.resHTML||''}</div><div id="tool-log"></div>`;
   toolRenderLog(tool);
 }
 async function toolRun(tool){
   const q=(document.getElementById('tool-ta').value||'').trim();if(!q)return;
   if(!TS[tool])TS[tool]={q:'',resHTML:'',log:[],intv:null,next:null};
   const s=TS[tool];s.q=q;
-  const entities=await extractEntities(q);
-  const key=entities.ioc||entities.event_name||entities.keywords[0]||q.substring(0,50);
+  const ent=await extractEntities(q);
+  const key=ent.ioc||ent.event_name||ent.keywords[0]||q.substring(0,50);
   const p=PORTALS[tool];
   if(p&&p.url&&p.sp)window.open(p.url+p.sp+encodeURIComponent(key),'_blank');
-  s.resHTML=buildResultPage(q);
+  s.resHTML=buildResultPage(q,null);
   const res=document.getElementById('tool-res');if(res)res.innerHTML=s.resHTML;
   await runSearch(q);
-  const rp=document.getElementById('result-page');if(rp)s.resHTML=rp.outerHTML;
+  const rp=document.getElementById('result-page');
+  if(rp)s.resHTML=rp.outerHTML;
   s.log.unshift({time:new Date().toLocaleString(),html:s.resHTML,isNew:s.log.length>0});
   if(s.log.length>5)s.log.pop();
   toolRenderLog(tool);
@@ -856,11 +861,10 @@ async function toolRun(tool){
     s.next=Date.now()+15*60*1000;
     s.intv=setInterval(async()=>{
       if(!s.q)return;
-      if(curPage==='tool'&&curTool===tool){const r=document.getElementById('tool-res');if(r)r.innerHTML=buildResultPage(s.q);}
+      if(curPage==='tool'&&curTool===tool){const r=document.getElementById('tool-res');if(r)r.innerHTML=buildResultPage(s.q,null);}
       await runSearch(s.q);
       const rp2=document.getElementById('result-page');if(rp2)s.resHTML=rp2.outerHTML;
-      s.log.unshift({time:new Date().toLocaleString(),html:s.resHTML,isNew:true});
-      if(s.log.length>5)s.log.pop();
+      s.log.unshift({time:new Date().toLocaleString(),html:s.resHTML,isNew:true});if(s.log.length>5)s.log.pop();
       s.next=Date.now()+15*60*1000;
       if(curPage==='tool'&&curTool===tool)toolRenderLog(tool);
     },15*60*1000);
@@ -868,12 +872,11 @@ async function toolRun(tool){
 }
 function toolClear(tool){const s=TS[tool]||{};if(s.intv)clearInterval(s.intv);TS[tool]={};renderTool(M(),tool);}
 function toolRenderLog(tool){
-  const s=TS[tool];const el=document.getElementById('tool-log');
-  if(!el||!s||!s.log||!s.log.length)return;
+  const s=TS[tool];const el=document.getElementById('tool-log');if(!el||!s||!s.log||!s.log.length)return;
   const rem=s.next?Math.max(0,Math.ceil((s.next-Date.now())/1000)):0;
   const m=Math.floor(rem/60),sc=rem%60;
-  el.innerHTML='<div class="sl" style="display:flex;align-items:center;justify-content:space-between;"><span>Refresh history (auto every 15 min)</span><span style="font-size:10px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;">'+(rem?'Next in '+m+':'+sc.toString().padStart(2,'0'):'Refreshing...')+'</span></div>'+
-  s.log.map((e,i)=>'<div class="url-entry"><div class="url-time">'+e.time+(e.isNew?'<span class="url-new">Updated</span>':'')+'</div>'+(i===0?e.html:'<details><summary style="font-size:11px;color:var(--text2);cursor:pointer;">View previous snapshot</summary><div style="margin-top:6px;">'+e.html+'</div></details>')+'</div>').join('');
+  el.innerHTML='<div class="sl" style="display:flex;align-items:center;justify-content:space-between;"><span>Refresh history (auto every 15 min)</span><span style="font-size:10px;color:var(--green-text);font-weight:400;text-transform:none;">&#9679; Next in '+m+':'+sc.toString().padStart(2,'0')+'</span></div>'+
+  s.log.map((e,i)=>'<div class="url-entry"><div class="url-time">'+e.time+(e.isNew?'<span class="url-new">Updated</span>':'')+'</div>'+(i===0?e.html:'<details><summary style="font-size:11px;color:var(--text2);cursor:pointer;">View snapshot</summary><div style="margin-top:6px;">'+e.html+'</div></details>')+'</div>').join('');
 }
 
 // ── X / TWITTER ──
@@ -884,47 +887,35 @@ function renderTwitter(mc){
   mc.innerHTML=`<div class="card">
     <div style="font-size:13px;font-weight:600;margin-bottom:10px;">&#120143; X / Twitter Search</div>
     <div class="row">
-      <input type="text" id="tw-in" style="flex:1;font-size:13px;height:38px;" placeholder="Type keywords and press Enter — opens X with results immediately" onkeydown="if(event.key==='Enter')twAdd()"/>
+      <input type="text" id="tw-in" style="flex:1;font-size:13px;height:38px;" placeholder="Type keywords — press Enter to open X with live results immediately" onkeydown="if(event.key==='Enter')twAdd()"/>
       <button class="btn go" onclick="twAdd()">Search &#120143;</button>
     </div>
     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
       <span style="font-size:10px;color:var(--text3);align-self:center;">Filter:</span>
-      <button class="fb on" id="twf-live"     onclick="twF('live',this)">Latest all</button>
-      <button class="fb"    id="twf-top"      onclick="twF('top',this)">Top tweets</button>
-      <button class="fb"    id="twf-verified" onclick="twF('verified',this)">Verified only</button>
-      <button class="fb"    id="twf-infosec"  onclick="twF('infosec',this)">Infosec</button>
-      <button class="fb"    id="twf-news"     onclick="twF('news',this)">News media</button>
-      <button class="fb"    id="twf-phys"     onclick="twF('phys',this)">Emergency/Govt</button>
+      <button class="fb on" id="twf-live" onclick="twF('live',this)">Latest all</button>
+      <button class="fb" id="twf-top" onclick="twF('top',this)">Top</button>
+      <button class="fb" id="twf-verified" onclick="twF('verified',this)">Verified</button>
+      <button class="fb" id="twf-infosec" onclick="twF('infosec',this)">Infosec</button>
+      <button class="fb" id="twf-news" onclick="twF('news',this)">News</button>
+      <button class="fb" id="twf-phys" onclick="twF('phys',this)">Emergency</button>
     </div>
-    <div style="font-size:10px;color:var(--text3);">Opens X in a new tab with your keywords already in the search bar — uses your existing X login to show full results</div>
-  </div>${bar}<div id="tw-body">${twActive?twBody():'<div class="empty"><div style="font-size:28px;margin-bottom:8px;">&#120143;</div><div style="font-weight:500;color:var(--text2);">Type keywords above and press Enter</div><div style="font-size:11px;margin-top:4px;">Opens X with your keywords in the search bar · each search gets its own tab here</div></div>'}</div>`;
+  </div>${bar}<div id="tw-body">${twActive?twBody():'<div class="empty"><div style="font-size:28px;margin-bottom:8px;">&#120143;</div><div style="font-weight:500;color:var(--text2);">Type keywords and press Enter</div><div style="font-size:11px;margin-top:4px;">Opens X with keywords in search bar · each search gets its own tab</div></div>'}</div>`;
   const fEl=document.getElementById('twf-'+twFilt);if(fEl){document.querySelectorAll('[id^=twf-]').forEach(b=>b.classList.remove('on'));fEl.classList.add('on');}
 }
 function twF(f,el){twFilt=f;document.querySelectorAll('[id^=twf-]').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');}
-function twAdd(){
-  const inp=document.getElementById('tw-in');if(!inp||!inp.value.trim())return;
-  const kw=inp.value.trim(),enc=encodeURIComponent(kw);
-  const urls={live:'https://x.com/search?q='+enc+'&f=live',top:'https://x.com/search?q='+enc,verified:'https://x.com/search?q='+enc+'+filter%3Averified&f=live',infosec:'https://x.com/search?q='+enc+'+%28%23infosec+OR+%23cybersecurity+OR+%23threatintel%29&f=live',news:'https://x.com/search?q='+enc+'+%28from%3ACNN+OR+from%3Areuters+OR+from%3ABBCWorld+OR+from%3ANPR%29&f=live',phys:'https://x.com/search?q='+enc+'+%28from%3AFEMA+OR+from%3ANOAAweather+OR+from%3AUSGS+OR+%23emergency+OR+%23breaking%29&f=live'};
-  const labels={live:'Latest',top:'Top',verified:'Verified',infosec:'Infosec',news:'News',phys:'Official'};
-  const id='tw'+(++twN);const url=urls[twFilt]||urls.live;
-  twTabs.push({id,kw,url,label:labels[twFilt]||'Latest'});twActive=id;inp.value='';
-  window.open(url,'_blank');renderTwitter(M());
-}
+function twAdd(){const inp=document.getElementById('tw-in');if(!inp||!inp.value.trim())return;const kw=inp.value.trim(),enc=encodeURIComponent(kw);const urls={live:'https://x.com/search?q='+enc+'&f=live',top:'https://x.com/search?q='+enc,verified:'https://x.com/search?q='+enc+'+filter%3Averified&f=live',infosec:'https://x.com/search?q='+enc+'+%28%23infosec+OR+%23cybersecurity%29&f=live',news:'https://x.com/search?q='+enc+'+%28from%3ACNN+OR+from%3Areuters+OR+from%3ABBCWorld%29&f=live',phys:'https://x.com/search?q='+enc+'+%28from%3AFEMA+OR+from%3ANOAAweather+OR+%23emergency%29&f=live'};const labels={live:'Latest',top:'Top',verified:'Verified',infosec:'Infosec',news:'News',phys:'Official'};const id='tw'+(++twN);const url=urls[twFilt]||urls.live;twTabs.push({id,kw,url,label:labels[twFilt]||'Latest'});twActive=id;inp.value='';window.open(url,'_blank');renderTwitter(M());}
 function twSel(id){twActive=id;renderTwitter(M());}
 function twClose(id){twTabs=twTabs.filter(t=>t.id!==id);if(twActive===id)twActive=twTabs.length?twTabs[twTabs.length-1].id:null;renderTwitter(M());}
-function twBody(){
-  const tab=twTabs.find(t=>t.id===twActive);if(!tab)return'';
-  return'<div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;"><span style="font-size:13px;font-weight:500;flex:1;">"'+esc(tab.kw)+'"</span><span class="tag t-amber">'+tab.label+'</span><a href="'+tab.url+'" target="_blank" class="btn primary" style="text-decoration:none;">Open in X &#8599;</a></div><p style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px;">Opened X with your keywords in the search bar. Switch to that tab to see live results.</p>'+(twTabs.length>1?'<div class="sl" style="margin-top:10px;">All saved searches</div><div class="lg">'+twTabs.map(t=>'<div class="lc" onclick="twSel(\''+t.id+'\');window.open(\''+t.url+'\',\'_blank\')" style="'+(t.id===twActive?'border-color:var(--blue-text);':'')+'">'+esc(t.kw.substring(0,20))+'<span class="tag t-amber">'+t.label+'</span></div>').join('')+'</div>':'')+'</div>';
-}
+function twBody(){const tab=twTabs.find(t=>t.id===twActive);if(!tab)return'';return'<div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;"><span style="font-size:13px;font-weight:500;flex:1;">"'+esc(tab.kw)+'"</span><span class="tag t-amber">'+tab.label+'</span><a href="'+tab.url+'" target="_blank" class="btn primary" style="text-decoration:none;">Open in X &#8599;</a></div>'+(twTabs.length>1?'<div class="sl">All saved searches</div><div class="lg">'+twTabs.map(t=>'<div class="lc" onclick="twSel(\''+t.id+'\');window.open(\''+t.url+'\',\'_blank\')" style="'+(t.id===twActive?'border-color:var(--blue-text);':'')+'">'+esc(t.kw.substring(0,20))+'<span class="tag t-amber">'+t.label+'</span></div>').join('')+'</div>':'')+'</div>';}
 
 // ── PHYSICAL MONITOR ──
 let physAll=[],physFilt='all',physIntv=null,physNext=null,physCDIntv=null;
 function physCat(e){const t=((e.event||'')+(e.headline||'')+(e.title||'')).toLowerCase();if(/flood|flash flood|coastal|surge|tsunami/.test(t))return'flood';if(/fire|wildfire|red flag/.test(t))return'fire';if(/hazmat|chemical|spill|toxic/.test(t))return'hazmat';if(/civil|unrest|protest|riot/.test(t))return'civil';return'weather';}
 function physSevCls(s){const sl=(s||'').toLowerCase();if(sl==='extreme'||sl==='critical')return't-red';if(sl==='severe'||sl==='high')return't-amber';if(sl==='moderate')return't-blue';return't-green';}
-async function fNWS2(){try{const r=await fetch('https://api.weather.gov/alerts/active?status=actual&limit=50',{headers:{Accept:'application/geo+json','User-Agent':'SOCHub/10.0'}});if(!r.ok)return[];const d=await r.json();return(d.features||[]).map(f=>{const p=f.properties||{};return{id:f.id+'',title:p.event||'NWS Alert',headline:p.headline||'',area:p.areaDesc||'',severity:p.severity||'Unknown',sent:p.sent||'',cat:physCat(p),source:'NWS',url:'https://www.weather.gov/alerts'};});}catch(e){return[];}}
+async function fNWS2(){try{const r=await fetch('https://api.weather.gov/alerts/active?status=actual&limit=50',{headers:{Accept:'application/geo+json','User-Agent':'SOCHub/10'}});if(!r.ok)return[];const d=await r.json();return(d.features||[]).map(f=>{const p=f.properties||{};return{id:f.id+'',title:p.event||'NWS Alert',headline:p.headline||'',area:p.areaDesc||'',severity:p.severity||'Unknown',sent:p.sent||'',cat:physCat(p),source:'NWS',url:'https://www.weather.gov/alerts'};});}catch(e){return[];}}
 async function fUSGS2(){try{const r=await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson');if(!r.ok)return[];const d=await r.json();return(d.features||[]).slice(0,5).map(f=>{const p=f.properties||{};return{id:f.id+'',title:'Earthquake M'+(p.mag||'?'),headline:p.title||'',area:p.place||'',severity:p.mag>=7?'Extreme':p.mag>=5?'Severe':'Moderate',sent:new Date(p.time||Date.now()).toISOString(),cat:'weather',source:'USGS',url:p.url||'https://earthquake.usgs.gov'};});}catch(e){return[];}}
 async function fFEMA2(){try{const r=await fetch('https://www.fema.gov/api/open/v2/disasterDeclarationsSummaries?$orderby=declarationDate%20desc&$top=12');if(!r.ok)return[];const d=await r.json();return(d.DisasterDeclarationsSummaries||[]).map(f=>({id:'fema-'+f.disasterNumber,title:'FEMA: '+f.incidentType,headline:f.declarationTitle+' — '+f.state,area:f.state||'',severity:'Severe',sent:f.declarationDate||'',cat:(f.incidentType||'').toLowerCase().includes('fire')?'fire':'flood',source:'FEMA',url:'https://www.fema.gov/disaster/'+f.disasterNumber}));}catch(e){return[];}}
-async function fGDELT2(){try{const q=encodeURIComponent('protest OR riot OR HAZMAT OR flood OR wildfire OR earthquake OR disaster OR shooting');const r=await fetch('https://api.gdeltproject.org/api/v2/doc/doc?query='+q+'&mode=artlist&maxrecords=8&format=json');if(!r.ok)return[];const d=await r.json();return(d.articles||[]).slice(0,5).map((a,i)=>({id:'g'+i+Date.now(),title:a.title||'',headline:a.domain||'',area:a.sourcecountry||'',severity:'Moderate',sent:a.seendate||'',cat:'civil',source:'GDELT',url:a.url||'https://gdeltproject.org'})).filter(a=>a.title);}catch(e){return[];}}
+async function fGDELT2(){try{const q=encodeURIComponent('protest OR riot OR HAZMAT OR flood OR wildfire OR earthquake OR disaster OR shooting');const r=await fetch('https://api.gdeltproject.org/api/v2/doc/doc?query='+q+'&mode=artlist&maxrecords=8&format=json');if(!r.ok)return[];const d=await r.json();return(d.articles||[]).filter(a=>a.title&&a.url).slice(0,5).map((a,i)=>({id:'g'+i+Date.now(),title:a.title,headline:a.domain||'',area:a.sourcecountry||'',severity:'Moderate',sent:a.seendate||'',cat:'civil',source:'GDELT',url:a.url}));}catch(e){return[];}}
 
 function renderPhysical(mc){
   if(!mc)return;
@@ -932,19 +923,16 @@ function renderPhysical(mc){
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
       <div style="font-size:13px;font-weight:600;">&#127758; Physical & Global Monitor</div>
       <a href="https://worldmonitor.app" target="_blank" class="btn sm" style="text-decoration:none;background:var(--green-bg);color:var(--green-text);border-color:var(--green-text);">World Monitor &#8599;</a>
-      <a href="https://citizen.com/explore" target="_blank" class="btn sm" style="text-decoration:none;">Citizen App &#8599;</a>
+      <a href="https://citizen.com/explore" target="_blank" class="btn sm" style="text-decoration:none;">Citizen &#8599;</a>
       <a href="https://app.watchduty.org" target="_blank" class="btn sm" style="text-decoration:none;">Watch Duty &#8599;</a>
       <a href="https://www.globalincidentmap.com" target="_blank" class="btn sm" style="text-decoration:none;">Global Incidents &#8599;</a>
     </div>
     <div class="row">
-      <input type="text" id="phys-loc" placeholder="Filter by state or region — leave blank for all US" style="flex:1;"/>
+      <input type="text" id="phys-loc" placeholder="Filter by state or region — blank = all US" style="flex:1;"/>
       <button class="btn primary" onclick="physFetch(true)">Refresh now</button>
     </div>
-    <div class="rbar">
-      <span class="dot" id="phys-dot"></span>
-      <span id="phys-lbl">Not started</span>
-      <span style="font-size:10px;color:var(--text3);" id="phys-cd"></span>
-      <button class="btn primary" id="phys-start" onclick="physStart()" style="margin-left:auto;font-size:11px;padding:4px 10px;">Start auto-refresh (15 min)</button>
+    <div class="rbar"><span class="dot" id="phys-dot"></span><span id="phys-lbl">Not started</span><span style="font-size:10px;color:var(--text3);" id="phys-cd"></span>
+      <button class="btn primary" id="phys-start" onclick="physStart()" style="margin-left:auto;font-size:11px;padding:4px 10px;">Start 15-min auto-refresh</button>
       <button class="btn" id="phys-stop" style="display:none;font-size:11px;padding:4px 10px;" onclick="physStop()">Stop</button>
     </div>
   </div>
@@ -961,22 +949,17 @@ function renderPhysical(mc){
   physRender();
 }
 async function physFetch(manual){
-  const feed=document.getElementById('phys-feed');if(manual&&feed)feed.innerHTML='<div class="empty"><span class="sp"></span> Fetching live data from NWS · USGS · FEMA · GDELT...</div>';
+  const feed=document.getElementById('phys-feed');if(manual&&feed)feed.innerHTML='<div class="empty"><span class="sp"></span> Fetching from NWS · USGS · FEMA · GDELT...</div>';
   const dot=document.getElementById('phys-dot');if(dot)dot.className='dot loading';
   const loc=((document.getElementById('phys-loc')||{}).value||'').trim().toLowerCase();
   const[nws,usgs,fema,gdelt]=await Promise.all([fNWS2(),fUSGS2(),fFEMA2(),fGDELT2()]);
   let all=[...nws,...usgs,...fema,...gdelt];
   if(loc)all=all.filter(a=>(a.area+a.headline+a.title).toLowerCase().includes(loc));
-  const ord={Extreme:0,Severe:1,Moderate:2,Minor:3,Unknown:4};
-  all.sort((a,b)=>(ord[a.severity]||4)-(ord[b.severity]||4));
-  const prev=new Set(physAll.map(a=>a.id));
-  const nw=all.filter(a=>!prev.has(a.id));physAll=all;
-  if(nw.length&&prev.size){
-    const nb=document.getElementById('phys-notif');
-    if(nb){nb.textContent=nw.length+' new alert'+(nw.length>1?'s':'')+' — '+nw.slice(0,2).map(a=>a.title).join(', ');nb.className='notif on';setTimeout(()=>nb.className='notif',8000);}
-  }
+  all.sort((a,b)=>({'Extreme':0,'Severe':1,'Moderate':2,'Minor':3,'Unknown':4}[a.severity]||4)-({'Extreme':0,'Severe':1,'Moderate':2,'Minor':3,'Unknown':4}[b.severity]||4));
+  const prev=new Set(physAll.map(a=>a.id));const nw=all.filter(a=>!prev.has(a.id));physAll=all;
+  if(nw.length&&prev.size){const nb=document.getElementById('phys-notif');if(nb){nb.textContent=nw.length+' new alert'+(nw.length>1?'s':'')+' — '+nw.slice(0,2).map(a=>a.title).join(', ');nb.className='notif on';setTimeout(()=>nb.className='notif',8000);}}
   if(dot)dot.className='dot live';
-  const lbl=document.getElementById('phys-lbl');if(lbl)lbl.textContent='Updated '+new Date().toLocaleTimeString()+' · '+all.length+' alerts from NWS, USGS, FEMA, GDELT';
+  const lbl=document.getElementById('phys-lbl');if(lbl)lbl.textContent='Updated '+new Date().toLocaleTimeString()+' · '+all.length+' alerts';
   physRender();
 }
 function physRender(){
@@ -989,18 +972,15 @@ function physRender(){
     const enc=encodeURIComponent((a.title+' '+a.area).substring(0,60));
     return`<div class="alert-card">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div>
-          <div style="font-size:12px;font-weight:500;">${a.title}</div>
-          <div style="font-size:10px;color:var(--text3);margin-top:2px;">${a.source} · ${cl[a.cat]||'Alert'}${a.area?' · '+a.area.substring(0,55):''}</div>
-        </div>
+        <div><div style="font-size:12px;font-weight:600;">${a.title}</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">${a.source} · ${cl[a.cat]||'Alert'}${a.area?' · '+a.area.substring(0,55):''}</div></div>
         <span class="tag ${physSevCls(a.severity)}">${a.severity}</span>
       </div>
-      ${a.headline?`<div style="font-size:11px;color:var(--text2);margin-top:5px;line-height:1.5;">${a.headline.substring(0,180)}${a.headline.length>180?'...':''}</div>`:''}
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:6px;">
+      ${a.headline?`<div style="font-size:11px;color:var(--text2);margin-top:5px;line-height:1.5;">${a.headline.substring(0,180)}...</div>`:''}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:5px;">
         <span style="font-size:10px;color:var(--text3);">${time}</span>
         <div style="display:flex;gap:5px;">
-          <a href="${a.url}" target="_blank" class="btn sm" style="text-decoration:none;">View source &#8599;</a>
-          <a href="https://x.com/search?q=${enc}&f=live" target="_blank" class="btn sm" style="text-decoration:none;">Search X &#8599;</a>
+          <a href="${a.url}" target="_blank" class="btn sm" style="text-decoration:none;">Source &#8599;</a>
+          <a href="https://x.com/search?q=${enc}&f=live" target="_blank" class="btn sm" style="text-decoration:none;">X &#8599;</a>
           <a href="https://news.google.com/search?q=${enc}" target="_blank" class="btn sm" style="text-decoration:none;">News &#8599;</a>
         </div>
       </div>
@@ -1009,293 +989,64 @@ function physRender(){
 }
 function pF(f,el){physFilt=f;document.querySelectorAll('.frow .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');physRender();}
 function physStart(){physFetch(true);physNext=Date.now()+15*60*1000;physIntv=setInterval(()=>{physFetch(false);physNext=Date.now()+15*60*1000;},15*60*1000);physCDIntv=setInterval(()=>{const cd=document.getElementById('phys-cd');if(cd){const rem=Math.max(0,Math.ceil((physNext-Date.now())/1000));cd.textContent='· next in '+Math.floor(rem/60)+':'+(rem%60).toString().padStart(2,'0');}},1000);document.getElementById('phys-start').style.display='none';document.getElementById('phys-stop').style.display='';}
-function physStop(){clearInterval(physIntv);clearInterval(physCDIntv);physIntv=null;const dot=document.getElementById('phys-dot');if(dot)dot.className='dot';const lbl=document.getElementById('phys-lbl');if(lbl)lbl.textContent='Stopped';document.getElementById('phys-start').style.display='';document.getElementById('phys-stop').style.display='none';}
+function physStop(){clearInterval(physIntv);clearInterval(physCDIntv);physIntv=null;const dot=document.getElementById('phys-dot');if(dot)dot.className='dot';document.getElementById('phys-start').style.display='';document.getElementById('phys-stop').style.display='none';}
 
 // ── URL MONITOR ──
 const UM={};let umN=0;
-function renderUrlMon(mc){
-  if(!mc)return;
-  mc.innerHTML=`<div class="card">
-    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">&#128225; URL / Feed Monitor</div>
-    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5;">Paste any URL — CISA advisory, CVE page, threat blog, news article, government alert. Gemini AI fetches and summarizes it on your schedule and clearly states what is NEW or CHANGED each refresh.</p>
-    <div class="row">
-      <input type="text" id="um-url" placeholder="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" style="flex:1;"/>
-      <select id="um-int" style="flex:0 0 130px;">
-        <option value="5">Every 5 min</option>
-        <option value="10">Every 10 min</option>
-        <option value="15" selected>Every 15 min</option>
-        <option value="30">Every 30 min</option>
-      </select>
-    </div>
-    <div class="btn-row"><button class="btn primary" onclick="umAdd()">Start monitoring &#8599;</button></div>
-  </div>
-  <div id="um-list"></div>`;
-  umRender();
-}
-function umAdd(){
-  const url=((document.getElementById('um-url')||{}).value||'').trim();
-  const interval=parseInt(((document.getElementById('um-int')||{}).value)||'15');
-  if(!url)return;
-  const id='u'+(++umN);
-  UM[id]={id,url,interval,log:[],intv:null,cdIntv:null,next:null};
-  document.getElementById('um-url').value='';
-  umRender();umFetch(id);
-  UM[id].next=Date.now()+interval*60*1000;
-  UM[id].intv=setInterval(()=>umFetch(id),interval*60*1000);
-  UM[id].cdIntv=setInterval(()=>{const el=document.getElementById('um-cd-'+id);if(!el)return;const rem=Math.max(0,Math.ceil((UM[id].next-Date.now())/1000));el.textContent='Next in '+Math.floor(rem/60)+':'+(rem%60).toString().padStart(2,'0');},1000);
-}
-async function umFetch(id){
-  const m=UM[id];if(!m)return;
-  const eid='e'+Date.now(),time=new Date().toLocaleString();
-  m.log.unshift({id:eid,time,html:'<span class="sp"></span> Fetching and summarizing...',isNew:false});
-  umRender();
-  const text=await ai(
-    'You are a SOC analyst monitoring a URL for security-relevant changes. Summarize the content concisely for security relevance. If this is a repeat check, clearly state at the top: "CHANGES DETECTED:" or "NO CHANGES" compared to what you know about this source.',
-    'Monitor and summarize this URL for a SOC analyst (check #'+m.log.length+'): '+m.url,
-    true,500
-  );
-  const entry=m.log.find(e=>e.id===eid);
-  if(entry){
-    entry.html=text&&text!=='__nokey__'
-      ?'<div style="font-size:12px;color:var(--text);line-height:1.7;">'+text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div>'
-      :'<span style="font-size:11px;color:var(--text3);">'+(text==='__nokey__'?'Add your Gemini API key to enable AI summaries.':'Error fetching.')+'</span>';
-    entry.isNew=m.log.length>1;
-  }
-  if(m.next)m.next=Date.now()+(m.interval*60*1000);
-  umRender();
-}
+function renderUrlMon(mc){if(!mc)return;mc.innerHTML='<div class="card"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">&#128225; URL / Feed Monitor</div><p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5;">Paste any URL. Gemini fetches, summarizes, and states what changed each refresh.</p><div class="row"><input type="text" id="um-url" placeholder="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" style="flex:1;"/><select id="um-int" style="flex:0 0 130px;"><option value="5">Every 5 min</option><option value="10">Every 10 min</option><option value="15" selected>Every 15 min</option></select></div><div class="btn-row"><button class="btn primary" onclick="umAdd()">Start monitoring &#8599;</button></div></div><div id="um-list"></div>';umRender();}
+function umAdd(){const url=((document.getElementById('um-url')||{}).value||'').trim();const interval=parseInt(((document.getElementById('um-int')||{}).value)||'15');if(!url)return;const id='u'+(++umN);UM[id]={id,url,interval,log:[],intv:null,cdIntv:null,next:null};document.getElementById('um-url').value='';umRender();umFetch(id);UM[id].next=Date.now()+interval*60*1000;UM[id].intv=setInterval(()=>umFetch(id),interval*60*1000);UM[id].cdIntv=setInterval(()=>{const el=document.getElementById('um-cd-'+id);if(!el)return;const rem=Math.max(0,Math.ceil((UM[id].next-Date.now())/1000));el.textContent='Next in '+Math.floor(rem/60)+':'+(rem%60).toString().padStart(2,'0');},1000);}
+async function umFetch(id){const m=UM[id];if(!m)return;const eid='e'+Date.now(),time=new Date().toLocaleString();m.log.unshift({id:eid,time,html:'<span class="sp"></span> Fetching...',isNew:false});umRender();const text=await ai('SOC analyst. Summarize this URL for security relevance. If repeat, state what is NEW or CHANGED.','Monitor (check #'+m.log.length+'): '+m.url,true,500);const entry=m.log.find(e=>e.id===eid);if(entry){entry.html=text&&text!=='__nokey__'?'<div style="font-size:12px;line-height:1.7;">'+text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div>':'<span style="font-size:11px;color:var(--text3);">'+(text==='__nokey__'?'Add Gemini API key.':'Error.')+'</span>';entry.isNew=m.log.length>1;}if(m.next)m.next=Date.now()+(m.interval*60*1000);umRender();}
 function umRemove(id){const m=UM[id];if(m){clearInterval(m.intv);clearInterval(m.cdIntv);}delete UM[id];umRender();}
-function umRender(){
-  const cont=document.getElementById('um-list');if(!cont)return;
-  const keys=Object.keys(UM);
-  if(!keys.length){cont.innerHTML='<div class="empty">No URLs being monitored yet.</div>';return;}
-  cont.innerHTML=keys.map(id=>{
-    const m=UM[id];
-    return'<div class="card"><div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap;"><span class="dot live"></span><span style="font-size:12px;font-weight:500;flex:1;word-break:break-all;">'+m.url+'</span><span style="font-size:10px;color:var(--text3);">Every '+m.interval+' min</span><span style="font-size:10px;color:var(--text3);" id="um-cd-'+id+'"></span><button class="btn sm" style="border-color:var(--red-text);color:var(--red-text);" onclick="umRemove(\''+id+'\')">Remove</button></div>'+
-    m.log.map((e,i)=>'<div class="url-entry"><div class="url-time">'+e.time+(e.isNew?'<span class="url-new">Updated</span>':'')+'</div>'+(i===0?e.html:'<details><summary style="font-size:11px;color:var(--text2);cursor:pointer;">Earlier snapshot</summary><div style="margin-top:5px;">'+e.html+'</div></details>')+'</div>').join('')+'</div>';
-  }).join('');
-}
+function umRender(){const cont=document.getElementById('um-list');if(!cont)return;const keys=Object.keys(UM);if(!keys.length){cont.innerHTML='<div class="empty">No URLs monitored.</div>';return;}cont.innerHTML=keys.map(id=>{const m=UM[id];return'<div class="card"><div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap;"><span class="dot live"></span><span style="font-size:12px;font-weight:500;flex:1;word-break:break-all;">'+m.url+'</span><span style="font-size:10px;color:var(--text3);">Every '+m.interval+' min</span><span style="font-size:10px;color:var(--text3);" id="um-cd-'+id+'"></span><button class="btn sm" style="border-color:var(--red-text);color:var(--red-text);" onclick="umRemove(\''+id+'\')">Remove</button></div>'+m.log.map((e,i)=>'<div class="url-entry"><div class="url-time">'+e.time+(e.isNew?'<span class="url-new">Updated</span>':'')+'</div>'+(i===0?e.html:'<details><summary style="font-size:11px;color:var(--text2);cursor:pointer;">Earlier</summary><div style="margin-top:5px;">'+e.html+'</div></details>')+'</div>').join('')+'</div>';}).join('');}
 
 // ── LOGIN REQUIRED ──
-function renderLogins(mc){
-  if(!mc)return;
-  const tools=[
-    {n:'CrowdStrike Falcon',u:'https://falcon.crowdstrike.com',w:'Threat intel, IOC hunting, endpoint detections, threat graph',f:'Enterprise'},
-    {n:'SentinelOne Singularity',u:'https://usea1-purple.sentinelone.net',w:'Deep visibility, endpoint detections, threat intelligence',f:'Enterprise'},
-    {n:'Microsoft Defender XDR',u:'https://security.microsoft.com',w:'Advanced hunting, threat intel, incidents, alerts',f:'Enterprise'},
-    {n:'Splunk',u:'https://splunkcloud.com',w:'Log search, correlation, SIEM investigation',f:'Enterprise'},
-    {n:'Everbridge',u:'https://app.everbridge.net',w:'Physical risk events, mass notification, risk intelligence',f:'Enterprise'},
-    {n:'Palo Alto Cortex',u:'https://apps.paloaltonetworks.com',w:'Cortex XDR, WildFire, Threat Vault, XSIAM',f:'Enterprise'},
-    {n:'Recorded Future',u:'https://app.recordedfuture.com',w:'Threat actors, IOC reputation, dark web monitoring',f:'Paid'},
-    {n:'Greynoise (Full)',u:'https://viz.greynoise.io',w:'Full IP classification, all intent tags, historical data',f:'Community free'},
-    {n:'Censys (Full)',u:'https://search.censys.io',w:'Full scan history, all filters, certificate history',f:'Limited free'},
-    {n:'Shodan (Full)',u:'https://www.shodan.io',w:'Full port data, all org filters, custom alerts',f:'Limited free'},
-    {n:'ANY.RUN',u:'https://app.any.run',w:'Interactive malware sandbox, live execution analysis',f:'Limited free'},
-    {n:'Hybrid Analysis',u:'https://www.hybrid-analysis.com',w:'Automated sandbox, MITRE ATT&CK mapping',f:'Free login'},
-    {n:'IntelX',u:'https://intelx.io',w:'Dark web, leaked databases, paste sites, Tor links',f:'Limited free'},
-    {n:'SecurityTrails',u:'https://securitytrails.com',w:'DNS history, WHOIS history, subdomain history',f:'Limited free'},
-    {n:'Have I Been Pwned',u:'https://haveibeenpwned.com',w:'Email and domain breach checking',f:'Free'},
-    {n:'PANW Threat Vault',u:'https://threatvault.paloaltonetworks.com',w:'Threat signatures, WildFire verdicts, CVE details',f:'Login required'},
-    {n:'X / Twitter',u:'https://x.com',w:'Full search results — limited results without login',f:'Free account'},
-    {n:'Citizen App',u:'https://citizen.com',w:'Local incidents, police activity, real-time crime alerts',f:'Free account'},
-    {n:'ACLED',u:'https://acleddata.com',w:'Armed conflict and protest event data worldwide',f:'Free login'},
-    {n:'Watch Duty',u:'https://app.watchduty.org',w:'Wildfire perimeter, evacuation zones, air quality',f:'Free'},
-  ];
-  mc.innerHTML=`<div class="card">
-    <div style="font-size:13px;font-weight:600;margin-bottom:4px;">&#128273; Login Required Tools</div>
-    <p style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6;">Log into each of these <strong>once</strong> in your browser. The SOC Hub opens them pre-loaded with your indicator automatically when you search. You will not need to log in again.</p>
-    <table class="login-table">
-      <thead><tr><th>Tool</th><th>Why you need it</th><th>Cost</th><th></th></tr></thead>
-      <tbody>${tools.map(t=>`<tr><td>${t.n}</td><td>${t.w}</td><td>${t.f}</td><td><a href="${t.u}" target="_blank" class="btn sm" style="text-decoration:none;">Open &amp; login &#8599;</a></td></tr>`).join('')}</tbody>
-    </table>
-  </div>`;
-}
+function renderLogins(mc){if(!mc)return;const tools=[{n:'CrowdStrike Falcon',u:'https://falcon.crowdstrike.com',w:'Threat intel, IOC hunting, endpoint detections',f:'Enterprise'},{n:'SentinelOne',u:'https://usea1-purple.sentinelone.net',w:'Deep visibility, threat intelligence',f:'Enterprise'},{n:'Microsoft Defender XDR',u:'https://security.microsoft.com',w:'Advanced hunting, threat intel, incidents',f:'Enterprise'},{n:'Splunk',u:'https://splunkcloud.com',w:'Log search, SIEM, alert investigation',f:'Enterprise'},{n:'Everbridge',u:'https://app.everbridge.net',w:'Physical risk events, mass notification',f:'Enterprise'},{n:'Palo Alto Cortex',u:'https://apps.paloaltonetworks.com',w:'XDR, WildFire, Threat Vault, XSIAM',f:'Enterprise'},{n:'Recorded Future',u:'https://app.recordedfuture.com',w:'Threat actors, IOC reputation, dark web',f:'Paid'},{n:'Greynoise Full',u:'https://viz.greynoise.io',w:'Full classification, all intent tags',f:'Community free'},{n:'Censys Full',u:'https://search.censys.io',w:'Full scan history, all filters',f:'Limited free'},{n:'Shodan Full',u:'https://www.shodan.io',w:'Full data, all filters, alerts',f:'Limited free'},{n:'ANY.RUN',u:'https://app.any.run',w:'Interactive malware sandbox',f:'Limited free'},{n:'Hybrid Analysis',u:'https://www.hybrid-analysis.com',w:'Automated sandbox, MITRE mapping',f:'Free login'},{n:'IntelX',u:'https://intelx.io',w:'Dark web, leaked DBs, paste sites',f:'Limited free'},{n:'SecurityTrails',u:'https://securitytrails.com',w:'DNS history, WHOIS history',f:'Limited free'},{n:'Have I Been Pwned',u:'https://haveibeenpwned.com',w:'Email breach checking',f:'Free'},{n:'PANW Threat Vault',u:'https://threatvault.paloaltonetworks.com',w:'Threat signatures, WildFire verdicts',f:'Login'},{n:'X / Twitter',u:'https://x.com',w:'Full search results — limited without login',f:'Free account'},{n:'Citizen App',u:'https://citizen.com',w:'Local incidents, crime, real-time alerts',f:'Free account'},{n:'Watch Duty',u:'https://app.watchduty.org',w:'Wildfire perimeter, evacuations — log in for alerts',f:'Free'},{n:'ACLED',u:'https://acleddata.com',w:'Armed conflict and protest event data',f:'Free login'}];
+mc.innerHTML='<div class="card"><div style="font-size:13px;font-weight:600;margin-bottom:4px;">&#128273; Login Required Tools</div><p style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6;">Log into each once in your browser. The tool opens them pre-loaded with your keywords automatically when you search.</p><table class="login-table"><thead><tr><th>Tool</th><th>Why you need it</th><th>Cost</th><th></th></tr></thead><tbody>'+tools.map(t=>'<tr><td>'+t.n+'</td><td>'+t.w+'</td><td>'+t.f+'</td><td><a href="'+t.u+'" target="_blank" class="btn sm" style="text-decoration:none;">Open &#8599;</a></td></tr>').join('')+'</tbody></table></div>';}
 
 // ── OSINT DIRECTORY ──
 function renderOsintDir(mc){
   if(!mc)return;
   const CATS=[
-    {id:'global',name:'&#127758; Global Intelligence Dashboards',tools:[
-      {n:'World Monitor',u:'https://worldmonitor.app',d:'25 data layers: geopolitics, military, disasters, markets, cyber — free',tags:['free','live']},
-      {n:'World Monitor Tech',u:'https://tech.worldmonitor.app',d:'Cyber threat monitoring intelligence layer',tags:['free','live']},
-      {n:'world-monitor.app',u:'https://world-monitor.app',d:'Alternative World Monitor instance',tags:['free','live']},
-      {n:'GDELT Project',u:'https://gdeltproject.org',d:'Global news events, protest index, conflict intensity',tags:['free','live']},
-      {n:'ACLED',u:'https://acleddata.com',d:'Armed conflict and protest event data worldwide',tags:['free','login']},
-      {n:'Global Incident Map',u:'https://www.globalincidentmap.com',d:'Real-time worldwide incidents — terrorism, HAZMAT, crime',tags:['free','live']},
-      {n:'RSOE EDIS',u:'https://rsoe-edis.org',d:'Emergency and Disaster Information Service, global map',tags:['free','live']},
-      {n:'ReliefWeb',u:'https://reliefweb.int',d:'Humanitarian situation reports, crisis maps',tags:['free']},
-      {n:'LiveUAMap',u:'https://liveuamap.com',d:'Live conflict map — Ukraine, Middle East, global military events',tags:['free']},
-      {n:'Bellingcat',u:'https://www.bellingcat.com',d:'Open source conflict verification, geolocation investigations',tags:['free']},
-    ]},
-    {id:'physical',name:'&#127782; Physical & Weather',tools:[
-      {n:'NWS Active Alerts',u:'https://www.weather.gov/alerts',d:'Live US weather alerts, all types, all states',tags:['free','live']},
-      {n:'NHC Hurricane Center',u:'https://www.nhc.noaa.gov',d:'Storm tracking, advisories, cone of uncertainty',tags:['free','live']},
-      {n:'SPC Storm Center',u:'https://www.spc.noaa.gov',d:'Tornado/hail/wind outlooks, active watches',tags:['free','live']},
-      {n:'Watch Duty',u:'https://app.watchduty.org',d:'Wildfire perimeter, containment %, evacuations',tags:['free','live']},
-      {n:'CAL FIRE',u:'https://www.fire.ca.gov',d:'California wildfire incidents, containment reports',tags:['free','live']},
-      {n:'NIFC Fire Center',u:'https://www.nifc.gov/fire-information',d:'National wildfire stats, situation reports',tags:['free','live']},
-      {n:'FEMA Disasters',u:'https://www.fema.gov/disasters',d:'Federal disaster declarations, response status',tags:['free','live']},
-      {n:'USGS Earthquakes',u:'https://earthquake.usgs.gov/earthquakes/map',d:'Real-time earthquake data, ShakeMap',tags:['free','live']},
-      {n:'NASA FIRMS',u:'https://firms.modaps.eosdis.nasa.gov/map',d:'Satellite fire detection, global wildfire coverage',tags:['free','live']},
-      {n:'AirNow',u:'https://www.airnow.gov',d:'Real-time AQI, wildfire smoke tracking',tags:['free','live']},
-      {n:'Windy',u:'https://www.windy.com',d:'Wind, weather, hurricane, storm visualization',tags:['free']},
-      {n:'Zoom.earth',u:'https://zoom.earth',d:'Real-time satellite imagery, storms, fires',tags:['free']},
-      {n:'Tropical Tidbits',u:'https://www.tropicaltidbits.com',d:'Hurricane model comparison, forecast tracks',tags:['free']},
-      {n:'SpotterNetwork',u:'https://www.spotternetwork.org',d:'Storm spotter reports, real-time severe weather',tags:['free']},
-      {n:'Citizen App',u:'https://citizen.com/explore',d:'Crowdsourced local incidents — crime, fire, accidents',tags:['login','live']},
-      {n:'MarineTraffic',u:'https://www.marinetraffic.com',d:'Real-time ship tracking, AIS vessel positions',tags:['free']},
-      {n:'FlightAware',u:'https://www.flightaware.com',d:'Real-time flight tracking, TFRs, restrictions',tags:['free','login']},
-      {n:'USGS Water Resources',u:'https://waterdata.usgs.gov/nwis/rt',d:'Stream gauges, river levels, flood stage',tags:['free','live']},
-      {n:'CAMEO Chemicals',u:'https://cameochemicals.noaa.gov',d:'Chemical hazard info, HAZMAT first responder guide',tags:['free']},
-    ]},
-    {id:'threat',name:'&#128737; Threat Intelligence',tools:[
-      {n:'VirusTotal',u:'https://www.virustotal.com',d:'90+ AV engines, sandbox, behavioral analysis',tags:['free']},
-      {n:'Shodan',u:'https://www.shodan.io',d:'Port scanner, banner data, CVEs, geolocation',tags:['free','login']},
-      {n:'Greynoise',u:'https://viz.greynoise.io',d:'Malicious/benign classification, scanning behavior',tags:['free','login']},
-      {n:'Censys',u:'https://search.censys.io',d:'Internet scan data, certificates, services',tags:['free','login']},
-      {n:'AlienVault OTX',u:'https://otx.alienvault.com',d:'Threat pulses, IOC sharing, malware families',tags:['free']},
-      {n:'Pulsedive',u:'https://pulsedive.com',d:'Risk scoring, threat feeds, linked indicators',tags:['free']},
-      {n:'ThreatFox',u:'https://threatfox.abuse.ch',d:'IOC platform, malware families, confidence levels',tags:['free']},
-      {n:'MalwareBazaar',u:'https://bazaar.abuse.ch',d:'Malware samples, YARA rules, first seen',tags:['free']},
-      {n:'URLhaus',u:'https://urlhaus.abuse.ch',d:'Malicious URLs, status, payload types',tags:['free']},
-      {n:'AbuseIPDB',u:'https://www.abuseipdb.com',d:'IP abuse reports, reputation, ISP, country',tags:['free']},
-      {n:'IBM X-Force',u:'https://exchange.xforce.ibmcloud.com',d:'Risk score, malware associations, CVE intel',tags:['free']},
-      {n:'Cisco Talos',u:'https://talosintelligence.com',d:'IP/domain reputation, spam, blacklist status',tags:['free']},
-      {n:'Recorded Future',u:'https://app.recordedfuture.com',d:'Threat actors, dark web intel, risk scores',tags:['paid']},
-      {n:'PANW Threat Vault',u:'https://threatvault.paloaltonetworks.com',d:'Threat signatures, WildFire verdicts',tags:['login']},
-      {n:'Hybrid Analysis',u:'https://www.hybrid-analysis.com',d:'Automated sandbox, MITRE ATT&CK mapping',tags:['free']},
-      {n:'ANY.RUN',u:'https://app.any.run',d:'Interactive sandbox, live malware execution',tags:['free']},
-      {n:'Joe Sandbox',u:'https://www.joesandbox.com',d:'Deep malware analysis, multiple platforms',tags:['free']},
-      {n:'Intezer',u:'https://analyze.intezer.com',d:'Code reuse analysis, genetic classification',tags:['free']},
-      {n:'Triage',u:'https://tria.ge',d:'Fast malware triage, config extraction',tags:['free']},
-      {n:'Malpedia',u:'https://malpedia.caad.fkie.fraunhofer.de',d:'Malware family library, YARA, actor associations',tags:['free','login']},
-      {n:'MITRE ATT&CK',u:'https://attack.mitre.org',d:'TTP mapping, threat actors, detection rules',tags:['free']},
-      {n:'Urlscan.io',u:'https://urlscan.io',d:'URL scanner, screenshots, DOM, network requests',tags:['free']},
-      {n:'PolySwarm',u:'https://polyswarm.io',d:'Multi-engine file scanning, crowdsourced detection',tags:['free']},
-      {n:'Maltiverse',u:'https://maltiverse.com',d:'IOC aggregator, threat scoring, blacklist feeds',tags:['free']},
-    ]},
-    {id:'cve',name:'&#9888; CVE & Vulnerability',tools:[
-      {n:'NVD NIST',u:'https://nvd.nist.gov',d:'CVE details, CVSS scores, CWE, affected CPEs',tags:['free']},
-      {n:'CISA KEV',u:'https://www.cisa.gov/known-exploited-vulnerabilities-catalog',d:'Known exploited vulnerabilities, required remediation',tags:['free']},
-      {n:'Exploit-DB',u:'https://www.exploit-db.com',d:'Public exploits, PoC code, GHDB dorks',tags:['free']},
-      {n:'GitHub Advisories',u:'https://github.com/advisories',d:'Package vulnerabilities, patch versions',tags:['free']},
-      {n:'AttackerKB',u:'https://attackerkb.com',d:'Analyst assessments, exploitability scores',tags:['free']},
-      {n:'Vulners',u:'https://vulners.com',d:'Aggregated vulnerability database, exploit count',tags:['free','login']},
-      {n:'Metasploit DB',u:'https://www.rapid7.com/db',d:'Module availability, exploit type, CVE mapping',tags:['free']},
-      {n:'Greynoise Trends',u:'https://viz.greynoise.io/trends',d:'CVEs being actively scanned/exploited in wild',tags:['free','login']},
-      {n:'OSV.dev',u:'https://osv.dev',d:'Open source package vulnerabilities by ecosystem',tags:['free']},
-      {n:'Snyk',u:'https://security.snyk.io',d:'Package-level vulnerabilities, fix guidance',tags:['free']},
-      {n:'CVEDetails',u:'https://www.cvedetails.com',d:'CVE stats, affected products, vendor response',tags:['free']},
-      {n:'Packet Storm',u:'https://packetstormsecurity.com',d:'Exploit code, security advisories, papers',tags:['free']},
-    ]},
-    {id:'ipdomain',name:'&#127760; IP / Domain / Network',tools:[
-      {n:'ViewDNS',u:'https://viewdns.info',d:'Reverse IP, DNS lookup, WHOIS, IP history',tags:['free']},
-      {n:'DNSDumpster',u:'https://dnsdumpster.com',d:'Subdomains, DNS records, MX, host map',tags:['free']},
-      {n:'SecurityTrails',u:'https://securitytrails.com',d:'DNS history, WHOIS, subdomains, IP history',tags:['free','login']},
-      {n:'crt.sh',u:'https://crt.sh',d:'Certificate transparency, subdomain discovery',tags:['free']},
-      {n:'BGP.he.net',u:'https://bgp.he.net',d:'BGP routing, ASN, IP prefix, network info',tags:['free']},
-      {n:'IPinfo',u:'https://ipinfo.io',d:'Geolocation, ISP, hostname, ASN, privacy',tags:['free']},
-      {n:'Spamhaus',u:'https://check.spamhaus.org',d:'IP/domain blacklist checks, ZEN, DBL',tags:['free']},
-      {n:'MXToolbox',u:'https://mxtoolbox.com',d:'DNS, MX, blacklist, SMTP diagnostics',tags:['free']},
-      {n:'Netlas',u:'https://app.netlas.io',d:'Internet scanner, certificates, DNS, HTTP',tags:['free']},
-      {n:'ZoomEye',u:'https://www.zoomeye.org',d:'Internet search for exposed devices/services',tags:['free','login']},
-      {n:'BGPView',u:'https://bgpview.io',d:'BGP routing, ASN, prefixes, peers',tags:['free']},
-      {n:'DomainTools',u:'https://www.domaintools.com',d:'WHOIS history, hosting history, risk scoring',tags:['paid']},
-    ]},
-    {id:'news',name:'&#128240; News & Community',tools:[
-      {n:'Google News',u:'https://news.google.com',d:'Aggregated news from thousands of publishers',tags:['free']},
-      {n:'Bleeping Computer',u:'https://www.bleepingcomputer.com',d:'Cybersecurity news, malware, breaches',tags:['free']},
-      {n:'SANS ISC',u:'https://isc.sans.edu',d:'Daily security diaries, handler analysis',tags:['free']},
-      {n:'Reddit r/netsec',u:'https://www.reddit.com/r/netsec',d:'Security community, PoC sharing',tags:['free']},
-      {n:'Dark Reading',u:'https://www.darkreading.com',d:'Enterprise security news',tags:['free']},
-      {n:'Krebs on Security',u:'https://krebsonsecurity.com',d:'Investigative cybercrime journalism',tags:['free']},
-      {n:'The Hacker News',u:'https://thehackernews.com',d:'Hacking and cybersecurity news',tags:['free']},
-      {n:'CISA Advisories',u:'https://www.cisa.gov/news-events/cybersecurity-advisories',d:'US government cybersecurity advisories',tags:['free']},
-      {n:'GitHub Security',u:'https://github.com/search?type=repositories',d:'PoC repos, detection rules, security tools',tags:['free']},
-      {n:'Mastodon infosec',u:'https://infosec.exchange',d:'Infosec Mastodon community',tags:['free']},
-      {n:'Packet Storm',u:'https://packetstormsecurity.com',d:'Security advisories, exploits, papers',tags:['free']},
-    ]},
-    {id:'breach',name:'&#128274; Breach & Dark Web',tools:[
-      {n:'Have I Been Pwned',u:'https://haveibeenpwned.com',d:'Email/domain breach check, 13B+ accounts',tags:['free']},
-      {n:'IntelX',u:'https://intelx.io',d:'Dark web, leaked databases, paste sites',tags:['free','login']},
-      {n:'Dehashed',u:'https://dehashed.com',d:'Breach database search, 18B+ records',tags:['paid']},
-      {n:'LeakCheck',u:'https://leakcheck.io',d:'Database breach lookup, 7B+ records',tags:['free','login']},
-      {n:'BreachDirectory',u:'https://breachdirectory.org',d:'Breach search by email, username, hash',tags:['free']},
-      {n:'Ahmia Dark Web',u:'https://ahmia.fi',d:'Dark web search engine, .onion indexing',tags:['free']},
-    ]},
-    {id:'frameworks',name:'&#9881; OSINT Frameworks',tools:[
-      {n:'OSINT Framework',u:'https://osintframework.com',d:'Interactive tree of all OSINT tools',tags:['free']},
-      {n:'IntelTechniques',u:'https://inteltechniques.com/tools',d:'Michael Bazzell OSINT tools and workflows',tags:['free']},
-      {n:'Spiderfoot',u:'https://www.spiderfoot.net',d:'Automated OSINT, 200+ modules',tags:['free','cli']},
-      {n:'Maltego',u:'https://www.maltego.com',d:'Visual link analysis, 50+ data sources',tags:['paid']},
-      {n:'Recon-ng',u:'https://github.com/lanmaster53/recon-ng',d:'Web recon framework, modular',tags:['free','cli']},
-      {n:'BBOT',u:'https://github.com/blacklanternsecurity/bbot',d:'Recursive internet scanner',tags:['free','cli']},
-      {n:'IntelOwl',u:'https://github.com/intelowlproject/IntelOwl',d:'Intelligence orchestration at scale',tags:['free','cli']},
-      {n:'MISP',u:'https://www.misp-project.org',d:'Malware information sharing platform',tags:['free','cli']},
-      {n:'OpenCTI',u:'https://opencti.io',d:'Cyber threat intelligence management',tags:['free','cli']},
-    ]}
+    {id:'global',name:'&#127758; Global Intelligence',tools:[{n:'World Monitor',u:'https://worldmonitor.app',d:'25 data layers: geopolitics, military, disasters, markets, cyber',tags:['free','live']},{n:'World Monitor Tech',u:'https://tech.worldmonitor.app',d:'Cyber threat monitoring layer',tags:['free','live']},{n:'GDELT Project',u:'https://gdeltproject.org',d:'Global news events, protest index, conflict intensity',tags:['free','live']},{n:'ACLED',u:'https://acleddata.com',d:'Armed conflict events, protests worldwide',tags:['free','login']},{n:'Global Incident Map',u:'https://www.globalincidentmap.com',d:'Real-time terrorism, HAZMAT, civil unrest',tags:['free','live']},{n:'RSOE EDIS',u:'https://rsoe-edis.org',d:'Emergency and disaster info, global map',tags:['free','live']},{n:'ReliefWeb',u:'https://reliefweb.int',d:'Humanitarian reports, crisis maps',tags:['free']},{n:'LiveUAMap',u:'https://liveuamap.com',d:'Live conflict map — Ukraine, Middle East',tags:['free']},{n:'Bellingcat',u:'https://www.bellingcat.com',d:'Open source conflict verification, geolocation',tags:['free']}]},
+    {id:'physical',name:'&#127782; Physical & Weather',tools:[{n:'NWS Alerts',u:'https://www.weather.gov/alerts',d:'Live US weather alerts',tags:['free','live']},{n:'NHC Hurricanes',u:'https://www.nhc.noaa.gov',d:'Storm tracking, advisories',tags:['free','live']},{n:'SPC Storms',u:'https://www.spc.noaa.gov',d:'Tornado/hail/wind outlooks',tags:['free','live']},{n:'Watch Duty',u:'https://app.watchduty.org',d:'Wildfire perimeter, containment, evacuations',tags:['free','live']},{n:'CAL FIRE',u:'https://www.fire.ca.gov',d:'California wildfire incidents',tags:['free','live']},{n:'NIFC Fire',u:'https://www.nifc.gov/fire-information',d:'National wildfire stats',tags:['free','live']},{n:'FEMA',u:'https://www.fema.gov/disasters',d:'Federal disaster declarations',tags:['free','live']},{n:'USGS Earthquakes',u:'https://earthquake.usgs.gov',d:'Real-time earthquake data',tags:['free','live']},{n:'NASA FIRMS',u:'https://firms.modaps.eosdis.nasa.gov/map',d:'Satellite fire detection',tags:['free','live']},{n:'AirNow',u:'https://www.airnow.gov',d:'Air quality, wildfire smoke',tags:['free','live']},{n:'Windy',u:'https://www.windy.com',d:'Wind, weather, hurricane visualization',tags:['free']},{n:'Zoom.earth',u:'https://zoom.earth',d:'Real-time satellite imagery',tags:['free']},{n:'Tropical Tidbits',u:'https://www.tropicaltidbits.com',d:'Hurricane model tracks',tags:['free']},{n:'SpotterNetwork',u:'https://www.spotternetwork.org',d:'Storm spotter real-time reports',tags:['free']},{n:'Citizen App',u:'https://citizen.com/explore',d:'Crowdsourced local incidents, crime',tags:['login','live']},{n:'MarineTraffic',u:'https://www.marinetraffic.com',d:'Real-time ship tracking',tags:['free']},{n:'FlightAware',u:'https://www.flightaware.com',d:'Flight tracking, TFRs',tags:['free','login']},{n:'USGS Water',u:'https://waterdata.usgs.gov/nwis/rt',d:'Stream gauges, river flood stage',tags:['free','live']},{n:'CAMEO Chemicals',u:'https://cameochemicals.noaa.gov',d:'HAZMAT first responder guide',tags:['free']}]},
+    {id:'threat',name:'&#128737; Threat Intelligence',tools:[{n:'VirusTotal',u:'https://www.virustotal.com',d:'90+ AV engines, sandbox analysis',tags:['free']},{n:'Shodan',u:'https://www.shodan.io',d:'Port scanner, CVEs, geolocation',tags:['free','login']},{n:'Greynoise',u:'https://viz.greynoise.io',d:'IP classification, scanning behavior',tags:['free','login']},{n:'Censys',u:'https://search.censys.io',d:'Internet scan data, certificates',tags:['free','login']},{n:'AlienVault OTX',u:'https://otx.alienvault.com',d:'Threat pulses, IOC sharing',tags:['free']},{n:'Pulsedive',u:'https://pulsedive.com',d:'Risk scoring, threat feeds',tags:['free']},{n:'ThreatFox',u:'https://threatfox.abuse.ch',d:'IOC platform, malware families',tags:['free']},{n:'MalwareBazaar',u:'https://bazaar.abuse.ch',d:'Malware samples, YARA rules',tags:['free']},{n:'URLhaus',u:'https://urlhaus.abuse.ch',d:'Malicious URLs, payloads',tags:['free']},{n:'AbuseIPDB',u:'https://www.abuseipdb.com',d:'IP abuse reports, reputation',tags:['free']},{n:'IBM X-Force',u:'https://exchange.xforce.ibmcloud.com',d:'Risk score, malware intel',tags:['free']},{n:'Cisco Talos',u:'https://talosintelligence.com',d:'IP/domain reputation',tags:['free']},{n:'Recorded Future',u:'https://app.recordedfuture.com',d:'Threat actors, dark web intel',tags:['paid']},{n:'PANW Threat Vault',u:'https://threatvault.paloaltonetworks.com',d:'Threat signatures, WildFire',tags:['login']},{n:'Hybrid Analysis',u:'https://www.hybrid-analysis.com',d:'Automated sandbox',tags:['free']},{n:'ANY.RUN',u:'https://app.any.run',d:'Interactive sandbox',tags:['free']},{n:'Joe Sandbox',u:'https://www.joesandbox.com',d:'Deep malware analysis',tags:['free']},{n:'Intezer',u:'https://analyze.intezer.com',d:'Code reuse, genetic classification',tags:['free']},{n:'Triage',u:'https://tria.ge',d:'Fast malware triage',tags:['free']},{n:'Malpedia',u:'https://malpedia.caad.fkie.fraunhofer.de',d:'Malware family library, YARA',tags:['free','login']},{n:'MITRE ATT&CK',u:'https://attack.mitre.org',d:'TTP mapping, threat actors',tags:['free']},{n:'Urlscan.io',u:'https://urlscan.io',d:'URL scanner, DOM, screenshots',tags:['free']}]},
+    {id:'cve',name:'&#9888; CVE & Vulnerability',tools:[{n:'NVD NIST',u:'https://nvd.nist.gov',d:'CVE details, CVSS scores',tags:['free']},{n:'CISA KEV',u:'https://www.cisa.gov/known-exploited-vulnerabilities-catalog',d:'Known exploited vulnerabilities',tags:['free']},{n:'Exploit-DB',u:'https://www.exploit-db.com',d:'Public exploits, PoC code',tags:['free']},{n:'GitHub Advisories',u:'https://github.com/advisories',d:'Package vulnerabilities, patches',tags:['free']},{n:'AttackerKB',u:'https://attackerkb.com',d:'Analyst assessments',tags:['free']},{n:'Vulners',u:'https://vulners.com',d:'Aggregated vuln DB',tags:['free','login']},{n:'Metasploit DB',u:'https://www.rapid7.com/db',d:'Module availability',tags:['free']},{n:'Greynoise Trends',u:'https://viz.greynoise.io/trends',d:'CVEs exploited in wild',tags:['free','login']},{n:'OSV.dev',u:'https://osv.dev',d:'Open source package vulns',tags:['free']},{n:'Snyk',u:'https://security.snyk.io',d:'Package vulnerabilities',tags:['free']},{n:'Packet Storm',u:'https://packetstormsecurity.com',d:'Exploit code, advisories',tags:['free']}]},
+    {id:'news',name:'&#128240; News & Community',tools:[{n:'Google News',u:'https://news.google.com',d:'Aggregated news',tags:['free']},{n:'Bleeping Computer',u:'https://www.bleepingcomputer.com',d:'Cybersecurity news, IOCs',tags:['free']},{n:'SANS ISC',u:'https://isc.sans.edu',d:'Daily handler diaries',tags:['free']},{n:'Reddit r/netsec',u:'https://www.reddit.com/r/netsec',d:'Security community, PoC',tags:['free']},{n:'Dark Reading',u:'https://www.darkreading.com',d:'Enterprise security news',tags:['free']},{n:'Krebs on Security',u:'https://krebsonsecurity.com',d:'Investigative cybercrime',tags:['free']},{n:'The Hacker News',u:'https://thehackernews.com',d:'Cybersecurity news',tags:['free']},{n:'CISA Advisories',u:'https://www.cisa.gov/news-events/cybersecurity-advisories',d:'US government advisories',tags:['free']},{n:'GitHub Security',u:'https://github.com/search?type=repositories',d:'PoC repos, detection rules',tags:['free']},{n:'Mastodon infosec',u:'https://infosec.exchange',d:'Infosec community',tags:['free']}]},
+    {id:'frameworks',name:'&#9881; OSINT Frameworks',tools:[{n:'OSINT Framework',u:'https://osintframework.com',d:'Interactive tree of all tools',tags:['free']},{n:'IntelTechniques',u:'https://inteltechniques.com/tools',d:'OSINT workflows by Bazzell',tags:['free']},{n:'Spiderfoot',u:'https://www.spiderfoot.net',d:'Automated OSINT, 200+ modules',tags:['free','cli']},{n:'Maltego',u:'https://www.maltego.com',d:'Visual link analysis',tags:['paid']},{n:'Recon-ng',u:'https://github.com/lanmaster53/recon-ng',d:'Web recon framework',tags:['free','cli']},{n:'BBOT',u:'https://github.com/blacklanternsecurity/bbot',d:'Recursive internet scanner',tags:['free','cli']},{n:'IntelOwl',u:'https://github.com/intelowlproject/IntelOwl',d:'Intelligence orchestration',tags:['free','cli']},{n:'MISP',u:'https://www.misp-project.org',d:'Malware info sharing',tags:['free','cli']},{n:'OpenCTI',u:'https://opencti.io',d:'Cyber threat intel management',tags:['free','cli']}]}
   ];
-
   mc.innerHTML=`<div class="card">
     <div style="font-size:14px;font-weight:600;margin-bottom:6px;">&#127760; Complete OSINT Framework — 300+ Tools</div>
-    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;">All tools from <a href="https://osintframework.com" target="_blank" style="color:var(--blue-text);">osintframework.com</a> plus additional sources. When you search in Investigations, the AI automatically uses the relevant tools for your alert type.</p>
-    <input type="text" class="osint-search" id="osint-search" placeholder="Search tools by name or description..." oninput="osintFilter(this.value)"/>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;">All tools organized by category. When you search in Investigations, the relevant tools fire automatically with your extracted keywords. Click any tool to open directly.</p>
+    <input type="text" class="osint-search" id="osint-search" placeholder="Search tools..." oninput="osintFilter(this.value)"/>
     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;">${CATS.map(c=>`<a href="#ocat-${c.id}" style="font-size:10px;padding:2px 8px;border-radius:999px;border:0.5px solid var(--border);color:var(--text2);text-decoration:none;">${c.name}</a>`).join('')}</div>
   </div>`+
-  CATS.map(c=>`<div class="card" id="ocat-${c.id}">
-    <div style="font-size:12px;font-weight:600;margin-bottom:10px;">${c.name}</div>
-    <div class="tool-grid">${c.tools.map(t=>`<a class="tool-card" href="${t.u}" target="_blank">
-      <div class="tc-name">${t.n}</div>
-      <div class="tc-desc">${t.d}</div>
-      <div class="tc-tags">${(t.tags||[]).map(tg=>`<span class="tg tg-${tg}">${tg}</span>`).join('')}</div>
-    </a>`).join('')}</div>
-  </div>`).join('');
+  CATS.map(c=>`<div class="card" id="ocat-${c.id}"><div style="font-size:12px;font-weight:600;margin-bottom:10px;">${c.name}</div><div class="tool-grid">${c.tools.map(t=>`<a class="tool-card" href="${t.u}" target="_blank"><div class="tc-name">${t.n}</div><div class="tc-desc">${t.d}</div><div class="tc-tags">${(t.tags||[]).map(tg=>`<span class="tg tg-${tg}">${tg}</span>`).join('')}</div></a>`).join('')}</div></div>`).join('');
 }
-function osintFilter(q){const ql=(q||'').toLowerCase();document.querySelectorAll('.tool-card').forEach(card=>{card.style.display=(!ql||card.innerText.toLowerCase().includes(ql))?'':'none';});}
+function osintFilter(q){const ql=(q||'').toLowerCase();document.querySelectorAll('.tool-card').forEach(c=>{c.style.display=(!ql||c.innerText.toLowerCase().includes(ql))?'':'none';});}
 
 // ── ABOUT ──
-function renderAbout(mc){
-  if(!mc)return;
-  mc.innerHTML=`<div class="card">
-    <div style="font-size:14px;font-weight:600;margin-bottom:12px;">Setup &amp; About</div>
-
-    <div class="sl">Step 1 — Get your free Gemini API key</div>
-    <div style="background:var(--green-bg);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--green-text);line-height:1.7;">
-      1. Go to <a href="https://aistudio.google.com" target="_blank" style="color:var(--green-text);font-weight:600;">aistudio.google.com</a><br>
-      2. Sign in with your Google account<br>
-      3. Click <strong>Get API Key</strong> → <strong>Create API key</strong><br>
-      4. Copy the key (starts with AIza...)<br>
-      5. Click &#9881; API Key in the header above → paste → Save<br>
-      <strong>Free forever. No credit card. 250 requests/day.</strong>
-    </div>
-
-    <div class="sl">Why Gemini API — and what it actually does</div>
-    <p style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Gemini 2.0 Flash with Google Search grounding means the AI actually searches Google in real time while analyzing your alert. When you paste "Palisade Fire Los Angeles County", Gemini searches Google right now and pulls current containment percentages, evacuation orders, air quality data from real current sources. This is real internet browsing — not AI guessing from old training data.</p>
-
-    <div class="sl">How the smart routing works</div>
-    <p style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;"><strong>Physical alert</strong> (wildfire, flood, earthquake, shooting, HAZMAT, protest) → fires ONLY physical tools: Watch Duty, Citizen App, NWS, FEMA, USGS, CAL FIRE, World Monitor, GDELT, Global Incident Map, NASA FIRMS, AirNow, Windy. Zero cyber tools.<br><br><strong>Cyber alert</strong> (malware, CVE, IP, domain, hash, ransomware) → fires ONLY cyber tools: VirusTotal, Shodan, Greynoise, OTX, ThreatFox, Hybrid Analysis, MITRE ATT&CK, etc. Zero physical tools.</p>
-
-    <div class="sl">What happens when you paste an alert</div>
-    <p style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;">
-      1. AI extracts keywords (fire name, location, CVE, IP, threat name)<br>
-      2. Tool shows keyword banner — you see exactly what was extracted<br>
-      3. Pre-filled tool links appear immediately — each shows "Searching: [keyword]"<br>
-      4. Top X/Twitter search auto-opens in new tab<br>
-      5. Gemini searches Google and writes intelligence brief with real current data<br>
-      6. NWS, USGS, FEMA, GDELT data fetched live<br>
-      7. Tool tabs auto-refresh every 15 minutes
-    </p>
-
-    <div class="sl">Current status</div>
-    <p style="font-size:12px;${getKey()?'color:var(--green-text);':'color:var(--amber-text);'}font-weight:500;">${getKey()?'&#10003; Gemini API key active — real internet search enabled':'&#9888; No API key — click &#9881; API Key in header to add your free Gemini key'}</p>
-  </div>`;
-}
+function renderAbout(mc){if(!mc)return;mc.innerHTML=`<div class="card">
+  <div style="font-size:14px;font-weight:600;margin-bottom:12px;">Setup &amp; About</div>
+  <div class="sl">Get your free Gemini API key — 2 minutes</div>
+  <div style="background:var(--green-bg);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--green-text);line-height:1.7;">
+    1. Go to <a href="https://aistudio.google.com" target="_blank" style="color:var(--green-text);font-weight:600;">aistudio.google.com</a><br>
+    2. Sign in with your Google account<br>
+    3. Click <strong>Get API Key</strong> &rarr; <strong>Create API key</strong><br>
+    4. Copy the key (starts with AIza...) &rarr; click &#9881; API Key in header &rarr; paste &rarr; Save<br>
+    <strong>Free. No credit card. 250 requests/day. Includes real Google Search browsing.</strong>
+  </div>
+  <div class="sl">How keyword extraction works</div>
+  <p style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;">The tool uses regex pattern matching first — it instantly detects fire names, CVE numbers, IP addresses, county names, state codes, malware names, and Everbridge field values without needing an API call. Then if you have a key, Gemini AI refines and improves the extraction. This means keyword extraction works even without an API key.</p>
+  <div class="sl">How search and results work</div>
+  <p style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Physical alert → fires only physical tools with brief description for each one. Cyber → fires only cyber tools. Each result shows the tool name, what it does, the exact keyword being searched, and a direct link to results. Gemini AI browses the internet and writes an intelligence brief with real current data. NWS, USGS, FEMA, GDELT data fetched live. X/Twitter auto-opens.</p>
+  <div class="sl">Auto-refresh</div>
+  <p style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Click "Start 15-min refresh" button in any investigation tab. The tool re-runs the entire search every 15 minutes automatically and updates all results. Tool source tabs (CrowdStrike, Splunk etc.) also auto-refresh every 15 minutes.</p>
+  <div class="sl">Current status</div>
+  <p style="font-size:12px;${getKey()?'color:var(--green-text);':'color:var(--amber-text);'}font-weight:500;">${getKey()?'&#10003; Gemini API active — real internet search enabled':'&#9888; No API key — click &#9881; API Key in header'}</p>
+</div>`;}
 
 // ── INIT ──
-invNew('Alert 1');
-go('inv');
-updateDot();
-if(!getKey())setTimeout(showSettings,800);
+invNew('Alert 1');go('inv');updateDot();if(!getKey())setTimeout(showSettings,900);
 </script>
 </body>
 </html>
