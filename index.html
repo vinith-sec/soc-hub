@@ -229,27 +229,688 @@ function detectState(text){
 }
 
 function extractKeywordsLocal(q){
-  const r={alert_type:'physical',sub_type:'unknown',event_name:null,location:null,state:null,state_code:null,keywords:[],ioc:null,severity:'high'};
+  const r={alert_type:'physical',sub_type:'unknown',event_name:null,location:null,state:null,state_code:null,keywords:[],ioc:null,severity:'high',counties:[],threat_name:null,affected_product:null,process_name:null,tactic:null};
+  const SC2NAME={'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'};
 
-  // ── DETECT ALERT TYPE (cyber wins over physical) ──
-  const isCVE=/CVE-\d{4}-\d+/i.test(q);
-  const isHash=/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i.test(q);
-  const isIP=/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(q);
-  // Detect cyber keywords
-  const isCyber=/malware|ransomware|phishing|trojan|exploit|powershell|cobalt strike|mimikatz|lateral movement|privilege escalation|credential|beacon|apt\d|t1\d{3}/i.test(q);
-  const isPhys=/wildfire|wild fire|\bfire\b|flood|earthquake|quake|hurricane|tropical storm|tornado|protest|riot|civil unrest|hazmat|chemical spill|evacuation|shooting|gunfire|active shooter|explosion|disaster|tsunami|blizzard/i.test(q);
+  // ── FIELD EXTRACTOR: handles "Label\nValue" (Everbridge) and "Label: Value" (CrowdStrike/Splunk)
+  function getField(label){
+    const nl=q.match(new RegExp('(?:^|\\n)'+label+'\\s*\\n\\s*([^\\n]+)','i'));
+    if(nl){const v=nl[1].trim();if(v&&v.length>0&&v.length<200&&!/^\d{4}-/.test(v)&&!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/.test(v))return v;}
+    const col=q.match(new RegExp('(?:^|[\\n|])\\s*'+label+'\\s*[:|]\\s*([^\\n|]+)','i'));
+    if(col){const v=col[1].trim();if(v&&v.length>0&&v.length<200)return v;}
+    return null;
+  }
 
-  // Cyber wins if explicit cyber keywords present
-  if(isCVE){r.alert_type='cve';r.sub_type='cve';}
-  else if(isHash){r.alert_type='hash';r.sub_type='hash';}
-  else if(isIP&&!isPhys){r.alert_type='ip';r.sub_type='ip';}
-  else if(isCyber&&!isPhys){r.alert_type='cyber';r.sub_type='malware';}
-  else if(isPhys){r.alert_type='physical';}
+  const fTitle   =getField('Title');
+  const fSubcat  =getField('Subcategory')||getField('Category')||getField('Type');
+  const fSeverity=getField('Severity');
+  const fDesc    =getField('Description');
+  const fHostname=getField('Hostname')||getField('Host');
+  const fProcess =getField('Process');
+  const fSHA     =getField('SHA256')||getField('SHA-256')||getField('Hash');
+  const fCVE     =getField('CVE');
+  const fIOC     =getField('IOC')||getField('Indicator');
+  const fTactic  =getField('Tactic')||getField('Technique');
+  const fThreat  =getField('Threat')||getField('Malware');
 
-  // ── EXTRACT EXACT IOCs ──
-  const cveM=q.match(/\b(CVE-\d{4}-\d+)\b/i);if(cveM)r.ioc=cveM[1].toUpperCase();
-  const hashM=q.match(/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i);if(hashM&&!isPhys)r.ioc=hashM[1].toLowerCase();
-  const ipM=q.match(/\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b/);if(ipM&&!isPhys)r.ioc=r.ioc||ipM[1];
+  // ── PIPE FORMAT PARSER: "EVERBRIDGE | WILDFIRE | Palisade Fire | Los Angeles County, CA"
+  const pipeParts=q.split('|').map(s=>s.trim());
+  const PHYSICAL_SUBTYPES={'WILDFIRE':'wildfire','FIRE':'wildfire','FLOOD':'flood','FLASH FLOOD':'flood','FLASH FLOODS':'flood','HURRICANE':'hurricane','TROPICAL STORM':'hurricane','TORNADO':'tornado','EARTHQUAKE':'earthquake','SHOOTING':'shooting','ACTIVE SHOOTER':'shooting','HAZMAT':'hazmat','CHEMICAL':'hazmat','PROTEST':'protest','CIVIL UNREST':'protest','TSUNAMI':'tsunami','BLIZZARD':'winter','WINTER STORM':'winter'};
+  const CYBER_SRCS=new Set(['CROWDSTRIKE','SENTINELONE','DEFENDER','SPLUNK','PALO ALTO','CYLANCE']);
+  let pipeSubtype=null,pipeEventName=null;
+  for(let i=0;i<pipeParts.length;i++){
+    const UP=pipeParts[i].toUpperCase().trim();
+    for(const[k,v]of Object.entries(PHYSICAL_SUBTYPES)){if(UP===k||UP.includes(k)){pipeSubtype=v;break;}}
+    if(pipeSubtype==='wildfire'&&i>0&&pipeParts[i].length>3&&pipeParts[i].length<60&&/^[A-Z]/.test(pipeParts[i])&&!/^(WILDFIRE|FIRE|EVERBRIDGE|ALERT|SEVERITY|ACTION|BLOCKED|CATEGORY)$/i.test(pipeParts[i])&&!/\d{2,}/.test(pipeParts[i])&&!pipeEventName)pipeEventName=pipeParts[i];
+  }
+
+  // ── IOC EXTRACTION from labeled fields then raw text
+  const rawIOC=fSHA||fCVE||fIOC||'';
+  if(rawIOC){const cm=rawIOC.match(/CVE-\d{4}-\d+/i);if(cm)r.ioc=cm[0].toUpperCase();const hm=rawIOC.match(/[0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32}/i);if(hm&&!r.ioc)r.ioc=hm[0].toLowerCase();if(!r.ioc&&rawIOC.trim().length>3)r.ioc=rawIOC.trim();}
+  if(!r.ioc){const cm=q.match(/\b(CVE-\d{4}-\d+)\b/i);if(cm)r.ioc=cm[1].toUpperCase();}
+  const hashInText=q.match(/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i);if(hashInText)r.hash_found=hashInText[1].toLowerCase();
+  const ipInText=q.match(/\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b/);if(ipInText)r.ip_found=ipInText[1];
+
+  // ── DETECT ALERT TYPE
+  const isCVE_rx=/CVE-\d{4}-\d+/i.test(q);
+  const isCyber_rx=/(malware|ransomware|phishing|trojan|exploit|powershell|cobalt.strike|mimikatz|lateral.movement|privilege.escal|credential.dump|\bbeacon\b|apt\d+|t1\d{3})/i.test(q);
+  const isCyberSrc=pipeParts.some(p=>CYBER_SRCS.has(p.split(/[\s:|]/)[0].trim().toUpperCase()));
+  const isPhys_rx=/(wildfire|wild.fire|\bfire\b|flood|flash.flood|earthquake|quake|hurricane|tropical.storm|tornado|protest|riot|civil.unrest|hazmat|chemical.spill|evacuation|shooting|gunfire|active.shooter|explosion|disaster|tsunami|blizzard|severe.weather|winter.storm)/i.test(q);
+  const isPhysField=/flood|fire|wildfire|earthquake|hurricane|tornado|storm|weather|hazmat|civil|protest|shooting|evacuation/i.test((fSubcat||'')+' '+(fTitle||''));
+  if(isCVE_rx)r.alert_type='cve';
+  else if(r.hash_found&&!isPhys_rx&&!isPhysField&&!pipeSubtype)r.alert_type='hash';
+  else if(r.ip_found&&!isPhys_rx&&!isPhysField&&!pipeSubtype)r.alert_type='ip';
+  else if((isCyber_rx||isCyberSrc)&&!isPhys_rx&&!isPhysField&&!pipeSubtype)r.alert_type='cyber';
+  else r.alert_type='physical';
+  if(!r.ioc&&r.alert_type!=='physical'){if(r.hash_found)r.ioc=r.hash_found;else if(r.ip_found)r.ioc=r.ip_found;}
+
+  // ── SUB-TYPE DETECTION (structured fields first, then raw text)
+  const combined=(fSubcat||'').toLowerCase()+' '+(fTitle||'').toLowerCase();
+  if(pipeSubtype)r.sub_type=pipeSubtype;
+  else if(/flash.flood|flooding|\bflood\b/i.test(combined))r.sub_type='flood';
+  else if(/wildfire|wild.fire/i.test(combined))r.sub_type='wildfire';
+  else if(/\bfire\b/i.test(combined)&&r.alert_type==='physical')r.sub_type='wildfire';
+  else if(/hurricane|tropical.storm/i.test(combined))r.sub_type='hurricane';
+  else if(/tornado/i.test(combined))r.sub_type='tornado';
+  else if(/earthquake|quake/i.test(combined))r.sub_type='earthquake';
+  else if(/shooting|gunfire|active.shooter/i.test(combined))r.sub_type='shooting';
+  else if(/hazmat|chemical.spill/i.test(combined))r.sub_type='hazmat';
+  else if(/protest|riot|civil.unrest/i.test(combined))r.sub_type='protest';
+  else if(/ransomware/i.test(q))r.sub_type='ransomware';
+  else if(/phishing/i.test(q))r.sub_type='phishing';
+  // Fallback to raw text
+  else if(/flash.flood|flooding|\bflood\b/i.test(q))r.sub_type='flood';
+  else if(/wildfire|wild.fire/i.test(q))r.sub_type='wildfire';
+  else if(/\bfire\b/i.test(q)&&r.alert_type==='physical')r.sub_type='wildfire';
+  else if(/hurricane|tropical.storm/i.test(q))r.sub_type='hurricane';
+  else if(/tornado/i.test(q))r.sub_type='tornado';
+  else if(/earthquake|\bquake\b/i.test(q))r.sub_type='earthquake';
+  else if(/shooting|gunfire|active.shooter/i.test(q))r.sub_type='shooting';
+
+  // ── COUNTY PARSER from Description field or raw text
+  // Handles: "Cayuga, NY; Cortland, NY" and "Cayuga County, NY"
+  const SKIP=new Set(['National','Warning','Watch','Advisory','Service','Weather','Flood','Flash','City','Fire','County','The','For','Until','Issued']);
+  const searchText=fDesc||q;
+  const cpat=/\b([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?)\s*(?:County\s*)?,\s*([A-Z]{2})\b/g;
+  const counties=[];let cm2;
+  while((cm2=cpat.exec(searchText))!==null){
+    const cN=cm2[1].trim(),cS=cm2[2];
+    if(!SKIP.has(cN)&&cN.length>2&&SC2NAME[cS]&&!counties.find(c=>c.county===cN))counties.push({county:cN,state:cS});
+  }
+  r.counties=counties;
+  if(counties.length>0){r.state_code=counties[0].state;r.state=SC2NAME[r.state_code]||r.state_code;}
+  if(!r.state_code){for(const[code,name]of Object.entries(SC2NAME)){if(new RegExp('\\b'+name+'\\b','i').test(q)){r.state=name;r.state_code=code;break;}}}
+  if(!r.state_code){const scM=q.match(/\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)\b/);if(scM&&SC2NAME[scM[1]]){r.state_code=scM[1];r.state=SC2NAME[scM[1]];}}
+  if(counties.length>0)r.location=counties.length<=3?counties.map(c=>c.county).join(', ')+' County':counties[0].county+' County and surrounding areas';
+  if(!r.location){const lm=q.match(/\b([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?)\s+County\b/);if(lm)r.location=lm[1].trim()+' County';}
+
+  // ── EVENT NAME
+  if(pipeEventName)r.event_name=pipeEventName;
+  else if(fTitle&&fTitle!=='N/A')r.event_name=fTitle;
+  if(!r.event_name||r.event_name===fTitle){
+    const nF=q.match(/\b([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?)\s+(Wildfire|Fire)\b/);if(nF)r.event_name=nF[0];
+    const nS=q.match(/\b(Hurricane|Tropical Storm)\s+([A-Z][a-zA-Z]+)\b/);if(nS&&!r.event_name)r.event_name=nS[0];
+  }
+
+  // Cyber names
+  if(r.alert_type!=='physical'){
+    const malP=[/\b(LockBit[\s\d.x]*)/i,/\b(BlackCat|ALPHV)\b/i,/\b(Ryuk|REvil|Conti|Hive|Cl0p|WannaCry|NotPetya|Maze)\b/i,/\b(Cobalt Strike)\b/i,/\b(APT\d+)\b/i,/\b(Fancy Bear|Cozy Bear|Lazarus|Sandworm|Volt Typhoon)\b/i];
+    for(const p of malP){const m=(fThreat||q).match(p);if(m){r.threat_name=m[1];if(!r.event_name)r.event_name=m[1];break;}}
+    const prod=q.match(/\b(PAN-OS|GlobalProtect|Cisco IOS|Exchange Server|Log4j|Apache|Fortinet|Citrix|VMware|F5|Active Directory|Windows)\b/i);if(prod)r.affected_product=prod[1];
+    const proc=(fProcess||'').match(/\b([a-zA-Z0-9_-]+\.exe)\b/i)||q.match(/\bProcess[:\s]+([a-zA-Z0-9_-]+\.exe)\b/i);if(proc)r.process_name=proc[1];
+    const tact=(fTactic||q).match(/\b(T1\d{3}(?:\.\d{3})?)\b/);if(tact)r.tactic=tact[1];
+  }
+
+  if(fSeverity){const sl=fSeverity.toLowerCase();if(/extreme|critical/.test(sl))r.severity='critical';else if(/severe|high|major/.test(sl))r.severity='high';else if(/moderate|medium/.test(sl))r.severity='medium';else r.severity='low';}
+  else{const sm=q.match(/\bSeverity[:\s]+([A-Za-z]+)/i);if(sm){const sl=sm[1].toLowerCase();if(/critical|extreme/.test(sl))r.severity='critical';else if(/high|severe|major/.test(sl))r.severity='high';}}
+
+  // ── BUILD PRECISE KEYWORDS — NO GARBAGE
+  const BANNED=new Set(['N/A','NULL','NONE','UNKNOWN','ALERT','DETECTION','SEVERITY','HIGH','LOW','CRITICAL','MODERATE','SEVERE','STATUS','TYPE','CATEGORY','THE','AND','FOR','FROM','WEATHER EVENTS','WEATHER EVENTS US','NATIONAL WEATHER SERVICE','SEGMENTS','SOURCE','DESCRIPTION','SUBCATEGORY','TITLE','LOCATION','BLOCKED','ACTION','PROCESS','USER']);
+  function isClean(k){
+    if(!k||typeof k!=='string')return false;k=k.trim();
+    if(k.length<3||k.length>100)return false;
+    if(BANNED.has(k.toUpperCase()))return false;
+    if(/^\d{4}-\d{2}-\d{2}/.test(k))return false;
+    if(/^\d+[hm]\s*ago$/i.test(k))return false;
+    if(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),/.test(k))return false;
+    if(/^in \d+[hm]/.test(k))return false;
+    if(/^(National Weather Service|Weather Events)$/i.test(k))return false;
+    return true;
+  }
+  const kws=[];
+  const evtLabelMap={flood:'Flash Flood',wildfire:'Wildfire',hurricane:'Hurricane',tornado:'Tornado',earthquake:'Earthquake',shooting:'Shooting',hazmat:'HAZMAT',protest:'Civil Unrest',tsunami:'Tsunami',winter:'Winter Storm',storm:'Severe Thunderstorm',ransomware:'Ransomware',phishing:'Phishing',malware:'Malware',cve:'CVE',hash:'Malware',ip:'Suspicious IP',unknown:''};
+  const evtLabel=evtLabelMap[r.sub_type]||fSubcat||'';
+
+  if(r.alert_type==='physical'){
+    if(r.event_name&&isClean(r.event_name))kws.push(r.event_name);
+    if(counties.length>0&&r.state_code)kws.push(counties.map(c=>c.county).join(', ')+', '+r.state_code);
+    else if(r.location&&r.state_code&&isClean(r.location+', '+r.state_code))kws.push(r.location+', '+r.state_code);
+    if(evtLabel&&r.state){const region=counties.length>2?'Central '+r.state:counties.length>0?counties[0].county+' County':r.location||r.state;const kw3=evtLabel+' '+region;if(isClean(kw3)&&!kws.includes(kw3))kws.push(kw3);}
+    if(r.state_code&&r.event_name&&isClean(r.state_code+' '+r.event_name))kws.push(r.state_code+' '+r.event_name);
+    if(r.state&&evtLabel){const kw5=r.state+' '+evtLabel.toLowerCase();if(isClean(kw5)&&!kws.includes(kw5))kws.push(kw5);}
+  } else {
+    if(r.ioc&&isClean(r.ioc))kws.push(r.ioc);
+    if(r.event_name&&isClean(r.event_name)&&r.event_name!==r.ioc)kws.push(r.event_name);
+    if(r.threat_name&&isClean(r.threat_name)&&r.threat_name!==r.ioc)kws.push(r.threat_name);
+    if(r.affected_product&&r.ioc&&isClean(r.ioc+' '+r.affected_product))kws.push(r.ioc+' '+r.affected_product);
+    else if(r.affected_product&&isClean(r.affected_product+' vulnerability'))kws.push(r.affected_product+' vulnerability');
+    if(r.process_name&&isClean(r.process_name))kws.push(r.process_name+' malware');
+    if(r.tactic&&isClean(r.tactic))kws.push(r.tactic);
+    if(fHostname&&isClean(fHostname))kws.push(fHostname);
+  }
+
+  r.keywords=[...new Set(kws)].filter(isClean).slice(0,5);
+  if(r.keywords.length===0){const loc=r.location||r.state||'';if(evtLabel&&loc&&isClean(evtLabel+' '+loc))r.keywords=[evtLabel+' '+loc];else if(r.event_name&&isClean(r.event_name))r.keywords=[r.event_name];else r.keywords=['unknown alert'];}
+  return r;
+}
+
+  // STATE CODE → NAME lookup
+  const SC2NAME={'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'};
+
+  // ══════════════════════════════════════════════════
+  //  STEP 0: FIELD EXTRACTOR
+  //  Everbridge uses "FieldName\nValue" (newline separated)
+  //  CrowdStrike/Splunk use "Field: Value" or "Field | Value"
+  //  This handles ALL formats.
+  // ══════════════════════════════════════════════════
+  function getField(label){
+    // Newline format: "Severity\nSevere" — exact match
+    const nl=q.match(new RegExp('(?:^|\\n)'+label+'\\s*\\n\\s*([^\\n]+)','i'));
+    if(nl){const v=nl[1].trim();if(v&&v.length>0&&v.length<200&&!/^\d{4}-/.test(v)&&!/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/.test(v))return v;}
+    // Colon/pipe format: "Severity: Severe" or "Severity | Severe"
+    const col=q.match(new RegExp('(?:^|[\\n|])\\s*'+label+'\\s*[:|]\\s*([^\\n|]+)','i'));
+    if(col){const v=col[1].trim();if(v&&v.length>0&&v.length<200)return v;}
+    return null;
+  }
+
+  // Read all known fields
+  const fTitle    = getField('Title');
+  const fSubcat   = getField('Subcategory')||getField('Category')||getField('Type');
+  const fSeverity = getField('Severity');
+  const fDesc     = getField('Description');
+  const fSource   = getField('Source');
+  const fLocation = getField('Location')||getField('Area')||getField('Region');
+  const fFireName = getField('Fire Name')||getField('Incident Name')||getField('Event Name');
+  const fCity     = getField('City');
+  const fState    = getField('State');
+  const fHostname = getField('Hostname')||getField('Host');
+  const fProcess  = getField('Process');
+  const fSHA      = getField('SHA256')||getField('SHA-256')||getField('Hash');
+  const fCVE      = getField('CVE');
+  const fDomain   = getField('Domain')||getField('URL');
+  const fIOC      = getField('IOC')||getField('Indicator');
+  const fTactic   = getField('Tactic')||getField('Technique');
+  const fThreat   = getField('Threat')||getField('Threat Actor')||getField('Malware');
+
+  // Severity from field
+  if(fSeverity){const sl=fSeverity.toLowerCase();if(/extreme|critical/.test(sl))r.severity='critical';else if(/severe|high|major/.test(sl))r.severity='high';else if(/moderate|medium/.test(sl))r.severity='medium';else r.severity='low';}
+
+  // IOC from fields
+  const rawIOC=fSHA||fCVE||fIOC||fDomain||'';
+  if(rawIOC){const cm=rawIOC.match(/CVE-\d{4}-\d+/i);if(cm)r.ioc=cm[0].toUpperCase();const hm=rawIOC.match(/[0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32}/i);if(hm&&!r.ioc)r.ioc=hm[0].toLowerCase();if(!r.ioc&&rawIOC.trim().length>3)r.ioc=rawIOC.trim();}
+
+  // ══════════════════════════════════════════════════
+  //  STEP 1: DETECT ALERT TYPE
+  // ══════════════════════════════════════════════════
+  const isCVE_rx=/CVE-\d{4}-\d+/i.test(q);
+  const isHash_rx=/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i.test(q);
+  const isIP_rx=/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(q);
+  const isCyber_rx=/\b(malware|ransomware|phishing|trojan|exploit|powershell|cobalt strike|mimikatz|lateral movement|privilege escalation|credential dump|beacon|apt\d+|t1\d{3})\b/i.test(q);
+  const isPhys_rx=/\b(wildfire|wild fire|fire|flood|flash flood|earthquake|quake|hurricane|tropical storm|tornado|protest|riot|civil unrest|hazmat|chemical spill|evacuation|shooting|gunfire|active shooter|explosion|disaster|tsunami|blizzard|severe weather|winter storm)\b/i.test(q);
+  const isPhysFromField=/flood|fire|wildfire|earthquake|hurricane|tornado|storm|weather|hazmat|civil|protest|shooting|evacuation/i.test((fSubcat||'')+' '+(fTitle||''));
+  const isCyberFromField=/malware|ransomware|intrusion|phishing|credential|exploit|cyber|endpoint|detection/i.test((fSubcat||'')+' '+(fSource||''));
+
+  if(isCVE_rx){r.alert_type='cve';}
+  else if(isHash_rx&&!isPhys_rx&&!isPhysFromField){r.alert_type='hash';}
+  else if(isIP_rx&&!isPhys_rx&&!isPhysFromField){r.alert_type='ip';}
+  else if((isCyber_rx||isCyberFromField)&&!isPhys_rx&&!isPhysFromField){r.alert_type='cyber';}
+  else{r.alert_type='physical';}
+
+  // Extract IOC from raw text too
+  if(!r.ioc){
+    const cm=q.match(/\b(CVE-\d{4}-\d+)\b/i);if(cm)r.ioc=cm[1].toUpperCase();
+    if(!r.ioc&&r.alert_type!=='physical'){
+      const hm=q.match(/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i);if(hm)r.ioc=hm[1].toLowerCase();
+      const im=q.match(/\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b/);if(im&&!r.ioc)r.ioc=im[1];
+    }
+  }
+
+  // ══════════════════════════════════════════════════
+  //  STEP 2: DETECT PRECISE SUB-TYPE
+  //  Subcategory field is authoritative
+  // ══════════════════════════════════════════════════
+  const subcatLower=(fSubcat||'').toLowerCase();
+  const titleLower=(fTitle||'').toLowerCase();
+  const combined=subcatLower+' '+titleLower;
+  if(/flash flood|flooding|flood/i.test(combined))r.sub_type='flood';
+  else if(/wildfire|wild fire/i.test(combined))r.sub_type='wildfire';
+  else if(/\bfire\b/i.test(combined)&&r.alert_type==='physical')r.sub_type='wildfire';
+  else if(/hurricane|tropical storm|typhoon/i.test(combined))r.sub_type='hurricane';
+  else if(/tornado|twister/i.test(combined))r.sub_type='tornado';
+  else if(/earthquake|quake|seismic/i.test(combined))r.sub_type='earthquake';
+  else if(/shooting|gunfire|active shooter/i.test(combined))r.sub_type='shooting';
+  else if(/hazmat|chemical spill|toxic release/i.test(combined))r.sub_type='hazmat';
+  else if(/protest|riot|civil unrest/i.test(combined))r.sub_type='protest';
+  else if(/tsunami/i.test(combined))r.sub_type='tsunami';
+  else if(/blizzard|winter storm|ice storm/i.test(combined))r.sub_type='winter';
+  else if(/severe thunderstorm|thunderstorm/i.test(combined))r.sub_type='storm';
+  else if(/ransomware/i.test(q))r.sub_type='ransomware';
+  else if(/phishing/i.test(q))r.sub_type='phishing';
+  else if(isCVE_rx)r.sub_type='cve';
+  else if(isHash_rx)r.sub_type='hash';
+  else if(isIP_rx)r.sub_type='ip';
+
+  // ══════════════════════════════════════════════════
+  //  STEP 3: EXTRACT US COUNTIES FROM DESCRIPTION
+  //  Everbridge format: "Cayuga, NY; Cortland, NY; Onondaga, NY"
+  //  Also: "Cayuga County, NY" or "Cayuga (NY)"
+  // ══════════════════════════════════════════════════
+  const SKIP_WORDS=new Set(['National','Warning','Watch','Advisory','Service','Weather','Flood','Flash','City','Fire','County','The','For','Until','Issued']);
+  const searchText=fDesc||q;
+  const countyPat=/\b([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?)\s*(?:County\s*)?,\s*([A-Z]{2})\b/g;
+  const counties=[];
+  let cm2;
+  while((cm2=countyPat.exec(searchText))!==null){
+    const cName=cm2[1].trim();
+    const cState=cm2[2];
+    if(!SKIP_WORDS.has(cName)&&cName.length>2&&SC2NAME[cState]){
+      if(!counties.find(c=>c.county===cName))counties.push({county:cName,state:cState});
+    }
+  }
+  r.counties=counties;
+
+  // Set state from counties
+  if(counties.length>0&&!r.state_code){r.state_code=counties[0].state;r.state=SC2NAME[r.state_code]||r.state_code;}
+  // State from dedicated field
+  if(!r.state_code&&fState){for(const[name,code]of Object.entries(SC2NAME).map(([c,n])=>[n,c])){if(name.toLowerCase()===fState.toLowerCase()){r.state=name;r.state_code=code;break;}}}
+  // State from text
+  if(!r.state_code){
+    for(const[code,name]of Object.entries(SC2NAME)){
+      if(new RegExp('\\b'+name+'\\b','i').test(q)){r.state=name;r.state_code=code;break;}
+    }
+    if(!r.state_code){
+      const scM=q.match(/\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)\b/);
+      if(scM&&SC2NAME[scM[1]]){r.state_code=scM[1];r.state=SC2NAME[scM[1]];}
+    }
+  }
+
+  // Location from counties or field
+  if(counties.length>0){
+    if(counties.length<=3)r.location=counties.map(c=>c.county).join(', ')+' County';
+    else r.location=counties[0].county+' County and surrounding areas';
+  }
+  if(!r.location&&fLocation)r.location=fLocation.split(',')[0].trim();
+  if(!r.location&&fCity)r.location=fCity.trim();
+
+  // ══════════════════════════════════════════════════
+  //  STEP 4: EXTRACT EVENT/FIRE NAME
+  // ══════════════════════════════════════════════════
+  if(fFireName)r.event_name=fFireName;
+  else if(fTitle&&fTitle!=='N/A'){r.event_name=fTitle;}
+
+  // Named fire from text: "Palisade Fire", "Hughes Fire"
+  if(!r.event_name||r.event_name===fTitle){
+    const namedFire=q.match(/\b([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?)\s+(Wildfire|Fire)\b/);
+    if(namedFire){const nm=namedFire[0];if(!/^(the |a |an )/i.test(nm))r.event_name=nm;}
+    const namedStorm=q.match(/\b(Hurricane|Tropical Storm|Typhoon|Cyclone)\s+([A-Z][a-zA-Z]+)\b/);
+    if(namedStorm&&!r.event_name)r.event_name=namedStorm[0];
+  }
+
+  // Cyber event/malware names
+  if(r.alert_type!=='physical'){
+    const malPats=[/\b(LockBit\s*[\d.x]*)/i,/\b(BlackCat|ALPHV)\b/i,/\b(Ryuk|REvil|Conti|Hive|Cl0p|BlackMatter|WannaCry|NotPetya|Maze)\b/i,/\b(Emotet|TrickBot|QakBot|Dridex|IcedID)\b/i,/\b(Cobalt Strike)\b/i,/\b(Mimikatz)\b/i,/\b(APT\d+)\b/i,/\b(Fancy Bear|Cozy Bear|Lazarus|Sandworm|Volt Typhoon)\b/i];
+    const mSrc=fThreat||q;
+    for(const p of malPats){const m=mSrc.match(p);if(m){r.event_name=r.event_name||m[1];r.threat_name=m[1];break;}}
+    const prod=(fProcess||q).match(/\b(PAN-OS|GlobalProtect|Cisco IOS|Exchange Server|Log4j|Apache|Fortinet|Citrix|VMware|F5|Active Directory|Windows)\b/i);
+    if(prod)r.affected_product=prod[1];
+    const proc=q.match(/\b([a-zA-Z0-9_-]{3,}\.exe)\b/i);if(proc)r.process_name=proc[1];
+    const tact=(fTactic||q).match(/\b(T1\d{3}(?:\.\d{3})?)\b/);if(tact)r.tactic=tact[1];
+  }
+
+  // ══════════════════════════════════════════════════
+  //  STEP 5: BUILD 5 CLEAN PRECISE KEYWORDS
+  //  Every keyword must be a real searchable term.
+  //  NO dates. NO "18m ago". NO "Weather Events (US)".
+  //  NO field names. NO generic labels.
+  // ══════════════════════════════════════════════════
+  const BANNED=new Set(['N/A','NULL','NONE','UNKNOWN','ALERT','DETECTION','SEVERITY','HIGH','LOW','CRITICAL','MODERATE','SEVERE','STATUS','TYPE','CATEGORY','EVENT','THE','AND','FOR','FROM','WITH','WEATHER EVENTS','WEATHER EVENTS US','US','TRUE','FALSE','SEGMENTS','SOURCE','DESCRIPTION','SUBCATEGORY','TITLE','LOCATION']);
+
+  function isClean(k){
+    if(!k||typeof k!=='string')return false;
+    k=k.trim();
+    if(k.length<3||k.length>100)return false;
+    if(BANNED.has(k.toUpperCase()))return false;
+    if(/^\d{4}-\d{2}-\d{2}/.test(k))return false;  // ISO dates
+    if(/^\d+[hm]\s*ago$/i.test(k))return false;      // "18m ago"
+    if(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),/.test(k))return false; // day names
+    if(/^in \d+[hm]/.test(k))return false;            // "in 3h"
+    if(/^(National Weather Service|Weather Events)$/i.test(k))return false;
+    return true;
+  }
+
+  const kws=[];
+
+  if(r.alert_type==='physical'){
+    // Map sub_type → human readable label
+    const evtLabel={flood:'Flash Flood',wildfire:'Wildfire',hurricane:'Hurricane',tornado:'Tornado',earthquake:'Earthquake',shooting:'Shooting',hazmat:'HAZMAT',protest:'Civil Unrest',tsunami:'Tsunami',winter:'Winter Storm',storm:'Severe Thunderstorm',unknown:''}[r.sub_type]||fSubcat||'';
+
+    // KW1: Event title (e.g. "Flash Flood Warning")
+    if(r.event_name&&isClean(r.event_name))kws.push(r.event_name);
+
+    // KW2: All county names + state code
+    //      e.g. "Cayuga, Cortland, Onondaga, Seneca, NY"
+    if(counties.length>0&&r.state_code){
+      kws.push(counties.map(c=>c.county).join(', ')+', '+r.state_code);
+    }else if(r.location&&r.state_code&&isClean(r.location+', '+r.state_code)){
+      kws.push(r.location+', '+r.state_code);
+    }
+
+    // KW3: Event type + region
+    //      e.g. "Flash Flood Central New York" or "Flash Flood Cayuga County"
+    if(evtLabel&&r.state){
+      const region=counties.length>2?'Central '+r.state:counties.length>0?counties[0].county+' County':r.state;
+      const kw3=evtLabel+' '+region;
+      if(isClean(kw3)&&!kws.includes(kw3))kws.push(kw3);
+    }
+
+    // KW4: State code + event title (for NWS/gov searches)
+    //      e.g. "NY Flash Flood Warning"
+    if(r.state_code&&r.event_name&&isClean(r.state_code+' '+r.event_name)){
+      kws.push(r.state_code+' '+r.event_name);
+    }
+
+    // KW5: Full state name + flooding/event type (for news search)
+    //      e.g. "New York flooding"
+    if(r.state&&evtLabel){
+      const kw5=r.state+' '+(evtLabel.toLowerCase());
+      if(isClean(kw5)&&!kws.includes(kw5))kws.push(kw5);
+    }
+
+  } else {
+    // CYBER
+    if(r.ioc&&isClean(r.ioc))kws.push(r.ioc);
+    if(r.threat_name&&isClean(r.threat_name)&&r.threat_name!==r.ioc)kws.push(r.threat_name);
+    if(r.affected_product&&r.ioc&&isClean(r.ioc+' '+r.affected_product))kws.push(r.ioc+' '+r.affected_product);
+    else if(r.affected_product&&isClean(r.affected_product+' vulnerability'))kws.push(r.affected_product+' vulnerability');
+    if(r.process_name&&isClean(r.process_name))kws.push(r.process_name);
+    if(r.tactic&&isClean(r.tactic))kws.push(r.tactic);
+    if(fHostname&&isClean(fHostname))kws.push(fHostname);
+  }
+
+  r.keywords=[...new Set(kws)].filter(isClean).slice(0,5);
+
+  // Fallback only if completely empty
+  if(r.keywords.length===0){
+    const evtLabel=fSubcat||r.sub_type||'';
+    const loc=r.location||r.state||'';
+    if(evtLabel&&loc&&isClean(evtLabel+' '+loc))r.keywords=[evtLabel+' '+loc];
+    else if(r.event_name&&isClean(r.event_name))r.keywords=[r.event_name];
+    else r.keywords=['unknown alert'];
+  }
+
+  return r;
+}
+
+  // ══════════════════════════════════════════════════
+  //  STEP 0: PARSE STRUCTURED FIELDS FIRST
+  //  Everbridge, Splunk, CrowdStrike use labeled fields.
+  //  Read them directly — most reliable extraction.
+  // ══════════════════════════════════════════════════
+
+  // Generic field extractor — handles "Field\nValue" and "Field: Value" and "Field | Value"
+  function getField(label){
+    // "Title\nFlash Flood Warning" or "Title: Flash Flood Warning" or "Title | Flash Flood Warning"
+    const patterns=[
+      new RegExp(label+'\\s*\\n\\s*([^\\n]+)','i'),
+      new RegExp(label+'\\s*[:|]\\s*([^\\n|]+)','i'),
+    ];
+    for(const p of patterns){
+      const m=q.match(p);
+      if(m){const v=m[1].trim().replace(/^\s*[\-:]\s*/,'').trim();if(v&&v.length>1&&v.length<120)return v;}
+    }
+    return null;
+  }
+
+  // Read structured fields directly
+  const fTitle      = getField('Title');
+  const fSubcat     = getField('Subcategory')||getField('Category')||getField('Type');
+  const fSeverity   = getField('Severity');
+  const fSource     = getField('Source');
+  const fDesc       = getField('Description');
+  const fLocation   = getField('Location')||getField('Area')||getField('Region');
+  const fFireName   = getField('Fire Name')||getField('Incident Name')||getField('Event Name');
+  const fCity       = getField('City');
+  const fState      = getField('State');
+  const fCounty     = getField('County');
+  const fHostname   = getField('Hostname')||getField('Host');
+  const fProcess    = getField('Process');
+  const fSHA        = getField('SHA256')||getField('Hash');
+  const fCVE        = getField('CVE');
+  const fDomain     = getField('Domain')||getField('URL');
+  const fIOC        = getField('IOC')||getField('Indicator');
+  const fTactic     = getField('Tactic')||getField('Technique');
+  const fThreat     = getField('Threat')||getField('Threat Actor')||getField('Malware');
+  const fSegments   = getField('Segments');
+
+  // Use structured field for event name immediately
+  if(fFireName)r.event_name=fFireName;
+  else if(fTitle&&fTitle!=='N/A'&&!/^(weather event|cyber|alert|event|incident)$/i.test(fTitle))r.event_name=fTitle;
+
+  // Severity from field
+  if(fSeverity){
+    const sl=fSeverity.toLowerCase();
+    if(/extreme|critical/.test(sl))r.severity='critical';
+    else if(/severe|high|major/.test(sl))r.severity='high';
+    else if(/moderate|medium/.test(sl))r.severity='medium';
+    else r.severity='low';
+  }
+
+  // ── IOC FIELDS (cyber) ──
+  const rawIOC=fSHA||fCVE||fIOC||fDomain||'';
+  if(rawIOC){
+    const cveM=rawIOC.match(/CVE-\d{4}-\d+/i);if(cveM)r.ioc=cveM[0].toUpperCase();
+    const hashM=rawIOC.match(/[0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32}/i);if(hashM&&!r.ioc)r.ioc=hashM[0].toLowerCase();
+    if(!r.ioc&&rawIOC.length>3)r.ioc=rawIOC.trim();
+  }
+
+  // ══════════════════════════════════════════════════
+  //  STEP 1: DETECT ALERT TYPE using structured fields + regex
+  // ══════════════════════════════════════════════════
+  const isCVE_rx=/CVE-\d{4}-\d+/i.test(q)||/CVE-\d{4}-\d+/i.test(rawIOC);
+  const isHash_rx=/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i.test(q);
+  const isIP_rx=/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(q);
+  const isCyber_rx=/malware|ransomware|phishing|trojan|exploit|powershell|cobalt strike|mimikatz|lateral movement|privilege escalation|credential dump|beacon|apt\d|t1\d{3}/i.test(q);
+  const isPhys_rx=/wildfire|wild fire|\bfire\b|flood|flash flood|earthquake|quake|hurricane|tropical storm|tornado|protest|riot|civil unrest|hazmat|chemical spill|evacuation|shooting|gunfire|active shooter|explosion|disaster|tsunami|blizzard|severe weather|winter storm/i.test(q);
+
+  // Subcategory field is authoritative for type
+  const subcatLower=(fSubcat||'').toLowerCase();
+  const titleLower=(fTitle||'').toLowerCase();
+  const isPhysFromField=/flood|fire|wildfire|earthquake|hurricane|tornado|storm|weather|hazmat|civil|protest|shooting|evacuation/i.test(subcatLower+' '+titleLower);
+  const isCyberFromField=/malware|ransomware|intrusion|phishing|credential|exploit|cyber|endpoint|detection/i.test(subcatLower+' '+fSource+' '+titleLower);
+
+  if(isCVE_rx){r.alert_type='cve';r.sub_type='cve';}
+  else if(isHash_rx&&!isPhys_rx){r.alert_type='hash';r.sub_type='hash';}
+  else if(isIP_rx&&!isPhys_rx&&!isPhysFromField){r.alert_type='ip';r.sub_type='ip';}
+  else if((isCyber_rx||isCyberFromField)&&!isPhys_rx&&!isPhysFromField){r.alert_type='cyber';r.sub_type='malware';}
+  else{r.alert_type='physical';}
+
+  // Extract raw IOCs from text too
+  if(!r.ioc){
+    const cveM=q.match(/\b(CVE-\d{4}-\d+)\b/i);if(cveM)r.ioc=cveM[1].toUpperCase();
+  }
+  if(!r.ioc&&!isPhys_rx){
+    const hashM=q.match(/\b([0-9a-f]{64}|[0-9a-f]{40}|[0-9a-f]{32})\b/i);if(hashM)r.ioc=hashM[1].toLowerCase();
+    const ipM=q.match(/\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b/);if(ipM&&!r.ioc)r.ioc=ipM[1];
+  }
+
+  // ══════════════════════════════════════════════════
+  //  STEP 2: DETECT PRECISE SUB-TYPE
+  //  Use structured Subcategory field first, then regex
+  // ══════════════════════════════════════════════════
+  const subcatMap={
+    'flash flood':'flood','flood':'flood','flooding':'flood',
+    'wildfire':'wildfire','fire':'wildfire',
+    'hurricane':'hurricane','tropical storm':'hurricane',
+    'tornado':'tornado',
+    'earthquake':'earthquake',
+    'winter storm':'winter','blizzard':'winter','ice storm':'winter',
+    'shooting':'shooting','active shooter':'shooting','gunfire':'shooting',
+    'hazmat':'hazmat','chemical spill':'hazmat','toxic release':'hazmat',
+    'protest':'protest','riot':'protest','civil unrest':'protest',
+    'tsunami':'tsunami',
+    'explosion':'explosion',
+    'severe thunderstorm':'storm','thunderstorm':'storm',
+    'ransomware':'ransomware','malware':'malware','phishing':'phishing',
+    'intrusion':'intrusion','endpoint detection':'malware',
+  };
+  // Check subcategory field first
+  let foundSubtype=null;
+  for(const[key,val]of Object.entries(subcatMap)){
+    if(subcatLower.includes(key)||titleLower.includes(key)){foundSubtype=val;break;}
+  }
+  if(foundSubtype)r.sub_type=foundSubtype;
+  else{
+    // Regex fallback
+    if(/flash flood|flood/i.test(q))r.sub_type='flood';
+    else if(/wildfire|wild fire/i.test(q))r.sub_type='wildfire';
+    else if(/\bfire\b/i.test(q)&&r.alert_type==='physical')r.sub_type='wildfire';
+    else if(/hurricane|tropical storm/i.test(q))r.sub_type='hurricane';
+    else if(/tornado/i.test(q))r.sub_type='tornado';
+    else if(/earthquake|quake/i.test(q))r.sub_type='earthquake';
+    else if(/shooting|gunfire|active shooter/i.test(q))r.sub_type='shooting';
+    else if(/hazmat|chemical spill|toxic/i.test(q))r.sub_type='hazmat';
+    else if(/protest|riot|civil unrest/i.test(q))r.sub_type='protest';
+    else if(/tsunami/i.test(q))r.sub_type='tsunami';
+    else if(/blizzard|winter storm|ice storm/i.test(q))r.sub_type='winter';
+    else if(/ransomware/i.test(q))r.sub_type='ransomware';
+    else if(/phishing/i.test(q))r.sub_type='phishing';
+  }
+
+  // ══════════════════════════════════════════════════
+  //  STEP 3: EXTRACT LOCATION — counties, city, state
+  // ══════════════════════════════════════════════════
+
+  // Parse counties from Everbridge description format:
+  // "Cayuga, NY; Cortland, NY; Onondaga, NY; Seneca, NY"
+  // Also handles "Cayuga County, NY"
+  const countyStatePattern=/\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\s*(?:County)?\s*,\s*([A-Z]{2})\b/g;
+  const counties=[];
+  let csm;
+  while((csm=countyStatePattern.exec(q))!==null){
+    const cName=csm[1].trim();
+    const cState=csm[2];
+    if(cName&&cState&&cName.length>2&&!['NY','CA','TX','FL','WA'].includes(cName)){
+      counties.push({county:cName,state:cState});
+      if(!r.state_code){r.state_code=cState;r.state=CODE_MAP[cState]||cState;}
+    }
+  }
+  r.counties=counties;
+
+  // Also check structured fields
+  if(fCounty&&!counties.length)counties.push({county:fCounty,state:r.state_code||''});
+  if(fState&&!r.state_code){
+    const stRes=detectState(fState);
+    if(stRes){r.state=stRes.state;r.state_code=stRes.code;}
+  }
+  if(!r.state_code){{const stRes=detectState(q);if(stRes){r.state=stRes.state;r.state_code=stRes.code;}}}
+
+  // Location from field or first county
+  if(fLocation&&!r.location)r.location=fLocation.split(',')[0].trim();
+  else if(fCity&&!r.location)r.location=fCity.trim();
+  else if(counties.length>0&&!r.location){
+    if(counties.length<=2)r.location=counties.map(c=>c.county).join(', ')+' County';
+    else r.location=counties[0].county+' County and surrounding areas';
+  }
+
+  // ══════════════════════════════════════════════════
+  //  STEP 4: EXTRACT EVENT/FIRE NAME
+  // ══════════════════════════════════════════════════
+  // If not set from structured fields, try patterns
+  if(!r.event_name){
+    // Named fire: "Palisade Fire", "Hughes Fire"
+    const namedFire=q.match(/\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\s+(?:Wildfire|Fire)\b/);
+    if(namedFire)r.event_name=namedFire[0];
+    // Named storm: "Hurricane Milton"
+    const namedStorm=q.match(/\b(Hurricane|Tropical Storm|Typhoon|Cyclone)\s+([A-Z][a-zA-Z]+)\b/);
+    if(namedStorm&&!r.event_name)r.event_name=namedStorm[0];
+    // Use title from field as fallback
+    if(!r.event_name&&fTitle)r.event_name=fTitle;
+  }
+
+  // Malware/threat names for cyber
+  if(r.alert_type!=='physical'){
+    const malwareNames=[
+      /\b(LockBit\s*[\d.x]*)/i,/\b(BlackCat|ALPHV)\b/i,/\b(Ryuk|Maze|REvil|Conti|Hive|Cl0p|BlackMatter)\b/i,
+      /\b(Emotet|TrickBot|QakBot|Qbot|Dridex|IcedID)\b/i,/\b(Cobalt Strike)\b/i,/\b(Mimikatz)\b/i,
+      /\b(APT\d+)\b/i,/\b(Fancy Bear|Cozy Bear|Lazarus|Sandworm|Volt Typhoon)\b/i,/\b(WannaCry|NotPetya)\b/i,
+    ];
+    const mSrc=fThreat||q;
+    for(const p of malwareNames){const m=mSrc.match(p);if(m){r.event_name=r.event_name||m[1];r.threat_name=m[1];break;}}
+    const prodM=(fProcess||q).match(/\b(PAN-OS|GlobalProtect|Cisco IOS|Exchange Server|Log4j|Apache|Fortinet|Citrix|VMware|F5|Active Directory|Windows)\b/i);
+    if(prodM)r.affected_product=prodM[1];
+    // Process name from CrowdStrike alerts
+    const procM=q.match(/\b([a-zA-Z0-9_-]+\.exe)\b/i);if(procM)r.process_name=procM[1];
+    // MITRE tactic
+    const tacticM=(fTactic||q).match(/\b(T1\d{3}(?:\.\d{3})?)\b/);if(tacticM)r.tactic=tacticM[1];
+  }
+
+  // ══════════════════════════════════════════════════
+  //  STEP 5: BUILD CLEAN PRECISE KEYWORDS
+  //  Rule: Every keyword must be a specific, searchable term.
+  //  NEVER include: dates, generic labels, full alert text,
+  //  field names, source names, or generic words.
+  // ══════════════════════════════════════════════════
+  const kws=[];
+  const BANNED=new Set(['N/A','NULL','NONE','UNKNOWN','ALERT','DETECTION','SEVERITY','HIGH','LOW','CRITICAL','MODERATE','STATUS','TYPE','CATEGORY','EVENT','THE','AND','FOR','FROM','WITH','WEATHER EVENTS','WEATHER EVENTS US','US','TRUE','FALSE']);
+
+  if(r.alert_type==='physical'){
+
+    // KW1: Named event (most specific — fire name, storm name)
+    // Only use if it's NOT a generic title like "Flash Flood Warning"
+    const isGenericTitle=r.event_name&&/^(flash flood warning|flood warning|fire warning|severe thunderstorm warning|tornado warning|winter storm warning|hurricane warning|evacuation order|shelter in place)$/i.test(r.event_name.trim());
+    if(r.event_name&&!isGenericTitle)kws.push(r.event_name);
+
+    // KW2: Subcategory + location (e.g. "Flash Flood Cayuga County NY")
+    const evtType=fSubcat||{flood:'Flash Flood',wildfire:'Wildfire',hurricane:'Hurricane',tornado:'Tornado',earthquake:'Earthquake',shooting:'Shooting',hazmat:'HAZMAT',protest:'Civil Unrest',tsunami:'Tsunami',winter:'Winter Storm',storm:'Severe Thunderstorm',unknown:''}[r.sub_type]||'';
+    if(evtType&&r.location)kws.push(evtType+' '+r.location);
+    else if(evtType&&r.state)kws.push(evtType+' '+r.state);
+    else if(r.event_name&&isGenericTitle&&r.location)kws.push(r.event_name+' '+r.location);
+
+    // KW3: County or city + state code
+    if(counties.length>0&&counties.length<=3){
+      kws.push(counties.map(c=>c.county).join(', ')+', '+r.state_code);
+    }else if(r.location){
+      kws.push(r.location+(r.state_code?', '+r.state_code:''));
+    }else if(r.state){
+      kws.push(r.state+' '+evtType);
+    }
+
+    // KW4: State abbreviation + event type (for NWS search)
+    if(r.state_code&&evtType)kws.push(r.state_code+' '+evtType+' warning');
+
+    // KW5: First specific county + event type
+    if(counties.length>0&&evtType)kws.push(counties[0].county+' County '+evtType);
+
+  } else {
+    // CYBER KEYWORDS
+    // KW1: Exact IOC
+    if(r.ioc)kws.push(r.ioc);
+    // KW2: Threat/malware name
+    if(r.threat_name&&r.threat_name!==r.ioc)kws.push(r.threat_name);
+    // KW3: IOC + product
+    if(r.affected_product&&r.ioc)kws.push(r.ioc+' '+r.affected_product);
+    else if(r.affected_product)kws.push(r.affected_product+' vulnerability');
+    // KW4: Process name (CrowdStrike)
+    if(r.process_name&&!kws.includes(r.process_name))kws.push(r.process_name);
+    // KW5: MITRE tactic
+    if(r.tactic)kws.push(r.tactic);
+    // KW from hostname for pivot
+    if(fHostname&&fHostname.length>3)kws.push(fHostname);
+  }
+
+  // Final cleanup — remove banned, duplicates, empties
+  r.keywords=[...new Set(kws)].filter(k=>{
+    if(!k||typeof k!=='string')return false;
+    k=k.trim();
+    if(k.length<3||k.length>80)return false;
+    if(BANNED.has(k.toUpperCase()))return false;
+    if(/^\d{4}-\d{2}-\d{2}/.test(k))return false; // no dates
+    if(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),/.test(k))return false; // no day names
+    if(/^\d+[hm]\s*ago$/i.test(k))return false; // no "18m ago"
+    return true;
+  }).slice(0,5);
+
+  // Only use fallback if truly nothing found
+  if(r.keywords.length===0){
+    const evtType=fSubcat||r.sub_type||'';
+    const loc=r.location||r.state||'';
+    if(evtType&&loc)r.keywords=[evtType+' '+loc];
+    else if(r.event_name)r.keywords=[r.event_name];
+    else r.keywords=['unknown alert'];
+  }
+
+  return r;
+}
 
   // ── DETECT PRECISE SUB-TYPE FIRST ──
   // Order matters — most specific first
